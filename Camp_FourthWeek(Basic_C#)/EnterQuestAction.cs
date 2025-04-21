@@ -6,5 +6,15 @@ public class EnterQuestAction : ActionBase
 
     public override void OnExcute()
     {
+        SubActionMap.Clear();
+    }
+}
+
+public class AcceptQuestAction : ActionBase
+{
+    public override string Name => "수락하기";
+
+    public override void OnExcute()
+    {
     }
 }
