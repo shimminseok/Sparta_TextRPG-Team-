@@ -10,13 +10,13 @@ public class EquipItemManagementAction : ActionBase
         PrevAction = _prevAction;
     }
 
-    public override string Name => "인벤토리 - 장착 관리";
+    public override string Name => "도구관리";
 
     public override void OnExcute()
     {
         SubActionMap.Clear();
-        Console.WriteLine("보유 중인 아이템을 장착할 수 있습니다.");
-        Console.WriteLine("[아이템 목록]");
+        Console.WriteLine("보유 중인 도구를 장착시킬 수 있습니다.");
+        Console.WriteLine("[도구 목록]");
         for (var i = 0; i < InventoryManager.Instance.Inventory.Count; i++)
         {
             var item = InventoryManager.Instance.Inventory[i];
