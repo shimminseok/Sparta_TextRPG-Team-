@@ -7,51 +7,82 @@ public class QuestManager
 {
     private static readonly QuestManager instance = new QuestManager();
 
-    //퀘스트를 관리하는 Dic
-    public Dictionary<QuestTargetType, List<Quest>> Quests { get; private set; } =
-        new Dictionary<QuestTargetType, List<Quest>>();
+    //퀘스트를 관리하는 Dic(다른 퀘스트에 같은 TargetID가 있을 수 있기 때문
+    public Dictionary<QuestTargetType, List<QuestCondition>> Quests { get; private set; } =
+        new Dictionary<QuestTargetType, List<QuestCondition>>();
 
     //현재 내가 수락한 실질적인 Quest List
-    public List<int> CurrentAcceptQuestList { get; private set; } = new List<int>();
+    public List<Quest> CurrentAcceptQuestList { get; private set; } = new List<Quest>();
     public List<int> ClearQuestList { get; private set; } = new List<int>();
     public static QuestManager Instance => instance;
 
 
     public void AcceptQuest(Quest _quest)
     {
-        for (int i = 0; i < _quest.Conditions.Count; i++)
+        if (CurrentAcceptQuestList.Exists(quest => quest.Key == _quest.Key))
+            return;
+
+
+        Quest quest = _quest.DeepCopy();
+        for (int i = 0; i < quest.Conditions.Count; i++)
         {
-            if (!Quests.ContainsKey(_quest.Conditions[i].TargetType))
+            var condition = quest.Conditions[i];
+            if (!Quests.ContainsKey(condition.TargetType))
             {
-                Quests[_quest.Conditions[i].TargetType] = new List<Quest>();
+                Quests[condition.TargetType] = new List<QuestCondition>();
             }
 
-            Quests[_quest.Conditions[i].TargetType].Add(_quest);
+            Quests[condition.TargetType].Add(condition);
         }
+
+        CurrentAcceptQuestList.Add(quest);
+    }
+
+    public void AbandonQuest(Quest _quest)
+    {
+        RemoveQuest(_quest);
     }
 
     public void QuestClear(Quest _quest)
     {
-        foreach (var condition in _quest.Conditions)
+        for (int i = 0; i < _quest.RewardItemsList.Count; i++)
         {
-            if (Quests.TryGetValue(condition.TargetType, out List<Quest> quests))
-            {
-                quests.RemoveAll(quest => quest.Key == _quest.Key);
-            }
+            var item = ItemTable.GetItemById(_quest.RewardItemsList[i]);
+            InventoryManager.Instance.AddItem(item);
         }
 
-        CurrentAcceptQuestList.Remove(_quest.Key);
+        if (_quest.QuestRewardGold > 0)
+        {
+            GameManager.Instance.PlayerInfo.Gold += _quest.QuestRewardGold;
+        }
+
+        RemoveQuest(_quest);
         ClearQuestList.Add(_quest.Key);
     }
 
-    public Quest? GetQuestInfo(int _key)
+    void RemoveQuest(Quest _quest)
     {
-        foreach (var quests in Quests.Values)
+        CurrentAcceptQuestList.Remove(_quest);
+        foreach (var condition in _quest.Conditions)
         {
-            var targetQuest = quests.Find(quest => quest.Key == _key);
-            return targetQuest;
+            if (Quests.TryGetValue(condition.TargetType, out List<QuestCondition> conditions))
+            {
+                conditions.Remove(condition);
+            }
         }
+    }
 
-        return null;
+    public void UpdateCurrentCount(QuestTargetType _type, int _targetID)
+    {
+        if (Quests.TryGetValue(_type, out List<QuestCondition> conditions))
+        {
+            foreach (var condition in conditions)
+            {
+                if (condition.TargetID == _targetID)
+                {
+                    condition.CurrentCount++;
+                }
+            }
+        }
     }
 }

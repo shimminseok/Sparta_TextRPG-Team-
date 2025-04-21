@@ -22,8 +22,8 @@ public enum QuestState
 {
     NotStarted,
     InProgress,
+    Completable,
     Completed,
-    Failed
 }
 
 public class Quest
@@ -35,9 +35,8 @@ public class Quest
 
     public QuestType QuestType { get; private set; }
     public List<int> PrerequisiteQuest; //선행 퀘스트
-    public int CurrentCount; //퀘스트의 현재 카운트
     public List<QuestCondition> Conditions; //퀘스트 조건 목록
-    public QuestState State { get; private set; }
+    public QuestState State { get; set; }
 
 
     public List<int> RewardItemsList { get; private set; }
@@ -75,8 +74,32 @@ public class Quest
     {
     }
 
+    public bool IsCompleted()
+    {
+        for (int i = 0; i < Conditions.Count; i++)
+        {
+            if (Conditions[i].CurrentCount < Conditions[i].RequiredCount)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public Quest()
     {
+    }
+
+    public Quest DeepCopy()
+    {
+        return new Quest
+        (Key, QuestName, QuestType, QuestDescription, QuestCompleteDescription,
+            new List<int>(PrerequisiteQuest),
+            Conditions.Select(cond =>
+                new QuestCondition(cond.TargetType, cond.QuestConditionTxt, cond.TargetID, cond.RequiredCount)
+            ).ToList(),
+            new List<int>(RewardItemsList), QuestRewardGold);
     }
 }
 
@@ -85,7 +108,9 @@ public class QuestCondition
     public QuestTargetType TargetType;
     public string QuestConditionTxt;
     public int TargetID;
+    public int CurrentCount = 0;
     public int RequiredCount;
+    public bool IsCompleted => CurrentCount >= RequiredCount;
 
     public QuestCondition(QuestTargetType _targetType, string _questConditionTxt, int _targetID, int _requiredCount)
     {
