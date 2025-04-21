@@ -19,8 +19,9 @@ public enum StatType
     CurHp,
     MaxMp,
     CurMp,
-
-    CriticalChance
+    CriticalChance,
+    CriticlaDamage,
+    EvadeChance
 }
 
 public enum ItemType
@@ -51,11 +52,13 @@ public class PlayerInfo
         Job = JobTable.JobDataDic[_job];
         Stats = Job.Stats.ToDictionary();
         Name = _name;
+        Skills = Job.Skills;
     }
 
     public string Name { get; private set; }
     public Job Job { get; }
     public Dictionary<StatType, Stat> Stats { get; }
+    public List<int> Skills { get; private set; }
 }
 
 public class Item(int _key, string _name, ItemType _type, List<Stat> _stats, string _description, int _cost)
@@ -82,7 +85,7 @@ public class Stat
     {
     }
 
-    public Stat(StatType _type, int _value)
+    public Stat(StatType _type, float _value)
     {
         Type = _type;
         BaseValue = _value;
@@ -136,7 +139,10 @@ public class Stat
                 return "MP";
             case StatType.CriticalChance:
                 return "치명타확률";
-
+            case StatType.CriticlaDamage:
+                return "치명타피해";
+            case StatType.EvadeChance:
+                return "회피확률";
             default: return string.Empty;
         }
     }
@@ -205,14 +211,30 @@ public class Dungeon
 
 public class Job
 {
-    public Job(JobType _type, string _name, Dictionary<StatType, Stat> _stat)
+    public Job(JobType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill)
     {
         Type = _type;
         Name = _name;
         Stats = _stat;
+        Skills = _skill;
     }
 
     public JobType Type { get; private set; }
+    public string Name { get; private set; }
+    public Dictionary<StatType, Stat> Stats { get; }
+    public List<int> Skills { get; private set; }
+}
+
+public class Skill
+{
+    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat)
+    {
+        Id = _id;
+        Name = _name;
+        Stats = _stat;
+    }
+
+    public int Id { get; private set; }
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; }
 }

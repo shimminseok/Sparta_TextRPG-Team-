@@ -13,8 +13,10 @@ public static class JobTable
                 { StatType.CurHp, new Stat(StatType.CurHp, 100) },
                 { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
                 { StatType.CurMp, new Stat(StatType.CurMp, 100) },
-                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 3) }
-            })
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1,2])
         },
         {
             JobType.Assassin, new Job(JobType.Assassin, "암살자", new Dictionary<StatType, Stat>()
@@ -25,8 +27,10 @@ public static class JobTable
                 { StatType.CurHp, new Stat(StatType.CurHp, 80) },
                 { StatType.MaxMp, new Stat(StatType.MaxMp, 80) },
                 { StatType.CurMp, new Stat(StatType.CurMp, 80) },
-                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 5) }
-            })
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            },[1,2])
         }
     };
 }
