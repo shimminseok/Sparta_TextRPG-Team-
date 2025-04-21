@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.Mime;
 
 namespace Camp_FourthWeek_Basic_C__;
@@ -27,6 +28,7 @@ public enum QuestState
 
 public class Quest
 {
+    public int Key { get; private set; }
     public string QuestName { get; private set; }
     public string QuestDescription { get; private set; } //퀘스트 수락 대사
     public string QuestCompleteDescription { get; private set; } //퀘스트 완료 대사
@@ -35,6 +37,7 @@ public class Quest
     public List<int> PrerequisiteQuest; //선행 퀘스트
     public int CurrentCount; //퀘스트의 현재 카운트
     public List<QuestCondition> Conditions; //퀘스트 조건 목록
+    public QuestState State { get; private set; }
 
 
     public List<int> RewardItemsList { get; private set; }
@@ -51,10 +54,12 @@ public class Quest
     /// <param name="_conditions"></param>
     /// <param name="_rewardItemsList"></param>
     /// <param name="_questRewardGold"></param>
-    public Quest(string _questName, QuestType _questType, string _questDescription, string _questCompleteDescription
+    public Quest(int _key, string _questName, QuestType _questType, string _questDescription,
+        string _questCompleteDescription
         , List<int> _prerequisQuest, List<QuestCondition> _conditions,
         List<int> _rewardItemsList, int _questRewardGold)
     {
+        Key = _key;
         QuestName = _questName;
         QuestType = _questType;
         QuestDescription = _questDescription;
@@ -63,6 +68,11 @@ public class Quest
         Conditions = _conditions;
         RewardItemsList = _rewardItemsList;
         QuestRewardGold = _questRewardGold;
+    }
+
+
+    public void CheckQuestComplete()
+    {
     }
 
     public Quest()
