@@ -4,11 +4,15 @@ namespace Camp_FourthWeek_Basic_C__;
 
 #region[Enum]
 
-public enum JobType
+public enum MonsterType
 {
     None,
-    Warrior,
-    Assassin
+    Pikachu,
+    Charmander,
+    Squirtle,
+    Bulbasaur,
+    Pidgey,
+    Stakataka
 }
 
 public enum StatType
@@ -47,16 +51,16 @@ public class PlayerInfo
 {
     public int Gold = 1500;
 
-    public PlayerInfo(JobType _job, string _name)
+    public PlayerInfo(MonsterType _monster, string _name)
     {
-        Job = JobTable.JobDataDic[_job];
-        Stats = Job.Stats.ToDictionary();
+        Monster = MonsterTable.MonsterDataDic[_monster];
+        Stats = Monster.Stats.ToDictionary();
         Name = _name;
-        Skills = Job.Skills;
+        Skills = Monster.Skills;
     }
 
     public string Name { get; private set; }
-    public Job Job { get; }
+    public Monster Monster { get; }
     public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
 }
@@ -209,20 +213,22 @@ public class Dungeon
     }
 }
 
-public class Job
+public class Monster
 {
-    public Job(JobType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill)
+    public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill)
     {
         Type = _type;
         Name = _name;
         Stats = _stat;
         Skills = _skill;
     }
-
-    public JobType Type { get; private set; }
+    public MonsterType Type { get; private set; }
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
+    public int ItemId { get; private set; }
+    public int Lv {  get; private set; }
+    public int Exp {  get; private set; }
 }
 
 public class Skill
@@ -247,13 +253,13 @@ public class SaveData
 
     // Item을 전부 변환 시킬 필요가 없음. int값만 가지고 와서 Table에서 가져오는 방식을 사용
     public List<int> Inventory;
-    public JobType Job;
+    public MonsterType Monster;
     public string Name;
 
     public SaveData(SaveData _data)
     {
         Name = _data.Name;
-        Job = _data.Job;
+        Monster = _data.Monster;
         DungeonClearCount = _data.DungeonClearCount;
         Inventory = _data.Inventory;
         EquipmentItem = _data.EquipmentItem;
