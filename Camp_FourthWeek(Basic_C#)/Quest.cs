@@ -17,6 +17,14 @@ public enum QuestTargetType
     Item
 }
 
+public enum QuestConditionType
+{
+    Equip, // 장착하기
+    Buy, // 구매하기
+    Catch, // 처치하기
+    Use, // 사용하기
+}
+
 //퀘스트 진행 사항
 public enum QuestState
 {
@@ -36,7 +44,7 @@ public class Quest
     public QuestType QuestType { get; private set; }
     public List<int> PrerequisiteQuest; //선행 퀘스트
     public List<QuestCondition> Conditions; //퀘스트 조건 목록
-    public QuestState State { get; set; }
+    public QuestState State { get; set; } = QuestState.NotStarted;
 
 
     public List<int> RewardItemsList { get; private set; }
@@ -69,22 +77,9 @@ public class Quest
         QuestRewardGold = _questRewardGold;
     }
 
-
-    public void CheckQuestComplete()
-    {
-    }
-
     public bool IsCompleted()
     {
-        for (int i = 0; i < Conditions.Count; i++)
-        {
-            if (Conditions[i].CurrentCount < Conditions[i].RequiredCount)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return Conditions.TrueForAll(x => x.IsCompleted);
     }
 
     public Quest()
@@ -97,7 +92,8 @@ public class Quest
         (Key, QuestName, QuestType, QuestDescription, QuestCompleteDescription,
             new List<int>(PrerequisiteQuest),
             Conditions.Select(cond =>
-                new QuestCondition(cond.TargetType, cond.QuestConditionTxt, cond.TargetID, cond.RequiredCount)
+                new QuestCondition(cond.TargetType, cond.ConditionType, cond.TargetID, cond.CurrentCount,
+                    cond.RequiredCount)
             ).ToList(),
             new List<int>(RewardItemsList), QuestRewardGold);
     }
@@ -106,17 +102,49 @@ public class Quest
 public class QuestCondition
 {
     public QuestTargetType TargetType;
-    public string QuestConditionTxt;
+    public QuestConditionType ConditionType;
     public int TargetID;
     public int CurrentCount = 0;
     public int RequiredCount;
     public bool IsCompleted => CurrentCount >= RequiredCount;
 
-    public QuestCondition(QuestTargetType _targetType, string _questConditionTxt, int _targetID, int _requiredCount)
+    public QuestCondition(QuestTargetType _targetType, QuestConditionType _conditionType, int _targetID,
+        int _currentCount,
+        int _requiredCount)
     {
         TargetType = _targetType;
-        QuestConditionTxt = _questConditionTxt;
+        ConditionType = _conditionType;
         TargetID = _targetID;
+        CurrentCount = _currentCount;
         RequiredCount = _requiredCount;
+    }
+
+    public string GetDescription()
+    {
+        switch (ConditionType)
+        {
+            case QuestConditionType.Equip:
+            {
+                string itemName = ItemTable.GetItemById(TargetID).Name;
+                return $"{itemName} 장착하기";
+            }
+            case QuestConditionType.Buy:
+            {
+                string itemName = ItemTable.GetItemById(TargetID).Name;
+                return $"{itemName} 구매하기";
+            }
+            case QuestConditionType.Catch:
+            {
+                string monsterName = MonsterTable.GetMonsterByType((MonsterType)TargetID).Name;
+                return $"{monsterName} {RequiredCount}마리 포획하기";
+            }
+            case QuestConditionType.Use:
+            {
+                string itemName = MonsterTable.GetMonsterByType((MonsterType)TargetID).Name;
+                return $"{itemName} {RequiredCount}개 사용하기";
+            }
+            default:
+                return $"Unknown Quest Condition: {ConditionType}";
+        }
     }
 }
