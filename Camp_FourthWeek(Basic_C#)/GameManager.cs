@@ -19,11 +19,11 @@ public class GameManager
         }
     }
 
-    public PlayerInfo PlayerInfo { get; private set; } = new(JobType.Warrior, "Test");
+    public PlayerInfo PlayerInfo { get; private set; } = new(MonsterType.Pikachu, "Test");
 
-    public void Init(JobType _job, string _name)
+    public void Init(MonsterType _monster, string _name)
     {
-        PlayerInfo = new PlayerInfo(_job, _name);
+        PlayerInfo = new PlayerInfo(_monster, _name);
 
         if (loadData != null)
         {
@@ -56,7 +56,7 @@ public class GameManager
         var saveData = new SaveData
         {
             Name = PlayerInfo.Name,
-            Job = PlayerInfo.Job.Type,
+            Monster = PlayerInfo.Monster.Type,
             Gold = PlayerInfo.Gold,
 
             Inventory = inventory,
@@ -83,7 +83,7 @@ public class GameManager
         if (data != null)
         {
             loadData = new SaveData(data);
-            Init(loadData.Job, loadData.Name);
+            Init(loadData.Monster, loadData.Name);
             var mainAction = new MainMenuAction();
             mainAction.Execute();
         }
