@@ -166,7 +166,6 @@ public class ClaimQuestRewardAction : ActionBase
     }
 }
 
-//보류
 public class AbandonQuestAction : ActionBase
 {
     public override string Name => "포기하기";

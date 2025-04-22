@@ -37,6 +37,18 @@ public enum ItemType
     Shoes
 }
 
+public enum MainManu
+{
+    Character = 1,
+    Inventory,
+    Shop,
+    Dungeon,
+    Quest,
+    Collection,
+    Rest,
+    Reset
+}
+
 #endregion[Enum]
 
 public interface IAction
@@ -69,7 +81,7 @@ public class PlayerInfo
             Stats[kv.Key] = new Stat(kv.Key, kv.Value.BaseValue);
         }
 
-        Skills= _monster.Skills;
+        Skills = _monster.Skills;
     }
 
     public string Name { get; private set; }
@@ -88,7 +100,7 @@ public class Item(int _key, string _name, ItemType _type, List<Stat> _stats, str
     public readonly List<Stat> Stats = _stats;
     public int Key { get; private set; } = _key;
 
-
+    public bool IsEquippedBy(Monster m) => m.ItemId == Key;
     public bool IsEquipment => EquipmentManager.IsEquipped(this);
 }
 
@@ -241,8 +253,9 @@ public class Monster
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
-    public int ItemId { get; private set; }
+    public int ItemId { get; set; }
     public int Lv { get; private set; }
+    
     public int Exp { get; private set; }
 }
 
