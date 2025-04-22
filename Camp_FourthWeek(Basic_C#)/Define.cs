@@ -222,13 +222,14 @@ public class Monster
         Stats = _stat;
         Skills = _skill;
     }
+
     public MonsterType Type { get; private set; }
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
     public int ItemId { get; private set; }
-    public int Lv {  get; private set; }
-    public int Exp {  get; private set; }
+    public int Lv { get; private set; }
+    public int Exp { get; private set; }
 }
 
 public class Skill
@@ -254,7 +255,12 @@ public class SaveData
     // Item을 전부 변환 시킬 필요가 없음. int값만 가지고 와서 Table에서 가져오는 방식을 사용
     public List<int> Inventory;
     public MonsterType Monster;
+
     public string Name;
+
+    //QuestData
+    public List<SaveQeust> Quests = new List<SaveQeust>();
+    public List<int> ClearQuests = new List<int>();
 
     public SaveData(SaveData _data)
     {
@@ -264,6 +270,8 @@ public class SaveData
         Inventory = _data.Inventory;
         EquipmentItem = _data.EquipmentItem;
         Gold = _data.Gold;
+        Quests = _data.Quests;
+        ClearQuests = _data.ClearQuests;
     }
 
     public SaveData()

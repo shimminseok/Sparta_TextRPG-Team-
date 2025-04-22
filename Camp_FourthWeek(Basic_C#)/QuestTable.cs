@@ -14,9 +14,9 @@ public static class QuestTable
                 new List<int>(),
                 new List<QuestCondition>()
                 {
-                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 1, 1),
-                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 4, 1),
-                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 7, 1)
+                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 1, 0, 1),
+                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 4, 0, 1),
+                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 7, 0, 1)
                 },
                 new List<int>() { 10, 13 },
                 1500)
@@ -28,9 +28,9 @@ public static class QuestTable
                 new List<int>() { 1 },
                 new List<QuestCondition>()
                 {
-                    new QuestCondition(QuestTargetType.Item, "{0} 장착하기", 1, 1),
-                    new QuestCondition(QuestTargetType.Item, "{0} 장착하기", 3, 1),
-                    new QuestCondition(QuestTargetType.Item, "{0} 장착하기", 5, 1)
+                    new QuestCondition(QuestTargetType.Item, "{0} 장착하기", 1, 0, 1),
+                    new QuestCondition(QuestTargetType.Item, "{0} 장착하기", 3, 0, 1),
+                    new QuestCondition(QuestTargetType.Item, "{0} 장착하기", 5, 0, 1)
                 },
                 new List<int>() { 7, 9 },
                 1500)
@@ -42,8 +42,8 @@ public static class QuestTable
                 new List<int>() { 2 },
                 new List<QuestCondition>()
                 {
-                    new QuestCondition(QuestTargetType.Monster, "{0} 장착하기", 1, 5),
-                    new QuestCondition(QuestTargetType.Monster, "{0} 장착하기", 2, 3),
+                    new QuestCondition(QuestTargetType.Monster, "{0} 장착하기", 1, 0, 5),
+                    new QuestCondition(QuestTargetType.Monster, "{0} 장착하기", 2, 0, 3),
                 },
                 new List<int>() { 7, 9 },
                 1500)
@@ -56,9 +56,9 @@ public static class QuestTable
                 new List<int>(),
                 new List<QuestCondition>()
                 {
-                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 1, 1),
-                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 4, 1),
-                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 7, 1)
+                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 1, 0, 1),
+                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 4, 0, 1),
+                    new QuestCondition(QuestTargetType.Item, "{0} 구매하기", 7, 0, 1)
                 },
                 new List<int>() { 10, 13 },
                 1500)

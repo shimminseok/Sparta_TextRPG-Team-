@@ -36,7 +36,7 @@ public class Quest
     public QuestType QuestType { get; private set; }
     public List<int> PrerequisiteQuest; //선행 퀘스트
     public List<QuestCondition> Conditions; //퀘스트 조건 목록
-    public QuestState State { get; set; }
+    public QuestState State { get; set; } = QuestState.NotStarted;
 
 
     public List<int> RewardItemsList { get; private set; }
@@ -69,22 +69,9 @@ public class Quest
         QuestRewardGold = _questRewardGold;
     }
 
-
-    public void CheckQuestComplete()
-    {
-    }
-
     public bool IsCompleted()
     {
-        for (int i = 0; i < Conditions.Count; i++)
-        {
-            if (Conditions[i].CurrentCount < Conditions[i].RequiredCount)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return Conditions.TrueForAll(x => x.IsCompleted);
     }
 
     public Quest()
@@ -97,7 +84,8 @@ public class Quest
         (Key, QuestName, QuestType, QuestDescription, QuestCompleteDescription,
             new List<int>(PrerequisiteQuest),
             Conditions.Select(cond =>
-                new QuestCondition(cond.TargetType, cond.QuestConditionTxt, cond.TargetID, cond.RequiredCount)
+                new QuestCondition(cond.TargetType, cond.QuestConditionTxt, cond.TargetID, cond.CurrentCount,
+                    cond.RequiredCount)
             ).ToList(),
             new List<int>(RewardItemsList), QuestRewardGold);
     }
@@ -112,11 +100,13 @@ public class QuestCondition
     public int RequiredCount;
     public bool IsCompleted => CurrentCount >= RequiredCount;
 
-    public QuestCondition(QuestTargetType _targetType, string _questConditionTxt, int _targetID, int _requiredCount)
+    public QuestCondition(QuestTargetType _targetType, string _questConditionTxt, int _targetID, int _currentCount,
+        int _requiredCount)
     {
         TargetType = _targetType;
         QuestConditionTxt = _questConditionTxt;
         TargetID = _targetID;
+        CurrentCount = _currentCount;
         RequiredCount = _requiredCount;
     }
 }

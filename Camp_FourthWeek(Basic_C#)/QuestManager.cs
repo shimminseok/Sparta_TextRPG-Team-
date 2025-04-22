@@ -8,12 +8,12 @@ public class QuestManager
     private static readonly QuestManager instance = new QuestManager();
 
     //퀘스트를 관리하는 Dic(다른 퀘스트에 같은 TargetID가 있을 수 있기 때문
-    public Dictionary<QuestTargetType, List<QuestCondition>> Quests { get; private set; } =
+    public Dictionary<QuestTargetType, List<QuestCondition>> QuestConditionsMap { get; private set; } =
         new Dictionary<QuestTargetType, List<QuestCondition>>();
 
     //현재 내가 수락한 실질적인 Quest List
     public List<Quest> CurrentAcceptQuestList { get; private set; } = new List<Quest>();
-    public List<int> ClearQuestList { get; private set; } = new List<int>();
+    public List<int> ClearQuestList { get; set; } = new List<int>();
     public static QuestManager Instance => instance;
 
 
@@ -27,14 +27,15 @@ public class QuestManager
         for (int i = 0; i < quest.Conditions.Count; i++)
         {
             var condition = quest.Conditions[i];
-            if (!Quests.ContainsKey(condition.TargetType))
+            if (!QuestConditionsMap.ContainsKey(condition.TargetType))
             {
-                Quests[condition.TargetType] = new List<QuestCondition>();
+                QuestConditionsMap[condition.TargetType] = new List<QuestCondition>();
             }
 
-            Quests[condition.TargetType].Add(condition);
+            QuestConditionsMap[condition.TargetType].Add(condition);
         }
 
+        quest.State = QuestState.InProgress;
         CurrentAcceptQuestList.Add(quest);
     }
 
@@ -56,6 +57,7 @@ public class QuestManager
             GameManager.Instance.PlayerInfo.Gold += _quest.QuestRewardGold;
         }
 
+        _quest.State = QuestState.Completed;
         RemoveQuest(_quest);
         ClearQuestList.Add(_quest.Key);
     }
@@ -65,7 +67,7 @@ public class QuestManager
         CurrentAcceptQuestList.Remove(_quest);
         foreach (var condition in _quest.Conditions)
         {
-            if (Quests.TryGetValue(condition.TargetType, out List<QuestCondition> conditions))
+            if (QuestConditionsMap.TryGetValue(condition.TargetType, out List<QuestCondition> conditions))
             {
                 conditions.Remove(condition);
             }
@@ -74,7 +76,7 @@ public class QuestManager
 
     public void UpdateCurrentCount(QuestTargetType _type, int _targetID)
     {
-        if (Quests.TryGetValue(_type, out List<QuestCondition> conditions))
+        if (QuestConditionsMap.TryGetValue(_type, out List<QuestCondition> conditions))
         {
             foreach (var condition in conditions)
             {
@@ -85,4 +87,21 @@ public class QuestManager
             }
         }
     }
+
+    public void LoadQuestData(SaveQeust _saveQuest)
+    {
+        Quest loadQuest = QuestTable.GetQuestInfo(_saveQuest.Key);
+        if (loadQuest == null)
+            return;
+
+        loadQuest.Conditions = _saveQuest.QuestConditions;
+
+        AcceptQuest(loadQuest);
+    }
+}
+
+public class SaveQeust()
+{
+    public int Key;
+    public List<QuestCondition> QuestConditions;
 }
