@@ -40,22 +40,21 @@ namespace Camp_FourthWeek_Basic_C__
 
         private static char[,] uiPanel = new char[height, width];
         private static Dictionary<int, List<int>> uiDic = new Dictionary<int, List<int>>();
+        private static Tuple<int, int> cusorPosition;
         public static void TextShowUI()
         {
+              UIUpdater(UIName.Intro_TextBox);
             UIUpdater(UIName.Intro_TextBox);
-            PrintPanel();
-
         }
         public static void PrintPanel()
         {
-            StringBuilder sb = new StringBuilder(height * (width + 1)); // 줄바꿈 고려
+            Console.Clear(); // 추가!
+            StringBuilder sb = new StringBuilder(); // 줄바꿈 고려
 
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    //char c = uiPanel[y, x];
-                    //sb.Append(c == '\0' ? '*' : c);  // null 문자면 공백으로 대체
                      sb.Append(uiPanel[y, x]);
                 }
                 sb.AppendLine(); // 줄 바꿈
@@ -66,17 +65,67 @@ namespace Camp_FourthWeek_Basic_C__
 
         public static void UIUpdater(UIName name)
         {
+            Console.Clear();
+
             var printUI = UITable.UITableDic[name];
             foreach (var value in printUI)
             {
                 ChangeUiPanel(UITable.UIDic[value]);
             }
-        }
 
+            // 출력
+            PrintPanel();
+
+            // 커서 위치 변경
+            ReadLineAt(cusorPosition.Item1, cusorPosition.Item2);
+        }
+        public static void ReadLineAt(int left, int top)
+        {
+            string inputBuffer = "";
+
+            ConsoleKeyInfo keyInfo;
+
+            while (true)
+            {
+                keyInfo = Console.ReadKey(intercept: true);
+
+                if (keyInfo.Key == ConsoleKey.Enter)
+                    break;
+
+                // 백스페이스 처리
+                if (keyInfo.Key == ConsoleKey.Backspace)
+                {
+                    if (inputBuffer.Length > 0)
+                    {
+                        inputBuffer = inputBuffer.Substring(0, inputBuffer.Length - 1);
+                        uiPanel[height-top, left + inputBuffer.Length] = ' ';
+                    }
+                }
+                else if (!char.IsControl(keyInfo.KeyChar))
+                {
+                    if (left + inputBuffer.Length < width) // overflow 방지
+                    {
+                        inputBuffer += keyInfo.KeyChar;
+                        uiPanel[height- top, left + inputBuffer.Length - 1] = keyInfo.KeyChar;
+                    }
+                }
+
+                PrintPanel();
+                Console.SetCursorPosition(left + inputBuffer.Length, height- top);
+            }
+
+            // 최종 입력 결과 inputBuffer에 저장됨
+        }
         public static void ChangeUiPanel(UI ui)
         {
             (int pivotX, int pivotY) = ui.Pivot;
             pivotY -=1;
+
+            if(ui.CusorPivot.Item1 != 0 && ui.CusorPivot.Item2 != 0)
+            {
+                cusorPosition = ui.CusorPivot;
+            }
+           
             string[] splitStrings = ui.UiString.Split('\n');
 
             for (int y = 0; y < splitStrings.Length; y++)
