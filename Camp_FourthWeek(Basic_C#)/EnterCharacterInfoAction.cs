@@ -18,7 +18,7 @@ public class EnterCharacterInfoAction : ActionBase
 
         Console.WriteLine($"{PadRightWithKorean("Lv.", 12)} : {LevelManager.CurrentLevel}");
         Console.WriteLine($"{PadRightWithKorean("닉네임 : ", 12)} : {PlayerInfo.Name}");
-        Console.WriteLine(PadRightWithKorean($"{PadRightWithKorean("직업", 12)} : {PlayerInfo.Job.Name}", 10));
+        Console.WriteLine(PadRightWithKorean($"{PadRightWithKorean("직업", 12)} : {PlayerInfo.Monster.Name}", 10));
         foreach (var stat in PlayerInfo.Stats.Values)
             Console.WriteLine(
                 $"{PadRightWithKorean(stat.GetStatName(), 12)} : {PadRightWithKorean(stat.FinalValue.ToString("N0"), 9)} +({stat.EquipmentValue})");

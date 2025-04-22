@@ -17,7 +17,7 @@ public class CreateNickNameAction : ActionBase
         Console.WriteLine($"{nickName}님 안녕하세요.");
         SubActionMap = new Dictionary<int, IAction>
         {
-            { 1, new SelectedJobAction(nickName) }
+            { 1, new SelectedMonsterAction(nickName) }
         };
         SelectAndRunAction(SubActionMap);
     }
