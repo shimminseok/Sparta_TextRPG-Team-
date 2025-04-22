@@ -18,23 +18,29 @@ namespace Camp_FourthWeek_Basic_C__
 
         public override void OnExcute()
         {
-            Console.WriteLine("Battle!!");
+            RandomMonster();
 
-            List<Monster> MonstersAllList = MonsterTable.MonsterDataDic.Values.ToList();
-            List<Monster> MonsterSelectList = new List<Monster>();
+            Console.WriteLine("[내정보]");
 
-            Random rand = new Random();
-            int randomNum = rand.Next(1, 5);
-            for (int i = 0; i < randomNum; i++)
+
+            LinePrint();
+           
+            if (!inputCheck)
             {
-                int randomMonsterNum = rand.Next(0, MonsterSelectList.Count);
-                MonsterSelectList.Add(MonstersAllList[randomMonsterNum]);
+                Console.WriteLine("잘못된 입력입니다.");
+                LinePrint();
             }
-
-            foreach (Monster monster in MonsterSelectList)
+            else if(inputCheck)
             {
-                float maxHP = monster.Stats[StatType.MaxHp].
-                Console.WriteLine($"{monster.Name} HP {maxHP}"); //미주야 아침에 고쳐야 해!
+                if(input == 1)
+                {
+                    Console.WriteLine("공격");
+                }
+                else if(input == 2)
+                {
+                    Console.WriteLine("도망치기");
+                }
+                else { Console.WriteLine("1과 2외의 잘못된 입력입니다."); LinePrint(); }
             }
 
             //몬스터 1~4마리 랜덤 등장
@@ -50,6 +56,45 @@ namespace Camp_FourthWeek_Basic_C__
             //3. 1. 공격
             // 원하시는 행동을 입력해주세요. >>
         }
+
+        public void RandomMonster()
+        {
+            Console.WriteLine("Battle!!");
+
+            List<Monster> MonstersAllList = MonsterTable.MonsterDataDic.Values.ToList(); //몬스터 테이블의 모든 몬스터 정보
+            List<Monster> MonsterSelectList = new List<Monster>(); //랜덤으로 선택된 몬스터를 넣을 공간
+
+            Random rand = new Random(); //랜덤값을 쓰겠습니다.
+            int randomNum = rand.Next(1, 5); //1부터 4까지의 랜덤값을 randomNum에 넣음 -> 랜덤한 수를 출력
+
+
+            for (int i = 0; i < randomNum; i++) //-> 랜덤한 몬스터 출력
+            {
+                int randomMonsterNum = rand.Next(0, MonstersAllList.Count); //0부터 전체 몬스터의 수만큼 랜덤한 수를 randomMonsterNum에 넣음
+                MonsterSelectList.Add(MonstersAllList[randomMonsterNum]); //MonsterAllList의 정보를 랜덤한 수(randomMonsterNum)로 골라 MonsterSelectList에 넣음.
+            }
+
+            foreach (Monster monster in MonsterSelectList) //-> 최종적으로 화면에 출력하기 위해
+            {
+                float maxHP = monster.Stats[StatType.MaxHp].FinalValue; //maxHP를 가져옴
+
+                Console.WriteLine($"Lv. {monster.Lv} {monster.Name} HP {maxHP}"); //화면에 출력
+            }
+        }
+
+        public void LinePrint()
+        {
+            Console.WriteLine($"\n1. 공격");
+            Console.WriteLine("2. 도망치기");
+            Console.WriteLine("\n원하시는 행동을 입력해주세요.");
+            Console.Write(">> ");
+
+            string PlayerInputNumber = Console.ReadLine();
+            inputCheck = int.TryParse(PlayerInputNumber, out input);
+        }
+
+        private int input = -1;
+        private bool inputCheck = true;
 
     }
 }
