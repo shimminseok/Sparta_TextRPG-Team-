@@ -30,10 +30,77 @@ namespace Camp_FourthWeek_Basic_C__
             return (_c >= 0xAC00 && _c <= 0xD7A3);
         }
     }
+    
 
 
     internal static class UiManager
     {
+        private static int width = 172;
+        private static int height = 55;
+
+        private static char[,] uiPanel = new char[height, width];
+        private static Dictionary<int, List<int>> uiDic = new Dictionary<int, List<int>>();
+        public static void TextShowUI()
+        {
+            UIUpdater(UIName.Intro_TextBox);
+            PrintPanel();
+
+        }
+        public static void PrintPanel()
+        {
+            StringBuilder sb = new StringBuilder(height * (width + 1)); // 줄바꿈 고려
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    //char c = uiPanel[y, x];
+                    //sb.Append(c == '\0' ? '*' : c);  // null 문자면 공백으로 대체
+                     sb.Append(uiPanel[y, x]);
+                }
+                sb.AppendLine(); // 줄 바꿈
+            }
+
+            Console.Write(sb.ToString());
+        }
+
+        public static void UIUpdater(UIName name)
+        {
+            var printUI = UITable.UITableDic[name];
+            foreach (var value in printUI)
+            {
+                ChangeUiPanel(UITable.UIDic[value]);
+            }
+        }
+
+        public static void ChangeUiPanel(UI ui)
+        {
+            (int pivotX, int pivotY) = ui.Pivot;
+            pivotY -=1;
+            string[] splitStrings = ui.UiString.Split('\n');
+
+            for (int y = 0; y < splitStrings.Length; y++)
+            {
+                string line = splitStrings[y];
+
+                for (int x = 0; x < line.Length; x++)
+                {
+                    int panelY = pivotY + y;
+                    int panelX = pivotX + x;
+
+                    // 유효 범위 확인
+                    if (panelY < 0 || panelY >= height || panelX < 0 || panelX >= width)
+                    {
+                        continue;
+                    }
+
+                    uiPanel[panelY, panelX] = line[x];
+                }
+            }
+        }
+
+
+
         public static StringBuilder ItemPrinter(Item _item, int _index = -1, bool _isShowDescript = true)
         {
             var sb = new StringBuilder();
