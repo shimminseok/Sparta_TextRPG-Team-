@@ -36,14 +36,13 @@ public static class QuestTable
                 1500)
         },
         {
-            3, new Quest(3, "장비 장착 퀘스트", QuestType.Main,
-                "장비 구매 퀘스트 입니다.",
+            3, new Quest(3, "구구가 좋아!", QuestType.Main,
+                " 미안한데... 내가 구구가 꼭 가지고 싶거든?\n 근데 내가 능력이 안되서 잡을 수가 없어!!\n구구 한마리를 잡아와 줄수 있겠어?",
                 "장비 구매를 완료했구나 축하",
-                new List<int>() { 2 },
+                new List<int>(),
                 new List<QuestCondition>()
                 {
-                    new QuestCondition(QuestTargetType.Monster, "{0} 장착하기", 1, 0, 5),
-                    new QuestCondition(QuestTargetType.Monster, "{0} 장착하기", 2, 0, 3),
+                    new QuestCondition(QuestTargetType.Monster, "{0} {1} 포획", (int)MonsterType.Pidgey, 0, 1),
                 },
                 new List<int>() { 7, 9 },
                 1500)

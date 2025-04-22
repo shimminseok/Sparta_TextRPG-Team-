@@ -111,7 +111,7 @@ public class DisplayQuestInfoAction : ActionBase
                     targetName = ItemTable.GetItemById(condition.TargetID).Name;
                     break;
                 case QuestTargetType.Monster:
-                    // targetName = .GetItemById(condition.TargetID).Name;
+                    targetName = MonsterTable.GetMonsterByType((MonsterType)condition.TargetID).Name;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
