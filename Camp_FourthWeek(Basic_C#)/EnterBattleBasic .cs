@@ -9,6 +9,7 @@ namespace Camp_FourthWeek_Basic_C__
 {
     public class EnterBattleBasic : ActionBase
     {
+        private Monster monster;
         public EnterBattleBasic(IAction _prevAction)
         {
             PrevAction = _prevAction;
@@ -18,17 +19,29 @@ namespace Camp_FourthWeek_Basic_C__
 
         public override void OnExcute()
         {
+            bool isValidInput = false;
+            Console.Clear();
             RandomMonster();
 
-            Console.WriteLine("[내정보]");
+            BattlePlayerInfo();
 
-
-            LinePrint();
+            DisplayMenu();
+            while (!isValidInput)
+            {
+                /*
+                1. ReadLine으로 입력값 받기
+                2. 입력받은 값이 유호한지 아닌지 (tryparse)로 확인
+                3. 유효한 값이 들어왔으면(int) 1,2가 아닌 경우 -> while반복
+                4. 유효한 값이 들어왔을때(1,2) 1 -> 공격 / 2 -> 도망가기
+                */
+                //1. 입력값 받기
+                //bool Input 
+            }
            
-            if (!inputCheck)
+            /*if (!inputCheck) //숫자가 아닌 값 입력 시
             {
                 Console.WriteLine("잘못된 입력입니다.");
-                LinePrint();
+                PrevAction?.Execute();
             }
             else if(inputCheck)
             {
@@ -40,9 +53,21 @@ namespace Camp_FourthWeek_Basic_C__
                 {
                     Console.WriteLine("도망치기");
                 }
-                else { Console.WriteLine("1과 2외의 잘못된 입력입니다."); LinePrint(); }
-            }
+                else { Console.WriteLine("1과 2외의 잘못된 입력입니다."); DisplayMenu(); } //1,2가 아닌 경우
+            }*/
 
+
+            /* 주호님 코드 참고해보기
+            var message = string.Empty;
+
+            monster.Stats[StatType.CurHp].ModifyAllValue(-PlayerInfo.Monster.Stats[StatType.Attack].FinalValue);
+            message = $"{monster.Name}의 체력이 {PlayerInfo.Monster.Stats[StatType.Attack].FinalValue}만큼 달았다!";
+            if (PrevAction != null)
+            {
+                PrevAction.SetFeedBackMessage(message);
+                PrevAction.Execute();
+            }
+            */
             //몬스터 1~4마리 랜덤 등장
             //몬스터 정보 - LV 이름 HP ATK
 
@@ -59,7 +84,7 @@ namespace Camp_FourthWeek_Basic_C__
 
         public void RandomMonster()
         {
-            Console.WriteLine("Battle!!");
+            Console.WriteLine("Battle!!\n");
 
             List<Monster> MonstersAllList = MonsterTable.MonsterDataDic.Values.ToList(); //몬스터 테이블의 모든 몬스터 정보
             List<Monster> MonsterSelectList = new List<Monster>(); //랜덤으로 선택된 몬스터를 넣을 공간
@@ -82,16 +107,37 @@ namespace Camp_FourthWeek_Basic_C__
             }
         }
 
-        public void LinePrint()
+        public void BattlePlayerInfo()
+        {
+            Console.WriteLine("\n[내정보]");
+            string name = PlayerInfo.Name;
+            int level = PlayerInfo.Monster.Lv;
+            float hp = PlayerInfo.Stats[StatType.MaxHp].BaseValue;
+            float mp = PlayerInfo.Stats[StatType.MaxMp].BaseValue;
+            //=================================================================== hp와 mp에 변동값 주는 변수
+
+            Console.WriteLine($"Lv.{level}  {name}");
+            Console.WriteLine($"HP {hp}/");
+            Console.WriteLine($"MP {mp}/");
+        }
+
+            
+
+        public void DisplayMenu()
         {
             Console.WriteLine($"\n1. 공격");
             Console.WriteLine("2. 도망치기");
             Console.WriteLine("\n원하시는 행동을 입력해주세요.");
             Console.Write(">> ");
 
+            
+        }
+
+        /*public void InputHandler()
+        {
             string PlayerInputNumber = Console.ReadLine();
             inputCheck = int.TryParse(PlayerInputNumber, out input);
-        }
+        }*/
 
         private int input = -1;
         private bool inputCheck = true;
