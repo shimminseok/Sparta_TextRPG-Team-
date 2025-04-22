@@ -16,6 +16,7 @@ public class EnterCollectionAction : ActionBase
         //1. 포켓몬 데이터Dic을 전부 가져온다.
         //2. 한번이라도 조우했으면 이름을 표시, 아니라면 ????
         //3. 포획하면 이름을 초록색으로
+        Console.WriteLine("테스트로 해당 번호 입력시 조우, 한번 더 입력하면 포획입니다.");
         SubActionMap.Clear();
         int index = 1;
         foreach (var monster in MonsterTable.MonsterDataDic.Keys)
@@ -34,7 +35,6 @@ public class EnterCollectionAction : ActionBase
                 Console.ForegroundColor = ConsoleColor.Green;
             }
 
-            Console.WriteLine("테스트로 해당 번호 입력시 조우, 한번 더 입력하면 포획입니다.");
             Console.WriteLine($"{index}. {sb.ToString()}");
             Console.ResetColor();
 
