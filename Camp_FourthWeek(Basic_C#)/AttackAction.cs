@@ -1,4 +1,6 @@
-﻿namespace Camp_FourthWeek_Basic_C__
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Camp_FourthWeek_Basic_C__
 {
 
     public class AttackAction : ActionBase
@@ -17,9 +19,24 @@
         public override void OnExcute()
         {
             var message = string.Empty;
+            bool isCritical = false;
+            bool isEvade = false;
+            Random rand = new Random();
 
-            monster.Stats[StatType.CurHp].ModifyAllValue(attackPower);
-            message = $"{monster.Name}의 체력이 {attackPower} 만큼 달았다!";
+            if (rand.NextDouble() < PlayerInfo.Stats[StatType.EvadeChance].FinalValue * 0.01f)
+                isEvade = true;
+            if (rand.NextDouble() < PlayerInfo.Stats[StatType.CriticalChance].FinalValue * 0.01f)
+                isCritical = true;
+            if(isEvade)
+            {
+                message = $"{monster.Name}이 피했다!";
+            }
+            else
+            {
+                float damage = isCritical ? attackPower * monster.Stats[StatType.CriticlaDamage].FinalValue : attackPower;
+                monster.Stats[StatType.CurHp].ModifyAllValue(damage);
+                message = $"{(isCritical ? "치명타!" : null)}{monster.Name}의 체력이 {damage} 만큼 달았다!";
+            }
             if (PrevAction != null)
             {
                 PrevAction.SetFeedBackMessage(message);

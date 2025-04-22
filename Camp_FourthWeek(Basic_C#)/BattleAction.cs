@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using static Camp_FourthWeek_Basic_C__.StringUtil;
-
-namespace Camp_FourthWeek_Basic_C__
+﻿namespace Camp_FourthWeek_Basic_C__
 {
     public class BattleAction : ActionBase
     {
@@ -25,8 +22,7 @@ namespace Camp_FourthWeek_Basic_C__
                 monsters = new Monster[rand.Next(0, 4) + 1];
                 for (int i = 0; i < monsters.Length; i++)
                 {
-                    monsters[i] = MonsterTable.MonsterDataDic[(MonsterType)rand.Next(1, MonsterTable.MonsterDataDic.Count + 1)];
-                    //monsters[i] = new Monster(MonsterTable.MonsterDataDic[(MonsterType)rand.Next(1, MonsterTable.MonsterDataDic.Count + 1)]);
+                    monsters[i] = new Monster(MonsterTable.MonsterDataDic[(MonsterType)rand.Next(1, MonsterTable.MonsterDataDic.Count + 1)]);
                 }
             }
             Console.WriteLine("Battle!!!");
