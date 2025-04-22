@@ -109,9 +109,7 @@ public class GameManager
     {
         foreach (var questData in loadData.Quests)
         {
-            var quest = QuestTable.GetQuestInfo(questData.Key);
-            quest.Conditions = questData.QuestConditions;
-            QuestManager.Instance.AcceptQuest(quest);
+            QuestManager.Instance.LoadQuestData(questData);
         }
 
         QuestManager.Instance.ClearQuestList = loadData.ClearQuests;
@@ -143,11 +141,14 @@ public class GameManager
     private List<SaveQeust> GetCurrentQuestData()
     {
         return QuestManager.Instance.CurrentAcceptQuestList
-            .Select(quest => new SaveQeust
-            {
-                Key = quest.Key,
-                QuestConditions = quest.Conditions
-            })
+            .Select(quest =>
+                new SaveQeust
+                (
+                    quest.Key,
+                    quest.Conditions
+                        .Select((condition, index) => new SaveCondition(index, condition.CurrentCount))
+                        .ToList()
+                ))
             .ToList();
     }
 
