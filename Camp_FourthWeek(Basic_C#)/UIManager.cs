@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using static Camp_FourthWeek_Basic_C__.StringUtil;
 
 namespace Camp_FourthWeek_Basic_C__
@@ -29,6 +30,46 @@ namespace Camp_FourthWeek_Basic_C__
         {
             return (_c >= 0xAC00 && _c <= 0xD7A3);
         }
+        public static int GetCharWidth(char c)
+        {
+            return IsKorean(c) ? 2 : 1;
+        }
+
+
+        public static string FormatText(string template, Dictionary<string, string> dict)
+        {
+            foreach (var pair in dict)
+            {
+                string placeholder = "{" + pair.Key + "}";
+                int index = template.IndexOf(placeholder);
+
+                if (index < 0) continue;
+
+                string replacement = pair.Value;
+
+                // 한글 수 계산
+                int deleteCount = -placeholder.Length;
+                foreach (char c in replacement)
+                {
+                    if (IsKorean(c)) deleteCount += 2;
+                    else deleteCount += 1;
+                }
+
+                // 치환
+                template = template.Replace(placeholder, replacement);
+
+                // 치환된 값 뒤에서 공백 제거
+                int afterIndex = index + replacement.Length;
+                int removed = 0;
+                while (afterIndex < template.Length && removed < deleteCount && template[afterIndex] == ' ')
+                {
+                    template = template.Remove(afterIndex, 1);
+                    removed++;
+                }
+            }
+
+            return template;
+        }
     }
     
 
@@ -44,7 +85,6 @@ namespace Camp_FourthWeek_Basic_C__
         public static void TextShowUI()
         {
               UIUpdater(UIName.Intro_TextBox);
-            UIUpdater(UIName.Intro_TextBox);
         }
         public static void PrintPanel()
         {
@@ -70,7 +110,7 @@ namespace Camp_FourthWeek_Basic_C__
             var printUI = UITable.UITableDic[name];
             foreach (var value in printUI)
             {
-                ChangeUiPanel(UITable.UIDic[value]);
+                ChangeUiPanel(name, UITable.UIDic[value]);
             }
 
             // 출력
@@ -79,44 +119,56 @@ namespace Camp_FourthWeek_Basic_C__
             // 커서 위치 변경
             ReadLineAt(cusorPosition.Item1, cusorPosition.Item2);
         }
-        public static void ReadLineAt(int left, int top)
+public static void ReadLineAt(int left, int top)
+{
+    string inputBuffer = "";
+    int displayWidth = 0;
+
+    while (true)
+    {
+        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+
+        if (keyInfo.Key == ConsoleKey.Enter)
+            break;
+
+        if (keyInfo.Key == ConsoleKey.Backspace)
         {
-            string inputBuffer = "";
-
-            ConsoleKeyInfo keyInfo;
-
-            while (true)
+            if (inputBuffer.Length > 0)
             {
-                keyInfo = Console.ReadKey(intercept: true);
+                char lastChar = inputBuffer[^1];
+                int charWidth = GetCharWidth(lastChar);
+                displayWidth -= charWidth;
+                inputBuffer = inputBuffer.Substring(0, inputBuffer.Length - 1);
 
-                if (keyInfo.Key == ConsoleKey.Enter)
-                    break;
-
-                // 백스페이스 처리
-                if (keyInfo.Key == ConsoleKey.Backspace)
-                {
-                    if (inputBuffer.Length > 0)
-                    {
-                        inputBuffer = inputBuffer.Substring(0, inputBuffer.Length - 1);
-                        uiPanel[height-top, left + inputBuffer.Length] = ' ';
-                    }
-                }
-                else if (!char.IsControl(keyInfo.KeyChar))
-                {
-                    if (left + inputBuffer.Length < width) // overflow 방지
-                    {
-                        inputBuffer += keyInfo.KeyChar;
-                        uiPanel[height- top, left + inputBuffer.Length - 1] = keyInfo.KeyChar;
-                    }
-                }
-
-                PrintPanel();
-                Console.SetCursorPosition(left + inputBuffer.Length, height- top);
+                for (int i = 0; i < charWidth; i++)
+                    uiPanel[height - top, left + displayWidth + i] = ' ';
             }
-
-            // 최종 입력 결과 inputBuffer에 저장됨
         }
-        public static void ChangeUiPanel(UI ui)
+        else if (!char.IsControl(keyInfo.KeyChar))
+        {
+            char c = keyInfo.KeyChar;
+            int charWidth = GetCharWidth(c);
+
+            if (left + displayWidth + charWidth <= width) // overflow 방지
+            {
+                inputBuffer += c;
+                uiPanel[height - top, left + displayWidth] = c;
+
+                if (charWidth == 2)
+                    uiPanel[height - top, left + displayWidth + 1] = ' ';
+
+                displayWidth += charWidth;
+            }
+        }
+
+        PrintPanel();
+        Console.SetCursorPosition(left + displayWidth, height - top);
+    }
+}
+
+
+
+        public static void ChangeUiPanel(UIName name, UI ui)
         {
             (int pivotX, int pivotY) = ui.Pivot;
             pivotY -=1;
@@ -125,8 +177,12 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 cusorPosition = ui.CusorPivot;
             }
-           
-            string[] splitStrings = ui.UiString.Split('\n');
+            string inputString = ui.UiString;
+            string changeString = FormatText(inputString, UITable.textDic[name]);
+            string[] splitStrings = changeString.Split('\n');
+
+
+
 
             for (int y = 0; y < splitStrings.Length; y++)
             {
