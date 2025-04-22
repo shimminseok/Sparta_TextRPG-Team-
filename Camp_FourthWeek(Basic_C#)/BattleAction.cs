@@ -5,16 +5,15 @@ namespace Camp_FourthWeek_Basic_C__
 {
     public class BattleAction : ActionBase
     {
-        private static Monster[]? monsters;
+        public static Monster[]? monsters;
         public BattleAction(IAction _prevAction)
         {
             PrevAction = _prevAction;
             SubActionMap = new Dictionary<int, IAction>
             {
-                { 1, new AttackSelectAction(monsters,this) },
+                { 1, new AttackSelectAction(this) },
                 { 2, new SkillSelectAction(this) }
             };
-
         }
         public override string Name => "배틀";
 
@@ -27,21 +26,29 @@ namespace Camp_FourthWeek_Basic_C__
                 for (int i = 0; i < monsters.Length; i++)
                 {
                     monsters[i] = MonsterTable.MonsterDataDic[(MonsterType)rand.Next(1, MonsterTable.MonsterDataDic.Count + 1)];
+                    //monsters[i] = new Monster(MonsterTable.MonsterDataDic[(MonsterType)rand.Next(1, MonsterTable.MonsterDataDic.Count + 1)]);
                 }
             }
             Console.WriteLine("Battle!!!");
             Console.WriteLine();
             ShowMonsterList();
             Console.WriteLine($"[내 정보]");
-            Console.WriteLine($"Lv.{LevelManager.CurrentLevel} {PlayerInfo.Name} ({PlayerInfo.Monster.Name})");
+            Console.WriteLine($"Lv.{LevelManager.CurrentLevel} ");
+            Console.WriteLine($"이 름 : {PlayerInfo.Monster.Name}");
+            Console.WriteLine($"H P: {PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue}/{PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue}");
+            Console.WriteLine($"M P: {PlayerInfo.Monster.Stats[StatType.CurMp].FinalValue}/{PlayerInfo.Monster.Stats[StatType.MaxMp].FinalValue}");
             Console.WriteLine("");
 
             SelectAndRunAction(SubActionMap);
         }
-        public void ShowMonsterList()
+        public static void ShowMonsterList(bool isShowList = false)
         {
-            foreach (var monster in monsters)
-                Console.WriteLine($"Lv.{monster.Lv}  {monster.Name}  HP {monster.Stats[StatType.CurHp].FinalValue}");
+            for (int i = 0; i < monsters.Length; i++)
+            {
+                Monster? monster = monsters[i];
+                Console.WriteLine($"{(isShowList ? i : "")} Lv.{monster.Lv}  {monster.Name}  HP {monster.Stats[StatType.CurHp].FinalValue}/{monster.Stats[StatType.MaxHp].FinalValue}");
+            }
+
             Console.WriteLine();
         }
     }

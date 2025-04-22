@@ -18,9 +18,10 @@
             .Where(item => PlayerInfo.Skills.Contains(item.Id))
             .ToList();
             var message = string.Empty;
-            if (PlayerInfo != null)
+            for (int i = 0; i < skills.Count; i++)
             {
-                ShowSkillInfo();
+                if (!SubActionMap.ContainsKey(i + 1))
+                    SubActionMap.Add(i + 1, new AttackSelectAction(this, skills[i]));
             }
 
             SelectAndRunAction(SubActionMap);
@@ -28,17 +29,6 @@
             {
                 PrevAction.SetFeedBackMessage(message);
                 PrevAction.Execute();
-            }
-        }
-        private void ShowSkillInfo()
-        {
-            for (var i = 0; i < skills.Count; i++)
-            {
-                var item = skills[i];
-                var sb = skills[i].Name + " " + skills[i].Stats[StatType.Attack].GetStatName() + " " + skills[i].Stats[StatType.Attack].FinalValue;
-
-                Console.WriteLine(sb.ToString());
-                Console.ResetColor();
             }
         }
     }

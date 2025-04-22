@@ -3,26 +3,22 @@
 
     public class AttackSelectAction : ActionBase
     {
-        private Monster[] monsters;
-        public AttackSelectAction(Monster[] _monsters ,IAction _prevAction)
+        private Skill skill;
+        public AttackSelectAction(IAction _prevAction, Skill? _skill = null)
         {
             PrevAction = _prevAction;
-            monsters = _monsters;
+            skill = _skill;
         }
 
-        public override string Name => $"공격";
+        public override string Name => $"{(PrevAction is SkillSelectAction ? skill.Name :  "공격하기")}";
 
         public override void OnExcute()
         {
-            var message = string.Empty;
-            if (PlayerInfo != null)
+            BattleAction.ShowMonsterList(true);
+            for(int i= 0; i<BattleAction.monsters.Length; i++)
             {
-            }
-
-            if (PrevAction != null)
-            {
-                PrevAction.SetFeedBackMessage(message);
-                PrevAction.Execute();
+                if(!SubActionMap.ContainsKey(i + 1))
+                    SubActionMap.Add(i + 1, new AttackAction(BattleAction.monsters[i], skill is null ? PlayerInfo.Monster.Stats[StatType.Attack].FinalValue : skill.Stats[StatType.Attack].FinalValue,PrevAction));
             }
 
             SelectAndRunAction(SubActionMap);
