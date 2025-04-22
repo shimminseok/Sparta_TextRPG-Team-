@@ -100,7 +100,7 @@ public class Item(int _key, string _name, ItemType _type, List<Stat> _stats, str
     public readonly List<Stat> Stats = _stats;
     public int Key { get; private set; } = _key;
 
-
+    public bool IsEquippedBy(Monster m) => m.ItemId == Key;
     public bool IsEquipment => EquipmentManager.IsEquipped(this);
 }
 

@@ -15,39 +15,30 @@ public class EquipAction : ActionBase
     public override void OnExcute()
     {
         var player = GameManager.Instance.PlayerInfo;
+        var currentMonster = player.Monster;
         var message = string.Empty;
 
-        foreach (var m in player.Monsters)
+
+        if (item.IsEquippedBy(currentMonster))
         {
-            m.ItemId = 0;
+            message = $"{item.Name}장착해제 했습니다.";
+            EquipmentManager.UnequipItem((item.ItemType));
+            currentMonster.ItemId = 0;
         }
-
-        var equippedTypes = InventoryManager.Instance.Inventory.
-                                                Where(i => i.IsEquipment).
-                                                Select(i => i.ItemType).
-                                                Distinct();
-        
-        foreach (var type in  equippedTypes)
+        else
         {
-            EquipmentManager.UnequipItem(type);
+            message = $"{item.Name}장착 되었습니다.";
+            foreach (var m in player.Monsters)
+            {
+                if (m.ItemId == item.Key)
+                {
+                    m.ItemId = 0;
+                }
+            }
+            
+            player.Monster.ItemId = item.Key;
+            EquipmentManager.EquipmentItem(item);
         }
-
-        // if (item.IsEquipment)
-        // {
-        //     message = $"{item.Name}이 장착 해제 되었습니다.";
-        //     EquipmentManager.UnequipItem(item.ItemType);
-        //     player.Monster.ItemId = 0;
-        // }
-        // else
-        // {
-        EquipmentManager.EquipmentItem(item);
-        
-        player.Monster.ItemId = item.Key;
-        
-        message = $"{item.Name}이 장착 되었습니다.";
-
-
-        //}
 
         Console.WriteLine(message);
         PrevAction?.Execute();
