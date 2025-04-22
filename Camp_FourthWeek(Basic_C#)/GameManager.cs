@@ -24,21 +24,13 @@ public class GameManager
     public void Init(MonsterType _monster, string _name)
     {
         PlayerInfo = new PlayerInfo(_monster, _name);
-
-        if (loadData != null)
-        {
-            for (var i = 0; i < loadData.Inventory.Count; i++)
-            {
-                var item = ItemTable.GetItemById(loadData.Inventory[i]);
-                InventoryManager.Instance.AddItem(item);
-                if (loadData.EquipmentItem.Contains(item.Key)) EquipmentManager.EquipmentItem(item);
-            }
-
-            for (var i = 0; i < loadData.DungeonClearCount; i++) LevelManager.AddClearCount();
-            PlayerInfo.Gold = loadData.Gold;
-        }
+        if (loadData == null)
+            return;
+        LoadInventoryAndEquipment();
+        LoadDungeonClearProgress();
+        LoadQuestProgress();
+        LoadPlayerGold();
     }
-
 
     public void SaveGame()
     {
@@ -58,13 +50,13 @@ public class GameManager
             Name = PlayerInfo.Name,
             Monster = PlayerInfo.Monster.Type,
             Gold = PlayerInfo.Gold,
-
-            Inventory = inventory,
-            EquipmentItem = equipmentItem,
-            DungeonClearCount = LevelManager.ClearDungeonCount
+            Inventory = GetInventoryItemKeys(),
+            EquipmentItem = GetEquippedItemKeys(),
+            DungeonClearCount = LevelManager.ClearDungeonCount,
+            Quests = GetCurrentQuestData(),
+            ClearQuests = QuestManager.Instance.ClearQuestList.ToList()
         };
         var sJson = JsonConvert.SerializeObject(saveData, Formatting.Indented);
-
 
         File.WriteAllText(path, sJson);
     }
@@ -88,6 +80,79 @@ public class GameManager
             mainAction.Execute();
         }
     }
+
+    #region [LoadGame]
+
+    private void LoadInventoryAndEquipment()
+    {
+        foreach (var itemId in loadData.Inventory)
+        {
+            var item = ItemTable.GetItemById(itemId);
+            InventoryManager.Instance.AddItem(item);
+
+            if (loadData.EquipmentItem.Contains(item.Key))
+            {
+                EquipmentManager.EquipmentItem(item);
+            }
+        }
+    }
+
+    private void LoadDungeonClearProgress()
+    {
+        for (int i = 0; i < loadData.DungeonClearCount; i++)
+        {
+            LevelManager.AddClearCount();
+        }
+    }
+
+    private void LoadQuestProgress()
+    {
+        foreach (var questData in loadData.Quests)
+        {
+            var quest = QuestTable.GetQuestInfo(questData.Key);
+            quest.Conditions = questData.QuestConditions;
+            QuestManager.Instance.AcceptQuest(quest);
+        }
+
+        QuestManager.Instance.ClearQuestList = loadData.ClearQuests;
+    }
+
+    private void LoadPlayerGold()
+    {
+        PlayerInfo.Gold = loadData.Gold;
+    }
+
+    #endregion
+
+    #region [SaveGame]
+
+    private List<int> GetInventoryItemKeys()
+    {
+        return InventoryManager.Instance.Inventory
+            .Select(item => item.Key)
+            .ToList();
+    }
+
+    private List<int> GetEquippedItemKeys()
+    {
+        return EquipmentManager.EquipmentItems.Values
+            .Select(item => item.Key)
+            .ToList();
+    }
+
+    private List<SaveQeust> GetCurrentQuestData()
+    {
+        return QuestManager.Instance.CurrentAcceptQuestList
+            .Select(quest => new SaveQeust
+            {
+                Key = quest.Key,
+                QuestConditions = quest.Conditions
+            })
+            .ToList();
+    }
+
+    #endregion
+
 
     public void DeleteGameData()
     {
