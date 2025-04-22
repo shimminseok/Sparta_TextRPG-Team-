@@ -104,23 +104,10 @@ public class DisplayQuestInfoAction : ActionBase
 
         foreach (QuestCondition condition in requiredQuest.Conditions)
         {
-            string targetName = string.Empty;
-            switch (condition.TargetType)
-            {
-                case QuestTargetType.Item:
-                    targetName = ItemTable.GetItemById(condition.TargetID).Name;
-                    break;
-                case QuestTargetType.Monster:
-                    targetName = MonsterTable.GetMonsterByType((MonsterType)condition.TargetID).Name;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
             if (condition.IsCompleted)
                 Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine
-                ($"{string.Format(condition.QuestConditionTxt, targetName)} ({condition.CurrentCount}/{condition.RequiredCount})");
+                ($"{string.Format(condition.GetDescription())} ({condition.CurrentCount}/{condition.RequiredCount})");
 
             Console.ResetColor();
         }

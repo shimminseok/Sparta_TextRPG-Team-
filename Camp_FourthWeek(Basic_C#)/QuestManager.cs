@@ -100,7 +100,7 @@ public class QuestManager
     }
 }
 
-public class SaveQeust()
+public class SaveQeust
 {
     public int Key;
     public List<QuestCondition> QuestConditions;
