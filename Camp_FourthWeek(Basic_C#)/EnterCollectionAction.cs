@@ -4,9 +4,9 @@ namespace Camp_FourthWeek_Basic_C__;
 
 public class EnterCollectionAction : ActionBase
 {
-    public const int MONSTER_VIEW_COUNT = 3;
+    private const int MONSTER_VIEW_COUNT = 3;
+    private readonly int page = 0;
     public override string Name => "포켓몬 도감";
-    private int page = 0;
 
     public EnterCollectionAction(IAction _prevAction, int _page = 0)
     {
@@ -23,7 +23,7 @@ public class EnterCollectionAction : ActionBase
 
         var pagedMonsters = keys.Skip(start).Take(MONSTER_VIEW_COUNT).ToList();
         int viewIndex = start + 1;
-        foreach (var monster in pagedMonsters)
+        foreach (MonsterType monster in pagedMonsters)
         {
             bool isDiscovered = CollectionManager.Instnace.IsDiscovered(monster);
             bool isCaptured = CollectionManager.Instnace.IsCaptured(monster);
@@ -54,7 +54,7 @@ public class EnterCollectionAction : ActionBase
     public class CollectionNextPageAction : ActionBase
     {
         public override string Name => "다음 페이지";
-        private int page = 0;
+        private readonly int page = 0;
 
         public CollectionNextPageAction(IAction _prevAction, int _page)
         {
@@ -72,7 +72,7 @@ public class EnterCollectionAction : ActionBase
     public class CollectionPrevPageAction : ActionBase
     {
         public override string Name => "이전 페이지";
-        private int page = 0;
+        private readonly int page = 0;
 
         public CollectionPrevPageAction(IAction _prevAction, int _page)
         {
