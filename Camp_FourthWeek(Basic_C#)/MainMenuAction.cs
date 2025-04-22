@@ -17,6 +17,7 @@ public class MainMenuAction : ActionBase
         SubActionMap[4] = new EnterDungeonAction(mainAction);
         SubActionMap[5] = new EnterRestAction(mainAction);
         SubActionMap[6] = new EnterResetAction(mainAction);
+        SubActionMap[7] = new BattleAction(mainAction);
     }
 
     public override void OnExcute()
