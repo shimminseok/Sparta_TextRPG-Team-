@@ -33,9 +33,10 @@ class MonsterChangeAction : ActionBase
             {
                 SubActionMap[index] = new ChangeMonsterSelectAction(m, this);
             }
+
             index++;
         }
-        SelectAndRunAction(SubActionMap);
+        SelectAndRunAction(SubActionMap,true);
     }
 }
 

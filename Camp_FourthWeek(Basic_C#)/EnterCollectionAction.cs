@@ -4,22 +4,26 @@ namespace Camp_FourthWeek_Basic_C__;
 
 public class EnterCollectionAction : ActionBase
 {
+    private const int MONSTER_VIEW_COUNT = 3;
+    private readonly int page = 0;
     public override string Name => "포켓몬 도감";
 
-    public EnterCollectionAction(IAction _prevAction)
+    public EnterCollectionAction(IAction _prevAction, int _page = 0)
     {
         PrevAction = _prevAction;
+        page = _page;
     }
 
     public override void OnExcute()
     {
-        //1. 포켓몬 데이터Dic을 전부 가져온다.
-        //2. 한번이라도 조우했으면 이름을 표시, 아니라면 ????
-        //3. 포획하면 이름을 초록색으로
         Console.WriteLine("테스트로 해당 번호 입력시 조우, 한번 더 입력하면 포획입니다.");
-        SubActionMap.Clear();
-        int index = 1;
-        foreach (var monster in MonsterTable.MonsterDataDic.Keys)
+        var keys = MonsterTable.MonsterDataDic.Keys.ToList();
+        int start = (page * MONSTER_VIEW_COUNT);
+        int end = Math.Min(start + MONSTER_VIEW_COUNT, keys.Count);
+
+        var pagedMonsters = keys.Skip(start).Take(MONSTER_VIEW_COUNT).ToList();
+        int viewIndex = start + 1;
+        foreach (MonsterType monster in pagedMonsters)
         {
             bool isDiscovered = CollectionManager.Instnace.IsDiscovered(monster);
             bool isCaptured = CollectionManager.Instnace.IsCaptured(monster);
@@ -35,38 +39,51 @@ public class EnterCollectionAction : ActionBase
                 Console.ForegroundColor = ConsoleColor.Green;
             }
 
-            Console.WriteLine($"{index}. {sb.ToString()}");
+            Console.WriteLine($"{viewIndex++}. {sb.ToString()}");
             Console.ResetColor();
-
-            SubActionMap[index++] = new TestCollectionAction(monster, this);
         }
+
+        if (page > 0)
+            SubActionMap[1] = new CollectionPrevPageAction(PrevAction, page - 1);
+        if (end < keys.Count)
+            SubActionMap[2] = new CollectionNextPageAction(PrevAction, page + 1);
 
         SelectAndRunAction(SubActionMap);
     }
-}
 
-public class TestCollectionAction : ActionBase
-{
-    public override string Name => MonsterTable.GetMonsterByType(monsterType).Name;
-    private MonsterType monsterType;
-
-    public TestCollectionAction(MonsterType _type, IAction _prevAction)
+    public class CollectionNextPageAction : ActionBase
     {
-        PrevAction = _prevAction;
-        monsterType = _type;
+        public override string Name => "다음 페이지";
+        private readonly int page = 0;
+
+        public CollectionNextPageAction(IAction _prevAction, int _page)
+        {
+            PrevAction = _prevAction;
+            page = _page;
+        }
+
+        public override void OnExcute()
+        {
+            var nextPage = new EnterCollectionAction(PrevAction, page);
+            nextPage.Execute();
+        }
     }
 
-    public override void OnExcute()
+    public class CollectionPrevPageAction : ActionBase
     {
-        if (!CollectionManager.Instnace.IsDiscovered(monsterType))
+        public override string Name => "이전 페이지";
+        private readonly int page = 0;
+
+        public CollectionPrevPageAction(IAction _prevAction, int _page)
         {
-            CollectionManager.Instnace.OnDiscovered(monsterType);
-        }
-        else
-        {
-            CollectionManager.Instnace.OnCaptured(monsterType);
+            PrevAction = _prevAction;
+            page = _page;
         }
 
-        SelectAndRunAction(SubActionMap);
+        public override void OnExcute()
+        {
+            var prevPage = new EnterCollectionAction(PrevAction, page);
+            prevPage.Execute();
+        }
     }
 }

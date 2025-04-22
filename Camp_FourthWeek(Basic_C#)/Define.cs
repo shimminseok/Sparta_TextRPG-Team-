@@ -7,12 +7,33 @@ namespace Camp_FourthWeek_Basic_C__;
 public enum MonsterType
 {
     None,
-    Pikachu,
-    Charmander,
-    Squirtle,
-    Bulbasaur,
-    Pidgey,
-    Stakataka
+    Pikachu, //피카츄
+    Charmander, //파이리
+    Squirtle, //꼬부기
+    Bulbasaur, // 이상해씨
+    Pidgey, //구구
+    Dratini, //미뇽
+
+    Raichu, //라이츄
+    Charmeleon, //리자드
+    Wartortle, //어니부기
+    Ivysaur, //이상해풀
+    Pidgeotto, //피죤
+    Dragonair, //신뇽
+
+    Charizard, //리자몽
+    Blastoise, //거북왕
+    Venusaur, //이상해꽃
+    Pidgeot, //피죤투
+    Dragonite, //망나뇽
+
+    Snorlax, //잠만보
+    Pachirisu, //파치리스
+
+    Articuno, //프리져
+    Zapdos, //썬더
+    Moltres, //파이어
+    Stakataka //차곡차곡
 }
 
 public enum StatType
@@ -114,13 +135,13 @@ public class Stat
     public Stat()
     {
     }
+
     public Stat(Stat stat)
     {
         Type = stat.Type;
         BaseValue = stat.BaseValue;
         BuffValue = stat.BuffValue;
         EquipmentValue = stat.EquipmentValue;
-
     }
 
     public Stat(StatType _type, float _value)
@@ -256,6 +277,7 @@ public class Monster
         Stats = _stat;
         Skills = _skill;
     }
+
     public Monster(Monster _monster)
     {
         Type = _monster.Type;
