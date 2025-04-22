@@ -54,13 +54,27 @@ public class PlayerInfo
     public PlayerInfo(MonsterType _monster, string _name)
     {
         Monster = MonsterTable.MonsterDataDic[_monster];
+        Monsters.Add(Monster);
         Stats = Monster.Stats.ToDictionary();
         Name = _name;
         Skills = Monster.Skills;
     }
 
+    public void ChangeMonsterStat(Monster _monster)
+    {
+        Monster = _monster;
+        Stats.Clear();
+        foreach (var kv in _monster.Stats)
+        {
+            Stats[kv.Key] = new Stat(kv.Key, kv.Value.BaseValue);
+        }
+
+        Skills= _monster.Skills;
+    }
+
     public string Name { get; private set; }
-    public Monster Monster { get; }
+    public Monster Monster { get; set; }
+    public List<Monster> Monsters { get; } = new();
     public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
 }
