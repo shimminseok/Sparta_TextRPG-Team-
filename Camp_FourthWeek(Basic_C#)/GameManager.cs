@@ -59,8 +59,6 @@ public class GameManager
         var sJson = JsonConvert.SerializeObject(saveData, Formatting.Indented);
         string encrypted = AESUtil.Encrypt(sJson);
 
-        Console.WriteLine(encrypted.Length);
-
         File.WriteAllText(path, encrypted);
     }
 
