@@ -37,6 +37,18 @@ public enum ItemType
     Shoes
 }
 
+public enum MainManu
+{
+    Character = 1,
+    Inventory,
+    Shop,
+    Dungeon,
+    Quest,
+    Collection,
+    Rest,
+    Reset
+}
+
 #endregion[Enum]
 
 public interface IAction
@@ -69,7 +81,7 @@ public class PlayerInfo
             Stats[kv.Key] = new Stat(kv.Key, kv.Value.BaseValue);
         }
 
-        Skills= _monster.Skills;
+        Skills = _monster.Skills;
     }
 
     public string Name { get; private set; }
