@@ -12,10 +12,10 @@ public class EnterQuestAction : ActionBase
         SubActionMap = new Dictionary<int, IAction>()
         {
             {
-                1, new ActionveQuestAction(this)
+                1, new ActiveQuestAction(this)
             },
             {
-                2, new AcceptableQuest(this)
+                2, new AcceptableQuestAction(this)
             }
         };
     }
@@ -32,11 +32,11 @@ public class EnterQuestAction : ActionBase
     }
 }
 
-public class ActionveQuestAction : ActionBase
+public class ActiveQuestAction : ActionBase
 {
     public override string Name => "진행중 퀘스트 목록";
 
-    public ActionveQuestAction(IAction _preAction)
+    public ActiveQuestAction(IAction _preAction)
     {
         PrevAction = _preAction;
     }
@@ -54,11 +54,11 @@ public class ActionveQuestAction : ActionBase
     }
 }
 
-public class AcceptableQuest : ActionBase
+public class AcceptableQuestAction : ActionBase
 {
     public override string Name => "수락 가능한 퀘스트 목록";
 
-    public AcceptableQuest(IAction _preAction)
+    public AcceptableQuestAction(IAction _preAction)
     {
         PrevAction = _preAction;
     }
@@ -104,23 +104,10 @@ public class DisplayQuestInfoAction : ActionBase
 
         foreach (QuestCondition condition in requiredQuest.Conditions)
         {
-            string targetName = string.Empty;
-            switch (condition.TargetType)
-            {
-                case QuestTargetType.Item:
-                    targetName = ItemTable.GetItemById(condition.TargetID).Name;
-                    break;
-                case QuestTargetType.Monster:
-                    // targetName = .GetItemById(condition.TargetID).Name;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
             if (condition.IsCompleted)
                 Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine
-                ($"{string.Format(condition.QuestConditionTxt, targetName)} ({condition.CurrentCount}/{condition.RequiredCount})");
+                ($"{string.Format(condition.GetDescription())} ({condition.CurrentCount}/{condition.RequiredCount})");
 
             Console.ResetColor();
         }
@@ -179,8 +166,9 @@ public class ClaimQuestRewardAction : ActionBase
     public override void OnExcute()
     {
         QuestManager.Instance.QuestClear(requiredQuest);
-        PrevAction?.SetFeedBackMessage("퀘스트 완료!!");
-        PrevAction?.Execute();
+        Console.WriteLine(requiredQuest.QuestCompleteDescription);
+
+        SelectAndRunAction(SubActionMap);
     }
 }
 
