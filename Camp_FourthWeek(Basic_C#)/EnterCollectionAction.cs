@@ -22,8 +22,8 @@ public class EnterCollectionAction : ActionBase
         {
             bool isDiscovered = CollectionManager.Instnace.IsDiscovered(monster);
             bool isCaptured = CollectionManager.Instnace.IsCaptured(monster);
-            string monsterName = (isCaptured || isDiscovered) 
-                ? MonsterTable.MonsterDataDic[monster].Name 
+            string monsterName = (isCaptured || isDiscovered)
+                ? MonsterTable.MonsterDataDic[monster].Name
                 : "???";
 
             StringBuilder sb = new StringBuilder(monsterName);
@@ -34,6 +34,7 @@ public class EnterCollectionAction : ActionBase
                 Console.ForegroundColor = ConsoleColor.Green;
             }
 
+            Console.WriteLine("테스트로 해당 번호 입력시 조우, 한번 더 입력하면 포획입니다.");
             Console.WriteLine($"{index}. {sb.ToString()}");
             Console.ResetColor();
 
