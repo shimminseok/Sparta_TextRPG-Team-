@@ -94,7 +94,11 @@ public class QuestManager
         if (loadQuest == null)
             return;
 
-        loadQuest.Conditions = _saveQuest.QuestConditions;
+        for (int i = 0; i < loadQuest.Conditions.Count; i++)
+        {
+            var saveCondition = _saveQuest.QuestConditions.Find(condition => condition.Index == i);
+            loadQuest.Conditions[i].CurrentCount = saveCondition.CurrentCount;
+        }
 
         AcceptQuest(loadQuest);
     }
@@ -103,5 +107,31 @@ public class QuestManager
 public class SaveQeust
 {
     public int Key;
-    public List<QuestCondition> QuestConditions;
+    public List<SaveCondition> QuestConditions;
+
+    public SaveQeust(int _key, List<SaveCondition> _conditions)
+    {
+        Key = _key;
+        QuestConditions = _conditions;
+    }
+
+    public SaveQeust()
+    {
+    }
+}
+
+public class SaveCondition
+{
+    public int Index;
+    public int CurrentCount;
+
+    public SaveCondition(int _index, int _currentCount)
+    {
+        Index = _index;
+        CurrentCount = _currentCount;
+    }
+
+    public SaveCondition()
+    {
+    }
 }
