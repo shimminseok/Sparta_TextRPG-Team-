@@ -241,8 +241,9 @@ public class Monster
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
-    public int ItemId { get; private set; }
+    public int ItemId { get; set; }
     public int Lv { get; private set; }
+    
     public int Exp { get; private set; }
 }
 

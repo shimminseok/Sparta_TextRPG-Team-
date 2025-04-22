@@ -27,8 +27,7 @@ class MonsterChangeAction : ActionBase
             var hp = m.Stats[StatType.CurHp].FinalValue;
             var mp = m.Stats[StatType.CurMp].FinalValue;
             var itemName = m.ItemId != 0 ? ItemTable.GetItemById(m.ItemId)?.Name ?? "알수 없음" : "없음";
-
-            Console.WriteLine($"{isEquipped}{name,-10} | LV {level} | HP {hp} / MP {mp} | 도구{itemName}");
+            Console.WriteLine($"{isEquipped}{name,-10} | LV {level} | HP {hp} / MP {mp} | 장착 중인 도구: {itemName} |");
 
             if (!SubActionMap.ContainsKey(index))
             {

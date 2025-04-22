@@ -14,17 +14,40 @@ public class EquipAction : ActionBase
 
     public override void OnExcute()
     {
+        var player = GameManager.Instance.PlayerInfo;
         var message = string.Empty;
-        if (item.IsEquipment)
+
+        foreach (var m in player.Monsters)
         {
-            message = $"{item.Name}이 장착 해제 되었습니다.";
-            EquipmentManager.UnequipItem(item.ItemType);
+            m.ItemId = 0;
         }
-        else
+
+        var equippedTypes = InventoryManager.Instance.Inventory.
+                                                Where(i => i.IsEquipment).
+                                                Select(i => i.ItemType).
+                                                Distinct();
+        
+        foreach (var type in  equippedTypes)
         {
-            message = $"{item.Name}이 장착 되었습니다.";
-            EquipmentManager.EquipmentItem(item);
+            EquipmentManager.UnequipItem(type);
         }
+
+        // if (item.IsEquipment)
+        // {
+        //     message = $"{item.Name}이 장착 해제 되었습니다.";
+        //     EquipmentManager.UnequipItem(item.ItemType);
+        //     player.Monster.ItemId = 0;
+        // }
+        // else
+        // {
+        EquipmentManager.EquipmentItem(item);
+        
+        player.Monster.ItemId = item.Key;
+        
+        message = $"{item.Name}이 장착 되었습니다.";
+
+
+        //}
 
         Console.WriteLine(message);
         PrevAction?.Execute();
