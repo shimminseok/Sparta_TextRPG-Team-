@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Camp_FourthWeek_Basic_C__;
+﻿namespace Camp_FourthWeek_Basic_C__;
 
 class MonsterChangeAction : ActionBase
 {
@@ -22,7 +16,6 @@ class MonsterChangeAction : ActionBase
         Console.WriteLine("[포켓몬 목록]");
 
         var player = GameManager.Instance.PlayerInfo;
-        var monsters = player.Monsters;
 
         int index = 1;
 
