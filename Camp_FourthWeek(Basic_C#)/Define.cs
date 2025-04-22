@@ -114,6 +114,14 @@ public class Stat
     public Stat()
     {
     }
+    public Stat(Stat stat)
+    {
+        Type = stat.Type;
+        BaseValue = stat.BaseValue;
+        BuffValue = stat.BuffValue;
+        EquipmentValue = stat.EquipmentValue;
+
+    }
 
     public Stat(StatType _type, float _value)
     {
@@ -248,6 +256,22 @@ public class Monster
         Stats = _stat;
         Skills = _skill;
     }
+    public Monster(Monster _monster)
+    {
+        Type = _monster.Type;
+        Name = _monster.Name;
+
+        Stats = new Dictionary<StatType, Stat>();
+        foreach (var stat in _monster.Stats)
+        {
+            Stats[stat.Key] = new Stat(stat.Value);
+        }
+
+        Skills = new List<int>(_monster.Skills);
+        ItemId = _monster.ItemId;
+        Lv = _monster.Lv;
+        Exp = _monster.Exp;
+    }
 
     public MonsterType Type { get; private set; }
     public string Name { get; private set; }
@@ -255,7 +279,7 @@ public class Monster
     public List<int> Skills { get; private set; }
     public int ItemId { get; set; }
     public int Lv { get; private set; }
-    
+
     public int Exp { get; private set; }
 }
 
