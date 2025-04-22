@@ -6,6 +6,7 @@ namespace Camp_FourthWeek_Basic_C__;
 public class QuestManager
 {
     private static readonly QuestManager instance = new QuestManager();
+    public static QuestManager Instance => instance;
 
     //퀘스트를 관리하는 Dic(다른 퀘스트에 같은 TargetID가 있을 수 있기 때문
     public Dictionary<QuestTargetType, List<QuestCondition>> QuestConditionsMap { get; private set; } =
@@ -14,7 +15,6 @@ public class QuestManager
     //현재 내가 수락한 실질적인 Quest List
     public List<Quest> CurrentAcceptQuestList { get; private set; } = new List<Quest>();
     public List<int> ClearQuestList { get; set; } = new List<int>();
-    public static QuestManager Instance => instance;
 
 
     public void AcceptQuest(Quest _quest)
