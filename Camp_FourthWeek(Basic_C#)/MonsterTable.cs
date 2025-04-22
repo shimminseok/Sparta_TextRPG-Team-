@@ -80,7 +80,7 @@ public static class MonsterTable
                 { StatType.Attack, new Stat(StatType.Attack, 10) },
                 { StatType.Defense, new Stat(StatType.Defense, 5) },
                 { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
-                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 50) },
                 { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
                 { StatType.CurMp, new Stat(StatType.CurMp, 100) },
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },

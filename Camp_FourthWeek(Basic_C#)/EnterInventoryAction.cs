@@ -9,7 +9,7 @@ public class EnterInventoryAction : ActionBase
         SubActionMap = new Dictionary<int, IAction>
         {
             { 1, new EquipItemManagementAction(this) },
-            { 2, new MonsterChangeAction(this) }
+            { 2, new MonsterBoxAction(this) }
         };
     }
 
