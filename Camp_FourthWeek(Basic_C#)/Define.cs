@@ -63,15 +63,19 @@ public enum MainManu
     Character = 1,
     Inventory,
     Shop,
-    Dungeon,
+    Stage,
     Quest,
     Collection,
     Rest,
+    Battle,
     Reset
 }
+
 public enum SkillAttackType
 {
-    All, Random, Select
+    All,
+    Random,
+    Select
 }
 
 #endregion[Enum]
@@ -211,65 +215,23 @@ public class Stat
     }
 }
 
-public class Dungeon
+public class Stage
 {
     //권장 방어력
     private readonly PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
 
-    public Dungeon(string _dungeonName, Stat _recommendedStat, int _rewardGold)
+    public Stage(int _key, string _stageName, MonsterType[] _monsters, int _rewardGold)
     {
-        DungeonName = _dungeonName;
-        RecommendedStat = _recommendedStat;
+        Key = _key;
+        StageName = _stageName;
+        SpawnedMonsters = _monsters;
         RewardGold = _rewardGold;
     }
 
-    public string DungeonName { get; }
-    public Stat RecommendedStat { get; private set; }
+    public int Key { get; }
+    public string StageName { get; }
     public int RewardGold { get; private set; }
-
-    public string ClearDungeon(float dam)
-    {
-        LevelManager.AddClearCount();
-        var rand = new Random();
-        var stat = playerInfo.Stats[StatType.Attack].FinalValue;
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        RewardGold += rand.Next((int)stat, (int)(stat * 2 + 1));
-
-        var originHP = curHP.FinalValue;
-        curHP.ModifyAllValue(dam);
-
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 클리어");
-        sb.AppendLine("축하 합니다!!");
-        sb.AppendLine($"{DungeonName}을 클리어 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-        sb.AppendLine($"Gold {playerInfo.Gold} -> {playerInfo.Gold + RewardGold}");
-
-        playerInfo.Gold += RewardGold;
-
-        return sb.ToString();
-    }
-
-    public string UnClearDungeon(float _dam)
-    {
-        var rand = new Random();
-
-        var damage = (int)(_dam / 2);
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        var originHP = curHP.FinalValue;
-
-        curHP.ModifyAllValue(damage);
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 공략 실패");
-        sb.AppendLine($"{DungeonName} 공략에 실패 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-
-        return sb.ToString();
-    }
+    public MonsterType[] SpawnedMonsters { get; }
 }
 
 public class Monster
@@ -307,15 +269,48 @@ public class Monster
     public int Lv { get; private set; }
     public int Exp { get; private set; }
 
+    public Monster Copy()
+    {
+        //Dictionary 복제 -> Dictionary 복제하는데 Stat이 클래스라서 Stat을 복제하면서 해야함.
+        Dictionary<StatType, Stat> newStat = new Dictionary<StatType, Stat>();
+
+        foreach (var copyDict in Stats) //foreach문을 이용하여 딕셔너리의 모든 키-값에 접근할 수 있음. (foreach var '지역변수' in '딕셔너리 이름')
+            // Stats : Dictionary<StatType, Stat>의 Stats이므로 copyDict도 <StatType, stat> 타입임
+            // copyDict는 Stats 딕셔너리의 각 항목을 참조하는 변수 + foreach는 딕셔너리에서 항목을 자동으로 순회할 수 있기 때문에 Stats만 써도 딕셔너리의 Key와 value값을 가져올 수 있다.
+        {
+            Stat
+                original = copyDict
+                    .Value; //CopyDict는 foreach문으로 딕셔너리를 순회하는 변수이므로, copyDict.value(StatType의 정보)를 original에 저장하는 결과가 된다.
+            Stat copyStat = new Stat(); //Stat 객체 생성
+
+            copyStat.Type = original.Type; //복제!
+            copyStat.BaseValue = original.BaseValue;
+            copyStat.BuffValue = original.BuffValue;
+            copyStat.EquipmentValue = original.EquipmentValue;
+            newStat[copyDict.Key] =
+                copyStat; //newStat : Dictionary<StatType, Stat> 타입의 딕셔너리의 copyDict.Key라는 키에 copyStat 값을 주겠다.
+            //즉 newStat의 key = copyDict.Key, newStat의 value = copyStat
+        }
+
+        //List 복제
+        List<int> newSkill = new List<int>(Skills);
+
+        Monster monster = new Monster(Type, Name, newStat, newSkill);
+
+        return monster;
+    }
+
     public void AddExp(int _exp)
     {
         Exp += _exp;
-        if(Exp > 10)//Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
+        int maxExp = ExpTable.GetExpByLevel(Lv + 1);
+        if (Exp > maxExp) //Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
         {
-            Exp -= 10;
+            Exp -= maxExp;
             LevelUp();
         }
     }
+
     private void LevelUp()
     {
         Lv++;
@@ -325,7 +320,8 @@ public class Monster
 
 public class Skill
 {
-    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType, int _targetCount)
+    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType,
+        int _targetCount)
     {
         Id = _id;
         Name = _name;
@@ -338,7 +334,7 @@ public class Skill
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; private set; }
     public SkillAttackType SkillAttackType { get; private set; }
-    public int TargetCount {  get; private set; }
+    public int TargetCount { get; private set; }
 }
 
 public class SaveData
@@ -357,6 +353,9 @@ public class SaveData
     public List<SaveQeust> Quests = new List<SaveQeust>();
     public List<int> ClearQuests = new List<int>();
 
+    //CollectionData
+    public Dictionary<MonsterType, CollectionData> CollectionData = new Dictionary<MonsterType, CollectionData>();
+
     public SaveData(SaveData _data)
     {
         Name = _data.Name;
@@ -367,6 +366,7 @@ public class SaveData
         Gold = _data.Gold;
         Quests = _data.Quests;
         ClearQuests = _data.ClearQuests;
+        CollectionData = _data.CollectionData;
     }
 
     public SaveData()
