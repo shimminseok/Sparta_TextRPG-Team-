@@ -63,7 +63,7 @@ public enum MainManu
     Character = 1,
     Inventory,
     Shop,
-    Dungeon,
+    Stage,
     Quest,
     Collection,
     Rest,
@@ -274,20 +274,24 @@ public class Monster
         //Dictionary 복제 -> Dictionary 복제하는데 Stat이 클래스라서 Stat을 복제하면서 해야함.
         Dictionary<StatType, Stat> newStat = new Dictionary<StatType, Stat>();
 
-        foreach (var copyDict in Stats)//foreach문을 이용하여 딕셔너리의 모든 키-값에 접근할 수 있음. (foreach var '지역변수' in '딕셔너리 이름')
-                                       // Stats : Dictionary<StatType, Stat>의 Stats이므로 copyDict도 <StatType, stat> 타입임
-                                       // copyDict는 Stats 딕셔너리의 각 항목을 참조하는 변수 + foreach는 딕셔너리에서 항목을 자동으로 순회할 수 있기 때문에 Stats만 써도 딕셔너리의 Key와 value값을 가져올 수 있다.
+        foreach (var copyDict in Stats) //foreach문을 이용하여 딕셔너리의 모든 키-값에 접근할 수 있음. (foreach var '지역변수' in '딕셔너리 이름')
+            // Stats : Dictionary<StatType, Stat>의 Stats이므로 copyDict도 <StatType, stat> 타입임
+            // copyDict는 Stats 딕셔너리의 각 항목을 참조하는 변수 + foreach는 딕셔너리에서 항목을 자동으로 순회할 수 있기 때문에 Stats만 써도 딕셔너리의 Key와 value값을 가져올 수 있다.
         {
-            Stat original = copyDict.Value; //CopyDict는 foreach문으로 딕셔너리를 순회하는 변수이므로, copyDict.value(StatType의 정보)를 original에 저장하는 결과가 된다.
+            Stat
+                original = copyDict
+                    .Value; //CopyDict는 foreach문으로 딕셔너리를 순회하는 변수이므로, copyDict.value(StatType의 정보)를 original에 저장하는 결과가 된다.
             Stat copyStat = new Stat(); //Stat 객체 생성
 
             copyStat.Type = original.Type; //복제!
             copyStat.BaseValue = original.BaseValue;
             copyStat.BuffValue = original.BuffValue;
             copyStat.EquipmentValue = original.EquipmentValue;
-            newStat[copyDict.Key] = copyStat; //newStat : Dictionary<StatType, Stat> 타입의 딕셔너리의 copyDict.Key라는 키에 copyStat 값을 주겠다.
-                                              //즉 newStat의 key = copyDict.Key, newStat의 value = copyStat
+            newStat[copyDict.Key] =
+                copyStat; //newStat : Dictionary<StatType, Stat> 타입의 딕셔너리의 copyDict.Key라는 키에 copyStat 값을 주겠다.
+            //즉 newStat의 key = copyDict.Key, newStat의 value = copyStat
         }
+
         //List 복제
         List<int> newSkill = new List<int>(Skills);
 
