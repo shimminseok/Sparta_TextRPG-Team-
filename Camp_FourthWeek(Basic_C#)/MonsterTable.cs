@@ -271,7 +271,7 @@ public static class MonsterTable
             }, [1, 2])
         },
         {
-            MonsterType.Articuno, new Monster(MonsterType.Pachirisu, "프리져", new Dictionary<StatType, Stat>()
+            MonsterType.Articuno, new Monster(MonsterType.Articuno, "프리져", new Dictionary<StatType, Stat>()
             {
                 { StatType.Attack, new Stat(StatType.Attack, 10) },
                 { StatType.Defense, new Stat(StatType.Defense, 5) },
