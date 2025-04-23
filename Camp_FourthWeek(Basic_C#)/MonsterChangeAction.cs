@@ -25,7 +25,6 @@ public class MonsterChangeAction : ActionBase
         var player = GameManager.Instance.PlayerInfo;
         var monsters = player.Monsters;
         var totalMonster = monsters.Count;
-        int maxPage = (int)Math.Ceiling(totalMonster / (float)PagepokemonSize);
         int pageStart = curPokemonPage * PagepokemonSize;
         int pageEnd = Math.Min(pageStart + PagepokemonSize, totalMonster);
 
