@@ -14,15 +14,29 @@ public class EquipAction : ActionBase
 
     public override void OnExcute()
     {
+        var player = GameManager.Instance.PlayerInfo;
+        var currentMonster = player.Monster;
         var message = string.Empty;
-        if (item.IsEquipment)
+
+
+        if (item.IsEquippedBy(currentMonster))
         {
-            message = $"{item.Name}이 장착 해제 되었습니다.";
-            EquipmentManager.UnequipItem(item.ItemType);
+            message = $"{item.Name}장착해제 했습니다.";
+            EquipmentManager.UnequipItem((item.ItemType));
+            currentMonster.ItemId = 0;
         }
         else
         {
-            message = $"{item.Name}이 장착 되었습니다.";
+            message = $"{item.Name}장착 되었습니다.";
+            foreach (var m in player.Monsters)
+            {
+                if (m.ItemId == item.Key)
+                {
+                    m.ItemId = 0;
+                }
+            }
+            
+            player.Monster.ItemId = item.Key;
             EquipmentManager.EquipmentItem(item);
         }
 

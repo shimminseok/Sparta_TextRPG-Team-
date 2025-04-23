@@ -21,11 +21,15 @@ public abstract partial class ActionBase : IAction
     }
 
     public abstract void OnExcute();
-
-    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap)
+    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap,bool _isView=false)
     {
         Console.WriteLine();
-        foreach (var action in _actionMap) Console.WriteLine($"{action.Key}. {action.Value.Name}");
+        if (!_isView)
+        {
+            foreach (var action in _actionMap) 
+                Console.WriteLine($"{action.Key}. {action.Value.Name}");
+        }
+
         Console.WriteLine();
         Console.WriteLine($"0. {(PrevAction == null ? "종료하기" : $"{PrevAction.Name}로 되돌아가기")}");
         Console.WriteLine();

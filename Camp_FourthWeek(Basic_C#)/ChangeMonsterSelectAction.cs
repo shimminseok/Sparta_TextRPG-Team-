@@ -10,12 +10,11 @@ public class ChangeMonsterSelectAction :ActionBase
         PrevAction = _prevAction;
     }
 
-    public override string Name => $"{monster.Name} 교체";
+    public override string Name => string.Empty;
 
     public override void OnExcute()
     {
         GameManager.Instance.PlayerInfo.ChangeMonsterStat(monster);
-        Console.WriteLine($"{monster.Name}으로 교체했습니다.");
         PrevAction?.Execute();
     }
 }

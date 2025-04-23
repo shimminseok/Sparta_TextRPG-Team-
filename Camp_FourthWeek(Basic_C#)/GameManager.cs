@@ -57,8 +57,9 @@ public class GameManager
             ClearQuests = QuestManager.Instance.ClearQuestList.ToList()
         };
         var sJson = JsonConvert.SerializeObject(saveData, Formatting.Indented);
+        string encrypted = AESUtil.Encrypt(sJson);
 
-        File.WriteAllText(path, sJson);
+        File.WriteAllText(path, encrypted);
     }
 
     public void LoadGame()
@@ -70,14 +71,24 @@ public class GameManager
             return;
         }
 
-        var json = File.ReadAllText(path);
-        var data = JsonConvert.DeserializeObject<SaveData>(json);
-        if (data != null)
+        try
         {
-            loadData = new SaveData(data);
-            Init(loadData.Monster, loadData.Name);
-            var mainAction = new MainMenuAction();
-            mainAction.Execute();
+            var encrypted = File.ReadAllText(path);
+            string decrypted = AESUtil.Decrypt(encrypted);
+            var data = JsonConvert.DeserializeObject<SaveData>(decrypted);
+            if (data != null)
+            {
+                loadData = new SaveData(data);
+                Init(loadData.Monster, loadData.Name);
+                var mainAction = new MainMenuAction();
+                mainAction.Execute();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("⚠ 저장 파일이 손상되었거나 복호화에 실패했습니다.");
+            File.Delete(path); // 손상된 파일 삭제 (선택)
+            new CreateCharacterAction().Execute();
         }
     }
 
@@ -109,9 +120,7 @@ public class GameManager
     {
         foreach (var questData in loadData.Quests)
         {
-            var quest = QuestTable.GetQuestInfo(questData.Key);
-            quest.Conditions = questData.QuestConditions;
-            QuestManager.Instance.AcceptQuest(quest);
+            QuestManager.Instance.LoadQuestData(questData);
         }
 
         QuestManager.Instance.ClearQuestList = loadData.ClearQuests;
@@ -143,11 +152,14 @@ public class GameManager
     private List<SaveQeust> GetCurrentQuestData()
     {
         return QuestManager.Instance.CurrentAcceptQuestList
-            .Select(quest => new SaveQeust
-            {
-                Key = quest.Key,
-                QuestConditions = quest.Conditions
-            })
+            .Select(quest =>
+                new SaveQeust
+                (
+                    quest.Key,
+                    quest.Conditions
+                        .Select((condition, index) => new SaveCondition(index, condition.CurrentCount))
+                        .ToList()
+                ))
             .ToList();
     }
 

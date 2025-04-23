@@ -11,13 +11,15 @@ public class MainMenuAction : ActionBase
 
     public void InitializeMainActions(MainMenuAction mainAction)
     {
-        SubActionMap[1] = new EnterCharacterInfoAction(mainAction);
-        SubActionMap[2] = new EnterInventoryAction(mainAction);
-        SubActionMap[3] = new EnterShopAction(mainAction);
-        SubActionMap[4] = new EnterDungeonAction(mainAction);
-        SubActionMap[5] = new EnterRestAction(mainAction);
-        SubActionMap[6] = new EnterResetAction(mainAction);
-        SubActionMap[7] = new EnterQuestAction(mainAction);
+        SubActionMap[(int)MainManu.Character] = new EnterCharacterInfoAction(mainAction);
+        SubActionMap[(int)MainManu.Inventory] = new EnterInventoryAction(mainAction);
+        SubActionMap[(int)MainManu.Shop] = new EnterShopAction(mainAction);
+        SubActionMap[(int)MainManu.Dungeon] = new EnterStageAction(mainAction);
+        SubActionMap[(int)MainManu.Quest] = new EnterQuestAction(mainAction);
+        SubActionMap[(int)MainManu.Collection] = new EnterCollectionAction(mainAction);
+        SubActionMap[(int)MainManu.Rest] = new EnterRestAction(mainAction);
+
+        SubActionMap[(int)MainManu.Reset] = new EnterResetAction(mainAction);
     }
 
     public override void OnExcute()

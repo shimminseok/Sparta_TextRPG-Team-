@@ -15,7 +15,7 @@ public class MonsterBoxAction : ActionBase
 
     public override void OnExcute()
     {
-        Console.WriteLine("포켓몬을 관리 할 수 있습니다.");
+        Console.WriteLine("포켓몬에 관한 행동을 볼 수 있습니다.");
         Console.WriteLine("\n[포켓몬 목록]");
         
         var player = GameManager.Instance.PlayerInfo;
@@ -29,7 +29,7 @@ public class MonsterBoxAction : ActionBase
             var mp = m.Stats[StatType.CurMp].FinalValue;
             var itemName = m.ItemId != 0 ? ItemTable.GetItemById(m.ItemId)?.Name ?? "알수 없음" : "없음";
 
-            Console.WriteLine($"{isEquipped}{name,-10} | LV {level} | HP {hp} / MP {mp} | 도구{itemName}");
+            Console.WriteLine($"{isEquipped}{name,-10} | LV {level} | HP {hp} / MP {mp} | 장착 중인 도구: {itemName} |");
 
         }
         

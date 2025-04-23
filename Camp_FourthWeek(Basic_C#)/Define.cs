@@ -7,12 +7,33 @@ namespace Camp_FourthWeek_Basic_C__;
 public enum MonsterType
 {
     None,
-    Pikachu,
-    Charmander,
-    Squirtle,
-    Bulbasaur,
-    Pidgey,
-    Stakataka
+    Pikachu, //피카츄
+    Charmander, //파이리
+    Squirtle, //꼬부기
+    Bulbasaur, // 이상해씨
+    Pidgey, //구구
+    Dratini, //미뇽
+
+    Raichu, //라이츄
+    Charmeleon, //리자드
+    Wartortle, //어니부기
+    Ivysaur, //이상해풀
+    Pidgeotto, //피죤
+    Dragonair, //신뇽
+
+    Charizard, //리자몽
+    Blastoise, //거북왕
+    Venusaur, //이상해꽃
+    Pidgeot, //피죤투
+    Dragonite, //망나뇽
+
+    Snorlax, //잠만보
+    Pachirisu, //파치리스
+
+    Articuno, //프리져
+    Zapdos, //썬더
+    Moltres, //파이어
+    Stakataka //차곡차곡
 }
 
 public enum StatType
@@ -35,6 +56,25 @@ public enum ItemType
     Armor,
     Groves,
     Shoes
+}
+
+public enum MainManu
+{
+    Character = 1,
+    Inventory,
+    Shop,
+    Dungeon,
+    Quest,
+    Collection,
+    Rest,
+    Reset
+}
+
+public enum SkillAttackType
+{
+    All,
+    Random,
+    Select
 }
 
 #endregion[Enum]
@@ -69,7 +109,7 @@ public class PlayerInfo
             Stats[kv.Key] = new Stat(kv.Key, kv.Value.BaseValue);
         }
 
-        Skills= _monster.Skills;
+        Skills = _monster.Skills;
     }
 
     public string Name { get; private set; }
@@ -88,7 +128,7 @@ public class Item(int _key, string _name, ItemType _type, List<Stat> _stats, str
     public readonly List<Stat> Stats = _stats;
     public int Key { get; private set; } = _key;
 
-
+    public bool IsEquippedBy(Monster m) => m.ItemId == Key;
     public bool IsEquipment => EquipmentManager.IsEquipped(this);
 }
 
@@ -101,6 +141,14 @@ public class Stat
 
     public Stat()
     {
+    }
+
+    public Stat(Stat stat)
+    {
+        Type = stat.Type;
+        BaseValue = stat.BaseValue;
+        BuffValue = stat.BuffValue;
+        EquipmentValue = stat.EquipmentValue;
     }
 
     public Stat(StatType _type, float _value)
@@ -166,65 +214,23 @@ public class Stat
     }
 }
 
-public class Dungeon
+public class Stage
 {
     //권장 방어력
     private readonly PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
 
-    public Dungeon(string _dungeonName, Stat _recommendedStat, int _rewardGold)
+    public Stage(int _key, string _stageName, MonsterType[] _monsters, int _rewardGold)
     {
-        DungeonName = _dungeonName;
-        RecommendedStat = _recommendedStat;
+        Key = _key;
+        StageName = _stageName;
+        SpawnedMonsters = _monsters;
         RewardGold = _rewardGold;
     }
 
-    public string DungeonName { get; }
-    public Stat RecommendedStat { get; private set; }
+    public int Key { get; }
+    public string StageName { get; }
     public int RewardGold { get; private set; }
-
-    public string ClearDungeon(float dam)
-    {
-        LevelManager.AddClearCount();
-        var rand = new Random();
-        var stat = playerInfo.Stats[StatType.Attack].FinalValue;
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        RewardGold += rand.Next((int)stat, (int)(stat * 2 + 1));
-
-        var originHP = curHP.FinalValue;
-        curHP.ModifyAllValue(dam);
-
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 클리어");
-        sb.AppendLine("축하 합니다!!");
-        sb.AppendLine($"{DungeonName}을 클리어 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-        sb.AppendLine($"Gold {playerInfo.Gold} -> {playerInfo.Gold + RewardGold}");
-
-        playerInfo.Gold += RewardGold;
-
-        return sb.ToString();
-    }
-
-    public string UnClearDungeon(float _dam)
-    {
-        var rand = new Random();
-
-        var damage = (int)(_dam / 2);
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        var originHP = curHP.FinalValue;
-
-        curHP.ModifyAllValue(damage);
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 공략 실패");
-        sb.AppendLine($"{DungeonName} 공략에 실패 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-
-        return sb.ToString();
-    }
+    public MonsterType[] SpawnedMonsters { get; }
 }
 
 public class Monster
@@ -237,27 +243,66 @@ public class Monster
         Skills = _skill;
     }
 
+    public Monster(Monster _monster)
+    {
+        Type = _monster.Type;
+        Name = _monster.Name;
+
+        Stats = new Dictionary<StatType, Stat>();
+        foreach (var stat in _monster.Stats)
+        {
+            Stats[stat.Key] = new Stat(stat.Value);
+        }
+
+        Skills = new List<int>(_monster.Skills);
+        ItemId = _monster.ItemId;
+        Lv = _monster.Lv;
+        Exp = _monster.Exp;
+    }
+
     public MonsterType Type { get; private set; }
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
-    public int ItemId { get; private set; }
+    public int ItemId { get; set; }
     public int Lv { get; private set; }
     public int Exp { get; private set; }
+
+    public void AddExp(int _exp)
+    {
+        Exp += _exp;
+        int maxExp = ExpTable.GetExpByLevel(Lv + 1);
+        if (Exp > maxExp) //Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
+        {
+            Exp -= maxExp;
+            LevelUp();
+        }
+    }
+
+    private void LevelUp()
+    {
+        Lv++;
+        //Todo : 진화를 여기서 하면 화면에 어떻게 뿌릴것인가?
+    }
 }
 
 public class Skill
 {
-    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat)
+    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType,
+        int _targetCount)
     {
         Id = _id;
         Name = _name;
         Stats = _stat;
+        SkillAttackType = _skillAttackType;
+        TargetCount = _targetCount;
     }
 
     public int Id { get; private set; }
     public string Name { get; private set; }
-    public Dictionary<StatType, Stat> Stats { get; }
+    public Dictionary<StatType, Stat> Stats { get; private set; }
+    public SkillAttackType SkillAttackType { get; private set; }
+    public int TargetCount { get; private set; }
 }
 
 public class SaveData

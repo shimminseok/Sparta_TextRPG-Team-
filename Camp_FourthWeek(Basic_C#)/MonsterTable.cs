@@ -75,6 +75,244 @@ public static class MonsterTable
             }, [1, 2])
         },
         {
+            MonsterType.Dratini, new Monster(MonsterType.Dratini, "미뇽", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Raichu, new Monster(MonsterType.Raichu, "라이츄", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Charmeleon, new Monster(MonsterType.Charmeleon, "리자드", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Wartortle, new Monster(MonsterType.Wartortle, "어니부기", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Ivysaur, new Monster(MonsterType.Ivysaur, "이상해풀", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Pidgeotto, new Monster(MonsterType.Pidgeotto, "피죤", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Dragonair, new Monster(MonsterType.Dragonair, "신룡", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Charizard, new Monster(MonsterType.Charizard, "리자몽", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Blastoise, new Monster(MonsterType.Blastoise, "거북왕", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Venusaur, new Monster(MonsterType.Venusaur, "이상해꽃", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Pidgeot, new Monster(MonsterType.Pidgeot, "피죤투", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Dragonite, new Monster(MonsterType.Dragonite, "망나뇽", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Snorlax, new Monster(MonsterType.Snorlax, "잠만보", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Pachirisu, new Monster(MonsterType.Pachirisu, "파치리스", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Articuno, new Monster(MonsterType.Articuno, "프리져", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Zapdos, new Monster(MonsterType.Zapdos, "썬더", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
+            MonsterType.Moltres, new Monster(MonsterType.Moltres, "파이어", new Dictionary<StatType, Stat>()
+            {
+                { StatType.Attack, new Stat(StatType.Attack, 10) },
+                { StatType.Defense, new Stat(StatType.Defense, 5) },
+                { StatType.MaxHp, new Stat(StatType.MaxHp, 100) },
+                { StatType.CurHp, new Stat(StatType.CurHp, 100) },
+                { StatType.MaxMp, new Stat(StatType.MaxMp, 100) },
+                { StatType.CurMp, new Stat(StatType.CurMp, 100) },
+                { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
+                { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
+                { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
+            }, [1, 2])
+        },
+        {
             MonsterType.Stakataka, new Monster(MonsterType.Stakataka, "차곡차곡", new Dictionary<StatType, Stat>()
             {
                 { StatType.Attack, new Stat(StatType.Attack, 10) },
