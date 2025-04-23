@@ -22,8 +22,7 @@ public class MonsterChangeAction : ActionBase
         Console.WriteLine();
         Console.WriteLine("[포켓몬 목록]");
 
-        var player = GameManager.Instance.PlayerInfo;
-        var monsters = player.Monsters;
+        var monsters = InventoryManager.Instance.MonsterBox;
         var totalMonster = monsters.Count;
         int maxPage = (int)Math.Ceiling(totalMonster / (float)PagepokemonSize);
         int pageStart = curPokemonPage * PagepokemonSize;
@@ -31,10 +30,10 @@ public class MonsterChangeAction : ActionBase
 
         int index = 1;
 
-        for(int i=pageStart; i<pageEnd; i++)
+        for (int i = pageStart; i < pageEnd; i++)
         {
-            var m = player.Monsters[i];
-            var isEquipped = (m == player.Monster) ? "[E]" : " ";
+            var m = InventoryManager.Instance.MonsterBox[i];
+            var isEquipped = (m == PlayerInfo.Monster) ? "[E]" : " ";
             var name = m.Name;
             var level = m.Lv;
             var hp = m.Stats[StatType.CurHp].FinalValue;
@@ -63,7 +62,7 @@ public class MonsterChangeAction : ActionBase
     public void MovePage(int _dir)
     {
         SetFeedBackMessage("");
-        var totalPage = GameManager.Instance.PlayerInfo.Monsters.Count;
+        var totalPage = InventoryManager.Instance.MonsterBox.Count;
         int maxPage = (int)Math.Ceiling(totalPage / (float)PagepokemonSize);
         int nextPage = curPokemonPage + _dir;
 

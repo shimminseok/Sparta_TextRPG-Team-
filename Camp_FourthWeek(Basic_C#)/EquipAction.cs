@@ -14,7 +14,7 @@ public class EquipAction : ActionBase
 
     public override void OnExcute()
     {
-        var player = GameManager.Instance.PlayerInfo;
+        var player = PlayerInfo;
         var currentMonster = player.Monster;
         var message = string.Empty;
 
@@ -28,14 +28,15 @@ public class EquipAction : ActionBase
         else
         {
             message = $"{item.Name}장착 되었습니다.";
-            foreach (var m in player.Monsters)
+            foreach (var m in InventoryManager.Instance.MonsterBox)
             {
                 if (m.ItemId == item.Key)
                 {
                     m.ItemId = 0;
+                    break;
                 }
             }
-            
+
             player.Monster.ItemId = item.Key;
             EquipmentManager.EquipmentItem(item);
         }
