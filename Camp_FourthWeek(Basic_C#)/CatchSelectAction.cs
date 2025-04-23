@@ -17,11 +17,11 @@ namespace Camp_FourthWeek_Basic_C__
 
         public override void OnExcute()
         {
-            BattleAction.ShowMonsterList(true);
-            for (int i = 0; i < BattleAction.monsters.Length; i++)
+            EnterBattleAction.DisplayMonsterList();
+            for (int i = 0; i < EnterBattleAction.MonsterSelectList.Count; i++)
             {
                 if (!SubActionMap.ContainsKey(i + 1))
-                    SubActionMap.Add(i + 1, new CatchAction(BattleAction.monsters[i],this));
+                    SubActionMap.Add(i + 1, new CatchAction(EnterBattleAction.MonsterSelectList[i],this));
             }
 
 
