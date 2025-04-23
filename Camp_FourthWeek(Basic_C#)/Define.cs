@@ -69,9 +69,12 @@ public enum MainManu
     Rest,
     Reset
 }
+
 public enum SkillAttackType
 {
-    All, Random, Select
+    All,
+    Random,
+    Select
 }
 
 #endregion[Enum]
@@ -211,65 +214,23 @@ public class Stat
     }
 }
 
-public class Dungeon
+public class Stage
 {
     //권장 방어력
     private readonly PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
 
-    public Dungeon(string _dungeonName, Stat _recommendedStat, int _rewardGold)
+    public Stage(int _key, string _stageName, MonsterType[] _monsters, int _rewardGold)
     {
-        DungeonName = _dungeonName;
-        RecommendedStat = _recommendedStat;
+        Key = _key;
+        StageName = _stageName;
+        SpawnedMonsters = _monsters;
         RewardGold = _rewardGold;
     }
 
-    public string DungeonName { get; }
-    public Stat RecommendedStat { get; private set; }
+    public int Key { get; }
+    public string StageName { get; }
     public int RewardGold { get; private set; }
-
-    public string ClearDungeon(float dam)
-    {
-        LevelManager.AddClearCount();
-        var rand = new Random();
-        var stat = playerInfo.Stats[StatType.Attack].FinalValue;
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        RewardGold += rand.Next((int)stat, (int)(stat * 2 + 1));
-
-        var originHP = curHP.FinalValue;
-        curHP.ModifyAllValue(dam);
-
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 클리어");
-        sb.AppendLine("축하 합니다!!");
-        sb.AppendLine($"{DungeonName}을 클리어 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-        sb.AppendLine($"Gold {playerInfo.Gold} -> {playerInfo.Gold + RewardGold}");
-
-        playerInfo.Gold += RewardGold;
-
-        return sb.ToString();
-    }
-
-    public string UnClearDungeon(float _dam)
-    {
-        var rand = new Random();
-
-        var damage = (int)(_dam / 2);
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        var originHP = curHP.FinalValue;
-
-        curHP.ModifyAllValue(damage);
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 공략 실패");
-        sb.AppendLine($"{DungeonName} 공략에 실패 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-
-        return sb.ToString();
-    }
+    public MonsterType[] SpawnedMonsters { get; }
 }
 
 public class Monster
@@ -310,12 +271,13 @@ public class Monster
     public void AddExp(int _exp)
     {
         Exp += _exp;
-        if(Exp > 10)//Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
+        if (Exp > 10) //Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
         {
             Exp -= 10;
             LevelUp();
         }
     }
+
     private void LevelUp()
     {
         Lv++;
@@ -325,7 +287,8 @@ public class Monster
 
 public class Skill
 {
-    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType, int _targetCount)
+    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType,
+        int _targetCount)
     {
         Id = _id;
         Name = _name;
@@ -338,7 +301,7 @@ public class Skill
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; private set; }
     public SkillAttackType SkillAttackType { get; private set; }
-    public int TargetCount {  get; private set; }
+    public int TargetCount { get; private set; }
 }
 
 public class SaveData
