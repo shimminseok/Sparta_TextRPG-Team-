@@ -321,6 +321,9 @@ public class SaveData
     public List<SaveQeust> Quests = new List<SaveQeust>();
     public List<int> ClearQuests = new List<int>();
 
+    //CollectionData
+    public Dictionary<MonsterType, CollectionData> CollectionData = new Dictionary<MonsterType, CollectionData>();
+
     public SaveData(SaveData _data)
     {
         Name = _data.Name;
@@ -331,6 +334,7 @@ public class SaveData
         Gold = _data.Gold;
         Quests = _data.Quests;
         ClearQuests = _data.ClearQuests;
+        CollectionData = _data.CollectionData;
     }
 
     public SaveData()
