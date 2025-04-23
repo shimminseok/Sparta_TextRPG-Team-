@@ -215,12 +215,12 @@ public class Stat
     }
 }
 
-public class Dungeon
+public class Stage
 {
     //권장 방어력
     private readonly PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
 
-    public Dungeon(string _dungeonName, MonsterType[] _monsters, int _rewardGold)
+    public Stage(string _dungeonName, MonsterType[] _monsters, int _rewardGold)
     {
         DungeonName = _dungeonName;
         SpawnedMonsters = _monsters;

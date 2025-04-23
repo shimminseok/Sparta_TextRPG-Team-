@@ -1,14 +1,12 @@
 namespace Camp_FourthWeek_Basic_C__;
 
-public class EnterDungeonAction : ActionBase
+public class EnterStageAction : ActionBase
 {
-    public EnterDungeonAction(IAction _prevAction)
+    public EnterStageAction(IAction _prevAction)
     {
         PrevAction = _prevAction;
         //TO DO
-        //상태 보기와 전투 시작을 나눠줌
-        // SubActionMap[1] = 
-        SubActionMap[2] = new SelectStageAction(this);
+        SubActionMap[1] = new SelectStageAction(this);
     }
 
     public override string Name => "지역 이동";
@@ -34,11 +32,11 @@ public class EnterDungeonAction : ActionBase
             SubActionMap.Clear();
 
             //TO DO
-            //현재 클리어한 스테이지를 저장 후 해당 스테이지 만큼 돌려줌
-            // for (var i = 0; i < PlayerInfo.ClearStage; i++)
-            // {
-            //     SubActionMap.Add(i + 1, new DungeonAction(i + 1, this));
-            // }
+            // 현재 클리어한 스테이지를 저장 후 해당 스테이지 만큼 돌려줌
+            for (var i = 0; i < PlayerInfo.ClearStage; i++)
+            {
+                SubActionMap.Add(i + 1, new StageAction(i + 1, this));
+            }
 
             SelectAndRunAction(SubActionMap);
         }

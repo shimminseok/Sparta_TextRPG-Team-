@@ -1,16 +1,16 @@
 namespace Camp_FourthWeek_Basic_C__;
 
-public class DungeonAction : ActionBase
+public class StageAction : ActionBase
 {
-    private readonly Dungeon? dungeon;
+    private readonly Stage? stage;
 
-    public DungeonAction(int _dunNum, IAction _prevAction)
+    public StageAction(int _dunNum, IAction _prevAction)
     {
-        dungeon = StageTable.GetDungeonById(_dunNum);
+        stage = StageTable.GetDungeonById(_dunNum);
         PrevAction = _prevAction;
     }
 
-    public override string Name => dungeon.DungeonName;
+    public override string Name => stage.DungeonName;
 
     public override void OnExcute()
     {
