@@ -14,7 +14,7 @@ public class MainMenuAction : ActionBase
         SubActionMap[(int)MainManu.Character] = new EnterCharacterInfoAction(mainAction);
         SubActionMap[(int)MainManu.Inventory] = new EnterInventoryAction(mainAction);
         SubActionMap[(int)MainManu.Shop] = new EnterShopAction(mainAction);
-        SubActionMap[(int)MainManu.Dungeon] = new EnterStageAction(mainAction);
+        SubActionMap[(int)MainManu.Stage] = new EnterStageAction(mainAction);
         SubActionMap[(int)MainManu.Quest] = new EnterQuestAction(mainAction);
         SubActionMap[(int)MainManu.Collection] = new EnterCollectionAction(mainAction);
         SubActionMap[(int)MainManu.Rest] = new EnterRestAction(mainAction);
