@@ -24,7 +24,9 @@ namespace Camp_FourthWeek_Basic_C__
             currentStage = _currentStage;
             SubActionMap = new Dictionary<int, IAction>
             {
-                { 1, new AttackSelectAction(this) }
+                { 1, new AttackSelectAction(this) },
+                { 3, new SkillSelectAction(this) },
+                { 4, new CatchSelectAction(this) }
             };
 
             monstersAllList = currentStage.SpawnedMonsters
