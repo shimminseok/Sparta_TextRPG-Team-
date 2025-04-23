@@ -15,7 +15,7 @@ public class MonsterBoxAction : ActionBase
 
     public override void OnExcute()
     {
-        Console.WriteLine("포켓몬을 관리 할 수 있습니다.");
+        Console.WriteLine("포켓몬에 관한 행동을 볼 수 있습니다.");
         Console.WriteLine("\n[포켓몬 목록]");
         
         var player = GameManager.Instance.PlayerInfo;
