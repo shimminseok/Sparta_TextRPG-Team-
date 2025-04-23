@@ -37,8 +37,17 @@ namespace Camp_FourthWeek_Basic_C__
         }
 
 
-        public static string FormatText(string template, Dictionary<string, string> dict)
+        public static string FormatText(string template, Dictionary<int, string>? dict, int maxFormat=0)
         {
+            for(int i = 0; i < maxFormat; i++)
+            {
+                if(dict.ContainsKey(i) == false)
+                {
+                    string placeholder = "{" + i + "}";
+                    template = template.Replace(placeholder, new string(' ', placeholder.Length));
+                }
+            }
+
             foreach (var pair in dict)
             {
                 string placeholder = "{" + pair.Key + "}";
@@ -47,7 +56,6 @@ namespace Camp_FourthWeek_Basic_C__
 
                 string replacement = pair.Value;
 
-                // placeholder 길이 대비 replacement의 “폭” 계산
                 int deleteCount = -placeholder.Length;
                 foreach (char c in replacement)
                 {
@@ -81,13 +89,29 @@ namespace Camp_FourthWeek_Basic_C__
             return template;
         }
 
-        public static Dictionary<string, string> MergeFormatDic(Dictionary<string, string> A, Dictionary<string, string> B)
+        public static (int,Dictionary<int, string>) MergeFormatDic((int, Dictionary<int, string>) A, (int, Dictionary<int, string>)? B)
         {
-            foreach (var value in B)
+            foreach (var value in B.Value.Item2)
             {
-                A[value.Key] = value.Value;
+                A.Item2[value.Key] = value.Value;
             }
-            return A;
+            return (A.Item1+ B.Value.Item1, A.Item2);
+        }
+
+        public static string GetBar(int cur, int Max)
+        {
+            cur = Math.Max(0, Math.Min(cur, Max));
+
+            double ratio = (double)cur / Max;
+            int filled = (int)Math.Ceiling(ratio * 10);
+
+            filled = Math.Max(0, Math.Min(10, filled));
+
+            // 채워진 부분 @, 빈 부분 _
+            const char filledChar = '@';
+            const char emptyChar = '_';
+
+            return $"(( {new string(filledChar, filled)}{new string(emptyChar, 10 - filled)} ))"; ;
         }
     }
     
@@ -96,47 +120,85 @@ namespace Camp_FourthWeek_Basic_C__
     internal static class UiManager
     {
         private static int width = 172;
-        private static int height = 55;
+        private static int height = 59;
 
         private static char[,] uiPanel = new char[height, width];
         private static Dictionary<int, List<int>> uiDic = new Dictionary<int, List<int>>();
         private static Tuple<int, int>? cusorPosition;
         public static void TextShowUI()
         {
-           /*
-           if (IntroRoop() == 1)
-            {
-                
-                UIUpdater(UIName.Intro_TextBox);
-                    UIUpdater(UIName.Intro_SetStarting, new Dictionary<int, Tuple<int, int>?>
-                {                
-                    {0, new Tuple<int, int>(0,10) },
-                    {1, new Tuple<int, int>(20,10) },
-                    {2, new Tuple<int, int>(70,10) },
-                    {3, new Tuple<int, int>(120,10) },
+            /*
+            //인트로
+            if (IntroRoop() == 1)
+             {
+                // 이름 정하기
+                 UIUpdater(UIName.Intro_TextBox);
+                //스타팅 포켓몬
+                     UIUpdater(UIName.Intro_SetStarting, new Dictionary<int, Tuple<int, int>?>
+                 {                
+                     {0, new Tuple<int, int>(0,10) },
+                     {1, new Tuple<int, int>(20,10) },
+                     {2, new Tuple<int, int>(70,10) },
+                     {3, new Tuple<int, int>(120,10) },
 
-                });
-                 UIUpdater(UIName.Main);
-            }
+                 });
+               // 메인
+                  UIUpdater(UIName.Main);
+                // 스테이터스창
+                  UIUpdater(UIName.Status, new Dictionary<int, Tuple<int, int>?>
+                 {
+                     {0, new Tuple<int, int>(0,0) },
+                     {1, new Tuple<int, int>(10,21)},
+                 },
+                 (9,new Dictionary<int, string>
+                 {
+                     {13, "한지우"},
+                     {14, "1500G"},
+                     {15, "피카츄"},
+                     {16, "1"},
+                     {17, "10"},
+                     {18, "5"},
+                     {19, "100"},
+                     {20, "200"},
+                 }));
+             }
            
-            */
-            UIUpdater(UIName.Status, new Dictionary<int, Tuple<int, int>?>
-                {
-                    {0, new Tuple<int, int>(0,0) },
-                    {1, new Tuple<int, int>(10,21)},
-                },
-                new Dictionary<string, string>
-                {
-                    {"13", "한지우"},
-                    {"14", "1500G"},
-                    {"15", "피카츄"},
-                    {"16", "1"},
-                    {"17", "10"},
-                    {"18", "5"},
-                    {"19", "100"},
-                    {"20", "200"},
-                });
+            //전투
+            UIUpdater(UIName.Battle, new Dictionary<int, Tuple<int, int>?>
+                 {
+                     {0, new Tuple<int, int>(0,0) },
+                     {1, new Tuple<int, int>(7,28)},
+                     {2, new Tuple<int, int>(5,6) },
+                     {3, new Tuple<int, int>(60,6) },
+                 },
+                 (18,new Dictionary<int, string>
+                 {   
+                     // 플레이어 정보
+                     {0, 5.ToString()},
+                     {1, MonsterTable.MonsterDataDic[MonsterType.Charizard].Name},
+                     {2, $"{100.ToString()} / {200.ToString()}"},
+                     {3, GetBar(100,200)},
+                     {4, $"{200.ToString()} / {300.ToString()}"},
+                     {5, GetBar(200,300)},
+                     // 적 정보 1
+                     {6, $"L   V  : {10.ToString()}" },
+                     {7, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Squirtle].Name}" },
+                     {8, $"H   P  : {70.ToString()} / {50.ToString()}" },
+                     {9, $"    {GetBar(50,100)}" },
+                     // 적 정보 2
+                     {10, $"L   V  : {7.ToString()}" },
+                     {11, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Bulbasaur].Name}" },
+                     {12, $"H   P  : {70.ToString()} / {100.ToString()}" },
+                     {13, $"    {GetBar(70,100)}" },
+    
+                 }),
+                 new List<int>() { 201, 102, 103 }
+                 );
+             */
 
+            //UIUpdater(UIName.Inventory);
+           // UIUpdater(UIName.SetPokectmon);
+            UIUpdater(UIName.Equipment);
         }
         public static void PrintPanel()
         {
@@ -155,12 +217,20 @@ namespace Camp_FourthWeek_Basic_C__
             Console.Write(sb.ToString());
         }
 
-        public static void UIUpdater(UIName name, Dictionary<int, Tuple<int, int>?>? fixPivotDic = null, Dictionary<string, string>? addFormat = null)
+        public static void UIUpdater(UIName name, Dictionary<int, Tuple<int, int>?>? fixPivotDic = null, (int, Dictionary<int, string>)? addFormat = null, List<int>? addUIList =null)
         {
             Console.Clear();
             ResetUIPanel();
 
-            var printUI = UITable.UITableDic[name];
+            List<int> printUI = UITable.UITableDic[name];
+            if(addUIList != null)
+            {
+                foreach(var value in addUIList)
+                {
+                    printUI.Add(value);
+                }
+            }
+            
             int dicCount = 0;
 
             if(fixPivotDic != null)
@@ -194,7 +264,7 @@ namespace Camp_FourthWeek_Basic_C__
                 ReadLineAt(cusorPosition.Item1, cusorPosition.Item2);
         }
   
-        public static void ChangeUiPanel(UIName name, UI ui, Tuple<int,int>? fixedPivot = null, Dictionary<string, string>? addFormat = null)
+        public static void ChangeUiPanel(UIName name, UI ui, Tuple<int,int>? fixedPivot = null, (int, Dictionary<int, string>)? addFormat = null)
         {
             int pivotX = 0;
             int pivotY = 0;
@@ -218,12 +288,12 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 if(addFormat == null)
                 {
-                    changeString = FormatText(inputString, UITable.textDic[name]);
+                    changeString = FormatText(inputString, UITable.textDic[name].Item2, UITable.textDic[name].Item1);
                 }
                 else
                 {
-                    var mergeDic = MergeFormatDic(UITable.textDic[name], addFormat);
-                    changeString = FormatText(inputString, mergeDic);
+                    (int, Dictionary<int, string>) mergeDic = MergeFormatDic(UITable.textDic[name], addFormat);
+                    changeString = FormatText(inputString, mergeDic.Item2, mergeDic.Item1);
                 }
 
              
