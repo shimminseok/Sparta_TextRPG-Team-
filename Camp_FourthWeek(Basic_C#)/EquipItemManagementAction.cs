@@ -33,8 +33,8 @@ public class EquipItemManagementAction : ActionBase
             var item = InventoryManager.Instance.Inventory[i];
             var sb = new StringBuilder();
             sb.Append($"{PadRightWithKorean($"- {i + 1}", 5)}");
-            
-            
+
+
             if (item.IsEquippedBy(currentMonster))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -46,7 +46,8 @@ public class EquipItemManagementAction : ActionBase
                 sb.Append(
                     $" | {PadRightWithKorean($"{item.Stats[j].GetStatName()} +{item.Stats[j].FinalValue}", 10)} ");
             sb.Append(" | ");
-            var monster = player.Monsters.FirstOrDefault(m => m.ItemId == item.Key);
+
+            var monster = InventoryManager.Instance.MonsterBox.FirstOrDefault(m => m.ItemId == item.Key);
             string equippedMonsterName = string.Empty;
 
             if (item.IsEquipment)

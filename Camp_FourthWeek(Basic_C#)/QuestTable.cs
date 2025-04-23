@@ -47,7 +47,35 @@ public static class QuestTable
                 },
                 new List<int>() { 7, 9 },
                 1500)
-        }
+        },
+        {
+            4, new Quest(4, "구구가 싫어!", QuestType.Main,
+                " 구구가 실허 다 죽었으면 좋겠어 우다다다다",
+                "와 너는 진짜 잔인한 놈이구나?!\n정말 고마워!!",
+                new List<int>(),
+                new List<QuestCondition>()
+                {
+                    new QuestCondition(QuestTargetType.Monster, QuestConditionType.Kill, (int)MonsterType.Pidgey, 0,
+                        5),
+                },
+                new List<int>() { 7, 9 },
+                1500)
+        },
+        {
+            5, new Quest(5, "구구랑 피카츄가 좋아!", QuestType.Main,
+                " 미안한데... 내가 구구랑 피카츄가 꼭 가지고 싶거든?\n근데 내가 능력이 안되서 잡을 수가 없어!!\n구구와 피카츄 한마리를 잡아와 줄수 있겠어?",
+                "와 너는 진짜 뛰어난 포켓몬 트레이너구나?!\n정말 고마워!!",
+                new List<int>(),
+                new List<QuestCondition>()
+                {
+                    new QuestCondition(QuestTargetType.Monster, QuestConditionType.Catch, (int)MonsterType.Pidgey, 0,
+                        1),
+                    new QuestCondition(QuestTargetType.Monster, QuestConditionType.Catch, (int)MonsterType.Pikachu, 0,
+                        1),
+                },
+                new List<int>() { 7, 9 },
+                1500)
+        },
     };
 
     public static Quest GetQuestInfo(int _key)
