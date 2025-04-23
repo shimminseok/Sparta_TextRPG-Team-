@@ -128,77 +128,85 @@ namespace Camp_FourthWeek_Basic_C__
         public static void TextShowUI()
         {
             /*
-            //인트로
-            if (IntroRoop() == 1)
-             {
-                // 이름 정하기
-                 UIUpdater(UIName.Intro_TextBox);
-                //스타팅 포켓몬
-                     UIUpdater(UIName.Intro_SetStarting, new Dictionary<int, Tuple<int, int>?>
-                 {                
-                     {0, new Tuple<int, int>(0,10) },
-                     {1, new Tuple<int, int>(20,10) },
-                     {2, new Tuple<int, int>(70,10) },
-                     {3, new Tuple<int, int>(120,10) },
+             //인트로
+             if (IntroRoop() == 1)
+              {
+                 // 이름 정하기
+                  UIUpdater(UIName.Intro_TextBox);
+                 //스타팅 포켓몬
+                      UIUpdater(UIName.Intro_SetStarting, new Dictionary<int, Tuple<int, int>?>
+                  {                
+                      {0, new Tuple<int, int>(0,10) },
+                      {1, new Tuple<int, int>(20,10) },
+                      {2, new Tuple<int, int>(70,10) },
+                      {3, new Tuple<int, int>(120,10) },
 
-                 });
-               // 메인
-                  UIUpdater(UIName.Main);
-                // 스테이터스창
-                  UIUpdater(UIName.Status, new Dictionary<int, Tuple<int, int>?>
-                 {
-                     {0, new Tuple<int, int>(0,0) },
-                     {1, new Tuple<int, int>(10,21)},
-                 },
-                 (9,new Dictionary<int, string>
-                 {
-                     {13, "한지우"},
-                     {14, "1500G"},
-                     {15, "피카츄"},
-                     {16, "1"},
-                     {17, "10"},
-                     {18, "5"},
-                     {19, "100"},
-                     {20, "200"},
-                 }));
-             }
-           
-            //전투
-            UIUpdater(UIName.Battle, new Dictionary<int, Tuple<int, int>?>
-                 {
-                     {0, new Tuple<int, int>(0,0) },
-                     {1, new Tuple<int, int>(7,28)},
-                     {2, new Tuple<int, int>(5,6) },
-                     {3, new Tuple<int, int>(60,6) },
-                 },
-                 (18,new Dictionary<int, string>
-                 {   
-                     // 플레이어 정보
-                     {0, 5.ToString()},
-                     {1, MonsterTable.MonsterDataDic[MonsterType.Charizard].Name},
-                     {2, $"{100.ToString()} / {200.ToString()}"},
-                     {3, GetBar(100,200)},
-                     {4, $"{200.ToString()} / {300.ToString()}"},
-                     {5, GetBar(200,300)},
-                     // 적 정보 1
-                     {6, $"L   V  : {10.ToString()}" },
-                     {7, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Squirtle].Name}" },
-                     {8, $"H   P  : {70.ToString()} / {50.ToString()}" },
-                     {9, $"    {GetBar(50,100)}" },
-                     // 적 정보 2
-                     {10, $"L   V  : {7.ToString()}" },
-                     {11, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Bulbasaur].Name}" },
-                     {12, $"H   P  : {70.ToString()} / {100.ToString()}" },
-                     {13, $"    {GetBar(70,100)}" },
-    
-                 }),
-                 new List<int>() { 201, 102, 103 }
-                 );
-             */
+                  });
+                // 메인
+                   UIUpdater(UIName.Main);
+                 // 스테이터스창
+                   UIUpdater(UIName.Status, new Dictionary<int, Tuple<int, int>?>
+                  {
+                      {0, new Tuple<int, int>(0,0) },
+                      {1, new Tuple<int, int>(10,23)},
+                  },
+                  (9,new Dictionary<int, string>
+                  {
+                      {13, "한지우"},
+                      {14, "1500G"},
+                      {15, "피카츄"},
+                      {16, "1"},
+                      {17, "10"},
+                      {18, "5"},
+                      {19, "100"},
+                      {20, "200"},
+                  }));
+              }
 
-            //UIUpdater(UIName.Inventory);
-           // UIUpdater(UIName.SetPokectmon);
-            UIUpdater(UIName.Equipment);
+             //전투
+             UIUpdater(UIName.Battle, new Dictionary<int, Tuple<int, int>?>
+                  {
+                      {0, new Tuple<int, int>(0,0) }, // 배경
+                      {1, new Tuple<int, int>(7,28)}, // 내 포켓몬
+                      {2, new Tuple<int, int>(5,6) }, // 적 1
+
+                  },
+                  (18,new Dictionary<int, string>
+                  {   
+                      // 플레이어 정보
+                      {0, 5.ToString()},
+                      {1, MonsterTable.MonsterDataDic[MonsterType.Charizard].Name},
+                      {2, $"{100.ToString()} / {200.ToString()}"},
+                      {3, GetBar(100,200)},
+                      {4, $"{200.ToString()} / {300.ToString()}"},
+                      {5, GetBar(200,300)},
+                      // 적 정보 1
+                      {6, $"L   V  : {10.ToString()}" },
+                      {7, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Squirtle].Name}" },
+                      {8, $"H   P  : {70.ToString()} / {50.ToString()}" },
+                      {9, $"    {GetBar(50,100)}" },
+
+
+                  }),
+                  new List<int>() { 201, 102} // 
+                  );
+
+
+             UIUpdater(UIName.Inventory);
+             UIUpdater(UIName.SetPokectmon);
+             UIUpdater(UIName.Equipment);
+             UIUpdater(UIName.Fruit);
+             UIUpdater(UIName.Quest_Main) ;
+             UIUpdater(UIName.Quest_List_Working) ;
+             UIUpdater(UIName.Quest_List_Acceptyet) ;
+             UIUpdater(UIName.Quest_Detail_Working) ;
+              UIUpdater(UIName.Quest_Detail_Acceptyet) ;
+                  UIUpdater(UIName.Collection);
+                        UIUpdater(UIName.Location);
+            */
+            UIUpdater(UIName.Center);
+
+
         }
         public static void PrintPanel()
         {
