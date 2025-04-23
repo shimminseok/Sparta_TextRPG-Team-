@@ -14,7 +14,7 @@ public static class SkillTable
             },SkillAttackType.Select,1)
         },
         {
-            2, new Skill(2, "전광석화", new Dictionary<StatType, Stat>()
+            2, new Skill(2, "번개", new Dictionary<StatType, Stat>()
             {
                 { StatType.Attack, new Stat(StatType.Attack, 1.5f) },
                 { StatType.CurMp, new Stat(StatType.CurMp, 15) },
