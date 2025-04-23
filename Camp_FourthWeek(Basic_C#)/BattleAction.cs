@@ -9,7 +9,8 @@
             SubActionMap = new Dictionary<int, IAction>
             {
                 { 1, new AttackSelectAction(this) },
-                { 2, new SkillSelectAction(this) }
+                { 2, new SkillSelectAction(this) },
+                {4, new CatchSelectAction(this)}
             };
         }
         public override string Name => "배틀";
