@@ -18,6 +18,7 @@ public class MainMenuAction : ActionBase
         SubActionMap[(int)MainManu.Quest] = new EnterQuestAction(mainAction);
         SubActionMap[(int)MainManu.Collection] = new EnterCollectionAction(mainAction);
         SubActionMap[(int)MainManu.Rest] = new EnterRestAction(mainAction);
+        SubActionMap[(int)MainManu.Battle] = new EnterBattleAction(mainAction);
 
         SubActionMap[(int)MainManu.Reset] = new EnterResetAction(mainAction);
     }
