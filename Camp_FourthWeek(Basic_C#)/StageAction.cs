@@ -10,12 +10,17 @@ public class StageAction : ActionBase
         PrevAction = _prevAction;
     }
 
-    public override string Name => stage.DungeonName;
+    public override string Name => stage.StageName;
 
     public override void OnExcute()
     {
         //전투 시작
-        Console.WriteLine("전투를 시작해요!!");
+        //내가 이기면
+        StageManager.Instance.ClearCurrentStage(stage);
+
+        //내가 지면
+        StageManager.Instance.UnClearStage(stage);
+
         PrevAction!.Execute();
     }
 }

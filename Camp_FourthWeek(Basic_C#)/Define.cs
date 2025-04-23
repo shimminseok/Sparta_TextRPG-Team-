@@ -90,7 +90,6 @@ public interface IAction
 public class PlayerInfo
 {
     public int Gold = 1500;
-    public int ClearStage = 1;
 
     public PlayerInfo(MonsterType _monster, string _name)
     {
@@ -220,60 +219,18 @@ public class Stage
     //권장 방어력
     private readonly PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
 
-    public Stage(string _dungeonName, MonsterType[] _monsters, int _rewardGold)
+    public Stage(int _key, string _stageName, MonsterType[] _monsters, int _rewardGold)
     {
-        DungeonName = _dungeonName;
+        Key = _key;
+        StageName = _stageName;
         SpawnedMonsters = _monsters;
         RewardGold = _rewardGold;
     }
 
-    public string DungeonName { get; }
+    public int Key { get; }
+    public string StageName { get; }
     public int RewardGold { get; private set; }
     public MonsterType[] SpawnedMonsters { get; }
-
-    public string ClearDungeon(float dam)
-    {
-        LevelManager.AddClearCount();
-        var rand = new Random();
-        var stat = playerInfo.Stats[StatType.Attack].FinalValue;
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        RewardGold += rand.Next((int)stat, (int)(stat * 2 + 1));
-
-        var originHP = curHP.FinalValue;
-        curHP.ModifyAllValue(dam);
-
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 클리어");
-        sb.AppendLine("축하 합니다!!");
-        sb.AppendLine($"{DungeonName}을 클리어 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-        sb.AppendLine($"Gold {playerInfo.Gold} -> {playerInfo.Gold + RewardGold}");
-
-        playerInfo.Gold += RewardGold;
-
-        return sb.ToString();
-    }
-
-    public string UnClearDungeon(float _dam)
-    {
-        var rand = new Random();
-
-        var damage = (int)(_dam / 2);
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        var originHP = curHP.FinalValue;
-
-        curHP.ModifyAllValue(damage);
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 공략 실패");
-        sb.AppendLine($"{DungeonName} 공략에 실패 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-
-        return sb.ToString();
-    }
 }
 
 public class Monster

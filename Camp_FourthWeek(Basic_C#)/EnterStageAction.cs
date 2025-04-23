@@ -33,7 +33,7 @@ public class EnterStageAction : ActionBase
 
             //TO DO
             // 현재 클리어한 스테이지를 저장 후 해당 스테이지 만큼 돌려줌
-            for (var i = 0; i < PlayerInfo.ClearStage; i++)
+            for (var i = 0; i <= StageManager.Instance.ClearStage; i++)
             {
                 SubActionMap.Add(i + 1, new StageAction(i + 1, this));
             }

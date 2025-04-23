@@ -6,7 +6,7 @@ public static class StageTable
     {
         {
             1,
-            new Stage("1 스테이지",
+            new Stage(1, "1 스테이지",
                 [
                     MonsterType.Pikachu, MonsterType.Charmander, MonsterType.Squirtle, MonsterType.Bulbasaur,
                     MonsterType.Pidgey
@@ -15,7 +15,7 @@ public static class StageTable
         },
         {
             2,
-            new Stage("2 스테이지",
+            new Stage(2, "2 스테이지",
                 [
                     MonsterType.Pikachu, MonsterType.Charmander, MonsterType.Squirtle, MonsterType.Bulbasaur,
                     MonsterType.Pidgey
@@ -24,7 +24,7 @@ public static class StageTable
         },
         {
             3,
-            new Stage("3 스테이지",
+            new Stage(3, "3 스테이지",
                 [
                     MonsterType.Pikachu, MonsterType.Charmander, MonsterType.Squirtle, MonsterType.Bulbasaur,
                     MonsterType.Pidgey, MonsterType.Dratini
@@ -33,7 +33,7 @@ public static class StageTable
         },
         {
             4,
-            new Stage("4 스테이지",
+            new Stage(4, "4 스테이지",
                 [
                     MonsterType.Pikachu, MonsterType.Charmander, MonsterType.Squirtle, MonsterType.Bulbasaur,
                     MonsterType.Pidgey, MonsterType.Dratini, MonsterType.Raichu, MonsterType.Charmeleon,
@@ -43,7 +43,7 @@ public static class StageTable
         },
         {
             5,
-            new Stage("5 스테이지",
+            new Stage(5, "5 스테이지",
             [
                 MonsterType.Pikachu, MonsterType.Charmander, MonsterType.Squirtle, MonsterType.Bulbasaur,
                 MonsterType.Pidgey, MonsterType.Dratini, MonsterType.Raichu, MonsterType.Charmeleon,
@@ -52,7 +52,7 @@ public static class StageTable
         },
         {
             6,
-            new Stage("6 스테이지",
+            new Stage(6, "6 스테이지",
             [
                 MonsterType.Dratini, MonsterType.Raichu, MonsterType.Charmeleon,
                 MonsterType.Wartortle, MonsterType.Ivysaur, MonsterType.Pidgeotto, MonsterType.Dragonair,
@@ -61,7 +61,7 @@ public static class StageTable
         },
         {
             7,
-            new Stage("7 스테이지",
+            new Stage(7, "7 스테이지",
             [
                 MonsterType.Dragonair, MonsterType.Charizard, MonsterType.Blastoise, MonsterType.Venusaur,
                 MonsterType.Pidgeot, MonsterType.Snorlax, MonsterType.Pachirisu
@@ -69,7 +69,7 @@ public static class StageTable
         },
         {
             8,
-            new Stage("8 스테이지",
+            new Stage(8, "8 스테이지",
             [
                 MonsterType.Dragonair, MonsterType.Charizard, MonsterType.Blastoise, MonsterType.Venusaur,
                 MonsterType.Pidgeot, MonsterType.Snorlax, MonsterType.Pachirisu
@@ -77,7 +77,7 @@ public static class StageTable
         },
         {
             9,
-            new Stage("9 스테이지",
+            new Stage(9, "9 스테이지",
             [
                 MonsterType.Dragonair, MonsterType.Charizard, MonsterType.Blastoise, MonsterType.Venusaur,
                 MonsterType.Pidgeot, MonsterType.Snorlax, MonsterType.Pachirisu
@@ -85,7 +85,7 @@ public static class StageTable
         },
         {
             10,
-            new Stage("10 스테이지",
+            new Stage(10, "10 스테이지",
             [
                 MonsterType.Articuno, MonsterType.Zapdos, MonsterType.Moltres, MonsterType.Stakataka
             ], 2500)
