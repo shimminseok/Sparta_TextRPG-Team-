@@ -2,7 +2,7 @@ namespace Camp_FourthWeek_Basic_C__;
 
 public static class ExpTable
 {
-    private static Dictionary<int, int> ExpDataDic { get; set; } = new Dictionary<int, int>()
+    public static Dictionary<int, int> ExpDataDic { get; private set; } = new Dictionary<int, int>()
     {
         {
             1, 0
