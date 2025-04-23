@@ -69,6 +69,10 @@ public enum MainManu
     Rest,
     Reset
 }
+public enum SkillAttackType
+{
+    All, Random, Select
+}
 
 #endregion[Enum]
 
@@ -321,16 +325,20 @@ public class Monster
 
 public class Skill
 {
-    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat)
+    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType, int _targetCount)
     {
         Id = _id;
         Name = _name;
         Stats = _stat;
+        SkillAttackType = _skillAttackType;
+        TargetCount = _targetCount;
     }
 
     public int Id { get; private set; }
     public string Name { get; private set; }
-    public Dictionary<StatType, Stat> Stats { get; }
+    public Dictionary<StatType, Stat> Stats { get; private set; }
+    public SkillAttackType SkillAttackType { get; private set; }
+    public int TargetCount {  get; private set; }
 }
 
 public class SaveData
