@@ -310,9 +310,10 @@ public class Monster
     public void AddExp(int _exp)
     {
         Exp += _exp;
-        if(Exp > 10)//Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
+        int maxexp = ExpTable.GetExpByLevel(Lv + 1);
+        if (Exp > maxexp)//Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
         {
-            Exp -= 10;
+            Exp -= maxexp;
             LevelUp();
         }
     }
