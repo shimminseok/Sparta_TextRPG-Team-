@@ -17,7 +17,7 @@ namespace Camp_FourthWeek_Basic_C__
             float damage = PlayerInfo.Monster.Stats[StatType.Attack].FinalValue;
             float monsterOriginHp = monster.Stats[StatType.CurHp].FinalValue;
 
-            //메세지 수정
+            //메세지 수정 -> 
             Console.WriteLine("Battle");
             Console.WriteLine($"{PlayerInfo.Monster.Name}의 공격!");
             Console.WriteLine($"Lv.{monster.Lv} {monster.Name}을(를) 맞췄습니다. [데미지 : {damage}\n");
