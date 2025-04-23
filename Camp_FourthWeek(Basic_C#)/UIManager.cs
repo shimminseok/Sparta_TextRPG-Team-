@@ -121,6 +121,8 @@ namespace Camp_FourthWeek_Basic_C__
     {
         private static int width = 172;
         private static int height = 59;
+        private static int monStartNum = 100;
+        private static int animSpeed = 200;
 
         private static char[,] uiPanel = new char[height, width];
         private static Dictionary<int, List<int>> uiDic = new Dictionary<int, List<int>>();
@@ -245,7 +247,7 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 foreach (int value in printUI)
                 {
-                    if (printUI[dicCount] < 100)
+                    if (printUI[dicCount] < monStartNum)
                     {
                         ChangeUiPanel(name, UITable.UIDic[value], null, addFormat);
                         dicCount++;
@@ -387,27 +389,27 @@ namespace Camp_FourthWeek_Basic_C__
             while (true)
             {
                 UIUpdater(UIName.Intro_GameStart_1);
-                Thread.Sleep(200);
+                Thread.Sleep(animSpeed);
                 var result = CheckIntroInput(); if (result.HasValue) return result.Value;
 
                 UIUpdater(UIName.Intro_GameStart_2);
-                Thread.Sleep(200);
+                Thread.Sleep(animSpeed);
                 result = CheckIntroInput(); if (result.HasValue) return result.Value;
 
                 UIUpdater(UIName.Intro_GameStart_3);
-                Thread.Sleep(200);
+                Thread.Sleep(animSpeed);
                 result = CheckIntroInput(); if (result.HasValue) return result.Value;
 
                 UIUpdater(UIName.Intro_GameStart_2);
-                Thread.Sleep(200);
+                Thread.Sleep(animSpeed);
                 result = CheckIntroInput(); if (result.HasValue) return result.Value;
 
                 UIUpdater(UIName.Intro_GameStart_1);
-                Thread.Sleep(200);
+                Thread.Sleep(animSpeed);
                 result = CheckIntroInput(); if (result.HasValue) return result.Value;
 
                 UIUpdater(UIName.Intro_GameStart_4);
-                Thread.Sleep(200);
+                Thread.Sleep(animSpeed);
                 result = CheckIntroInput(); if (result.HasValue) return result.Value;
             }
         }
