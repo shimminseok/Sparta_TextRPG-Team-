@@ -69,9 +69,12 @@ public enum MainManu
     Rest,
     Reset
 }
+
 public enum SkillAttackType
 {
-    All, Random, Select
+    All,
+    Random,
+    Select
 }
 
 #endregion[Enum]
@@ -216,16 +219,16 @@ public class Dungeon
     //권장 방어력
     private readonly PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
 
-    public Dungeon(string _dungeonName, Stat _recommendedStat, int _rewardGold)
+    public Dungeon(string _dungeonName, MonsterType[] _monsters, int _rewardGold)
     {
         DungeonName = _dungeonName;
-        RecommendedStat = _recommendedStat;
+        SpawnedMonsters = _monsters;
         RewardGold = _rewardGold;
     }
 
     public string DungeonName { get; }
-    public Stat RecommendedStat { get; private set; }
     public int RewardGold { get; private set; }
+    public MonsterType[] SpawnedMonsters { get; }
 
     public string ClearDungeon(float dam)
     {
@@ -310,12 +313,13 @@ public class Monster
     public void AddExp(int _exp)
     {
         Exp += _exp;
-        if(Exp > 10)//Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
+        if (Exp > 10) //Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
         {
             Exp -= 10;
             LevelUp();
         }
     }
+
     private void LevelUp()
     {
         Lv++;
@@ -325,7 +329,8 @@ public class Monster
 
 public class Skill
 {
-    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType, int _targetCount)
+    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType,
+        int _targetCount)
     {
         Id = _id;
         Name = _name;
@@ -338,7 +343,7 @@ public class Skill
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; private set; }
     public SkillAttackType SkillAttackType { get; private set; }
-    public int TargetCount {  get; private set; }
+    public int TargetCount { get; private set; }
 }
 
 public class SaveData
