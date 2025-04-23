@@ -10,7 +10,7 @@ namespace Camp_FourthWeek_Basic_C__
     {
         private Skill? skill;
         public override string Name =>
-            skill is null ? "공격하기" : $"{skill.Name} - MP {skill.Stats[StatType.CurMp].FinalValue}\n";
+            skill is null ? "공격하기" : $"{skill.Name} - MP {skill.Stats[StatType.CurMp].FinalValue}\n{skill.Description}";
 
         public override void OnExcute()
         {
