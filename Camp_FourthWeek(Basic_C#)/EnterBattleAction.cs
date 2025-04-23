@@ -28,7 +28,7 @@ namespace Camp_FourthWeek_Basic_C__
         {
             bool isValidInput = false; //while문을 돌리기 위해
             Console.Clear();
-            if(!(MonsterSelectList.Count > 0)) //(!isMonsterListInitialized)// //메인에 돌아갔다 와도 교체 되지 않음. //클리어(몬스터가 모두 dead)이후 교체도 해야함.
+            //if(!(MonsterSelectList.Count > 0)) //(!isMonsterListInitialized)// //메인에 돌아갔다 와도 교체 되지 않음. //클리어(몬스터가 모두 dead)이후 교체도 해야함.
             {
                 RandomMonster(); //몬스터 리스트 출력
                 //isMonsterListInitialized = true;
