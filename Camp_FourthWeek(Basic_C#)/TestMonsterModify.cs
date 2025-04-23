@@ -1,12 +1,12 @@
 namespace Camp_FourthWeek_Basic_C__;
 
-public class TestMonsterModify:ActionBase
+public class TestMonsterModify : ActionBase
 {
-
     public TestMonsterModify(IAction _preAction)
     {
-        PrevAction=_preAction;
+        PrevAction = _preAction;
     }
+
     public override string Name => "테스트 포켓몬 추가";
 
     public override void OnExcute()
@@ -21,18 +21,20 @@ public class TestMonsterModify:ActionBase
 
         var rand = new Random();
         var newType = types[rand.Next(types.Count)];
-        if (player.Monsters.Any(m => m.Type == newType))
+        if (InventoryManager.Instance.MonsterBox.Any(m => m.Type == newType))
         {
             Console.WriteLine($"{newType}는 이미 보유 중.");
         }
+
         if (MonsterTable.MonsterDataDic.TryGetValue(newType, out var monster))
         {
-            player.Monsters.Add(monster);
+            InventoryManager.Instance.AddMonsterToBox(monster);
         }
         else
         {
             Console.WriteLine($"{newType}데이터를 찾을수없지롱");
         }
+
         PrevAction?.Execute();
     }
 }

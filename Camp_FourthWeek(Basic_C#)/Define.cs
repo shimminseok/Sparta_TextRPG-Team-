@@ -95,7 +95,8 @@ public class PlayerInfo
     public PlayerInfo(MonsterType _monster, string _name)
     {
         Monster = MonsterTable.MonsterDataDic[_monster];
-        Monsters.Add(Monster);
+        // Monsters.Add(Monster);
+        InventoryManager.Instance.AddMonsterToBox(Monster);
         Stats = Monster.Stats.ToDictionary();
         Name = _name;
         Skills = Monster.Skills;
@@ -115,7 +116,6 @@ public class PlayerInfo
 
     public string Name { get; private set; }
     public Monster Monster { get; set; }
-    public List<Monster> Monsters { get; } = new();
     public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
 }
