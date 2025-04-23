@@ -14,12 +14,13 @@ public class InventoryManager()
     }
 
     public List<Item> Inventory { get; } = new();
+    public List<Monster> MonsterBox { get; } = new();
 
     public void AddItem(Item _item)
     {
         Inventory.Add(_item);
         //퀘스트 확인한번하기 ㅎ
-        QuestManager.Instance.UpdateCurrentCount(QuestTargetType.Item, _item.Key);
+        QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Item, QuestConditionType.Buy), _item.Key);
     }
 
     public void RemoveItem(Item _item)
@@ -28,5 +29,10 @@ public class InventoryManager()
             EquipmentManager.UnequipItem(_item.ItemType);
 
         Inventory.Remove(_item);
+    }
+
+    public void AddMonsterToBox(Monster _monster)
+    {
+        MonsterBox.Add(_monster);
     }
 }

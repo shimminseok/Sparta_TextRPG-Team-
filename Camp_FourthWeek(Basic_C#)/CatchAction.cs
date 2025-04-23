@@ -2,12 +2,11 @@
 
 namespace Camp_FourthWeek_Basic_C__
 {
-
     public class CatchAction : ActionBase
     {
         private Monster monster;
 
-        public CatchAction(Monster _monster,IAction _prevAction)
+        public CatchAction(Monster _monster, IAction _prevAction)
         {
             PrevAction = _prevAction;
             monster = _monster;
@@ -23,6 +22,12 @@ namespace Camp_FourthWeek_Basic_C__
             float hpRatio = monster.Stats[StatType.CurHp].FinalValue / monster.Stats[StatType.MaxHp].FinalValue;
             float catchChance = maximumCatchChance - (maximumCatchChance - basicCatchChance) * hpRatio;
 
+
+            //포획 성공시
+            QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Monster, QuestConditionType.Catch),
+                (int)monster.Type);
+            InventoryManager.Instance.AddMonsterToBox(monster);
+            //
 
             SelectAndRunAction(SubActionMap);
         }
