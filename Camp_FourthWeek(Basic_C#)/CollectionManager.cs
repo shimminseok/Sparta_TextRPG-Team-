@@ -37,6 +37,11 @@ public class CollectionManager
     {
         return CollectionMonsterDataDic.TryGetValue(_key, out var monster) && monster.IsCaptured;
     }
+
+    public void GetLoadData(Dictionary<MonsterType, CollectionData> loadData)
+    {
+        CollectionMonsterDataDic = loadData.ToDictionary();
+    }
 }
 
 public class CollectionData
