@@ -21,7 +21,6 @@ public abstract partial class ActionBase : IAction
     }
 
     public abstract void OnExcute();
-
     public void SelectAndRunAction(Dictionary<int, IAction> _actionMap,bool _isView=false)
     {
         Console.WriteLine();

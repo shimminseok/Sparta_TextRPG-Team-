@@ -30,6 +30,7 @@ public class GameManager
         LoadDungeonClearProgress();
         LoadQuestProgress();
         LoadPlayerGold();
+        LoadCollectionData();
     }
 
     public void SaveGame()
@@ -54,7 +55,8 @@ public class GameManager
             EquipmentItem = GetEquippedItemKeys(),
             DungeonClearCount = LevelManager.ClearDungeonCount,
             Quests = GetCurrentQuestData(),
-            ClearQuests = QuestManager.Instance.ClearQuestList.ToList()
+            ClearQuests = QuestManager.Instance.ClearQuestList.ToList(),
+            CollectionData = GetCurrentCollectionData()
         };
         var sJson = JsonConvert.SerializeObject(saveData, Formatting.Indented);
         string encrypted = AESUtil.Encrypt(sJson);
@@ -131,6 +133,11 @@ public class GameManager
         PlayerInfo.Gold = loadData.Gold;
     }
 
+    void LoadCollectionData()
+    {
+        CollectionManager.Instnace.GetLoadData(loadData.CollectionData);
+    }
+
     #endregion
 
     #region [SaveGame]
@@ -161,6 +168,11 @@ public class GameManager
                         .ToList()
                 ))
             .ToList();
+    }
+
+    Dictionary<MonsterType, CollectionData> GetCurrentCollectionData()
+    {
+        return CollectionManager.Instnace.CollectionMonsterDataDic.ToDictionary();
     }
 
     #endregion

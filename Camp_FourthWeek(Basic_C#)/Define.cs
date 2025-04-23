@@ -70,6 +70,13 @@ public enum MainManu
     Reset
 }
 
+public enum SkillAttackType
+{
+    All,
+    Random,
+    Select
+}
+
 #endregion[Enum]
 
 public interface IAction
@@ -207,65 +214,23 @@ public class Stat
     }
 }
 
-public class Dungeon
+public class Stage
 {
     //권장 방어력
     private readonly PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
 
-    public Dungeon(string _dungeonName, Stat _recommendedStat, int _rewardGold)
+    public Stage(int _key, string _stageName, MonsterType[] _monsters, int _rewardGold)
     {
-        DungeonName = _dungeonName;
-        RecommendedStat = _recommendedStat;
+        Key = _key;
+        StageName = _stageName;
+        SpawnedMonsters = _monsters;
         RewardGold = _rewardGold;
     }
 
-    public string DungeonName { get; }
-    public Stat RecommendedStat { get; private set; }
+    public int Key { get; }
+    public string StageName { get; }
     public int RewardGold { get; private set; }
-
-    public string ClearDungeon(float dam)
-    {
-        LevelManager.AddClearCount();
-        var rand = new Random();
-        var stat = playerInfo.Stats[StatType.Attack].FinalValue;
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        RewardGold += rand.Next((int)stat, (int)(stat * 2 + 1));
-
-        var originHP = curHP.FinalValue;
-        curHP.ModifyAllValue(dam);
-
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 클리어");
-        sb.AppendLine("축하 합니다!!");
-        sb.AppendLine($"{DungeonName}을 클리어 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-        sb.AppendLine($"Gold {playerInfo.Gold} -> {playerInfo.Gold + RewardGold}");
-
-        playerInfo.Gold += RewardGold;
-
-        return sb.ToString();
-    }
-
-    public string UnClearDungeon(float _dam)
-    {
-        var rand = new Random();
-
-        var damage = (int)(_dam / 2);
-        var curHP = playerInfo.Stats[StatType.CurHp];
-        var originHP = curHP.FinalValue;
-
-        curHP.ModifyAllValue(damage);
-        var sb = new StringBuilder();
-        sb.AppendLine("던전 공략 실패");
-        sb.AppendLine($"{DungeonName} 공략에 실패 하였습니다.");
-
-        sb.AppendLine("[탐험 결과]");
-        sb.AppendLine($"체력 {originHP} -> {curHP.FinalValue}");
-
-        return sb.ToString();
-    }
+    public MonsterType[] SpawnedMonsters { get; }
 }
 
 public class Monster
@@ -301,22 +266,43 @@ public class Monster
     public List<int> Skills { get; private set; }
     public int ItemId { get; set; }
     public int Lv { get; private set; }
-
     public int Exp { get; private set; }
+
+    public void AddExp(int _exp)
+    {
+        Exp += _exp;
+        int maxExp = ExpTable.GetExpByLevel(Lv + 1);
+        if (Exp > maxExp) //Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
+        {
+            Exp -= maxExp;
+            LevelUp();
+        }
+    }
+
+    private void LevelUp()
+    {
+        Lv++;
+        //Todo : 진화를 여기서 하면 화면에 어떻게 뿌릴것인가?
+    }
 }
 
 public class Skill
 {
-    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat)
+    public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType,
+        int _targetCount)
     {
         Id = _id;
         Name = _name;
         Stats = _stat;
+        SkillAttackType = _skillAttackType;
+        TargetCount = _targetCount;
     }
 
     public int Id { get; private set; }
     public string Name { get; private set; }
-    public Dictionary<StatType, Stat> Stats { get; }
+    public Dictionary<StatType, Stat> Stats { get; private set; }
+    public SkillAttackType SkillAttackType { get; private set; }
+    public int TargetCount { get; private set; }
 }
 
 public class SaveData
@@ -335,6 +321,9 @@ public class SaveData
     public List<SaveQeust> Quests = new List<SaveQeust>();
     public List<int> ClearQuests = new List<int>();
 
+    //CollectionData
+    public Dictionary<MonsterType, CollectionData> CollectionData = new Dictionary<MonsterType, CollectionData>();
+
     public SaveData(SaveData _data)
     {
         Name = _data.Name;
@@ -345,6 +334,7 @@ public class SaveData
         Gold = _data.Gold;
         Quests = _data.Quests;
         ClearQuests = _data.ClearQuests;
+        CollectionData = _data.CollectionData;
     }
 
     public SaveData()
