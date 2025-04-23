@@ -5,20 +5,42 @@ public class EnterDungeonAction : ActionBase
     public EnterDungeonAction(IAction _prevAction)
     {
         PrevAction = _prevAction;
-        SubActionMap = new Dictionary<int, IAction>();
-        for (var i = 0; i < DungeonTable.DungeonDic.Count; i++) SubActionMap.Add(i + 1, new DungeonAction(i + 1, this));
+        //TO DO
+        //상태 보기와 전투 시작을 나눠줌
+        // SubActionMap[1] = 
+        SubActionMap[2] = new SelectStageAction(this);
     }
 
-    public override string Name => "던전 입장";
+    public override string Name => "지역 이동";
 
     public override void OnExcute()
     {
-        Console.WriteLine("");
-
-        Console.WriteLine("[던전 목록]");
-        Console.WriteLine($"현재 공격력 : {PlayerInfo.Stats[StatType.Attack].FinalValue}");
-        Console.WriteLine($"현재 방어력 : {PlayerInfo.Stats[StatType.Defense].FinalValue}");
-
+        //TO DO
+        //Clear한 스테이지를 저장한 후 그 스테이지에 맞게 뿌려줌
         SelectAndRunAction(SubActionMap);
+    }
+
+    public class SelectStageAction : ActionBase
+    {
+        public override string Name => "전투 시작";
+
+        public SelectStageAction(IAction _prAction)
+        {
+            PrevAction = _prAction;
+        }
+
+        public override void OnExcute()
+        {
+            SubActionMap.Clear();
+
+            //TO DO
+            //현재 클리어한 스테이지를 저장 후 해당 스테이지 만큼 돌려줌
+            // for (var i = 0; i < PlayerInfo.ClearStage; i++)
+            // {
+            //     SubActionMap.Add(i + 1, new DungeonAction(i + 1, this));
+            // }
+
+            SelectAndRunAction(SubActionMap);
+        }
     }
 }
