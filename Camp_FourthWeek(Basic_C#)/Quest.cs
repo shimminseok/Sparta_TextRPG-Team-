@@ -23,6 +23,7 @@ public enum QuestConditionType
     Buy, // 구매하기
     Catch, // 포획
     Use, // 사용하기
+    Kill,
 }
 
 //퀘스트 진행 사항
@@ -140,8 +141,13 @@ public class QuestCondition
             }
             case QuestConditionType.Use:
             {
-                string itemName = MonsterTable.GetMonsterByType((MonsterType)TargetID).Name;
+                string itemName = ItemTable.GetItemById(TargetID).Name;
                 return $"{itemName} {RequiredCount}개 사용하기";
+            }
+            case QuestConditionType.Kill:
+            {
+                string monsterName = MonsterTable.GetMonsterByType((MonsterType)TargetID).Name;
+                return $"{monsterName} {RequiredCount}마리 처치하기";
             }
             default:
                 return $"Unknown Quest Condition: {ConditionType}";

@@ -15,12 +15,12 @@ public class StageAction : ActionBase
         }
 
         PrevAction = _prevAction;
-        SubActionMap[1] = new EnterBattleAction(stage, this);
+        SubActionMap[1] = new EnterBattleAction(stage, PrevAction);
     }
 
 
     public override void OnExcute()
     {
-        SelectAndRunAction(SubActionMap);
+        SubActionMap[1].Execute();
     }
 }

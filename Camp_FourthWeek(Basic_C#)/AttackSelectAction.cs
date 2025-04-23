@@ -8,7 +8,9 @@ namespace Camp_FourthWeek_Basic_C__
 {
     internal class AttackSelectAction : ActionBase
     {
-        public override string Name => "공격하기";
+        private Skill? skill;
+        public override string Name =>
+            skill is null ? "공격하기" : $"{skill.Name} - MP {skill.Stats[StatType.CurMp].FinalValue}\n{skill.Description}";
 
         public override void OnExcute()
         {
@@ -25,9 +27,10 @@ namespace Camp_FourthWeek_Basic_C__
             SelectAndRunAction(SubActionMap);
         }
 
-        public AttackSelectAction(IAction _prevAction)
+        public AttackSelectAction(IAction _prevAction, Skill? _skill = null)
         {
             PrevAction = _prevAction;
+            skill = _skill;
         }
     }
 }

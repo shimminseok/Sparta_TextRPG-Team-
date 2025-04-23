@@ -1,4 +1,6 @@
-﻿namespace Camp_FourthWeek_Basic_C__;
+﻿using System.Dynamic;
+
+namespace Camp_FourthWeek_Basic_C__;
 
 public class InventoryManager()
 {
@@ -13,13 +15,18 @@ public class InventoryManager()
         }
     }
 
+    public const float HEAL_AMOUNT = 30f;
+
     public List<Item> Inventory { get; } = new();
+    public List<Monster> MonsterBox { get; } = new();
+
+    public int FruitCount { get; private set; } = 3;
 
     public void AddItem(Item _item)
     {
         Inventory.Add(_item);
         //퀘스트 확인한번하기 ㅎ
-        QuestManager.Instance.UpdateCurrentCount(QuestTargetType.Item, _item.Key);
+        QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Item, QuestConditionType.Buy), _item.Key);
     }
 
     public void RemoveItem(Item _item)
@@ -28,5 +35,27 @@ public class InventoryManager()
             EquipmentManager.UnequipItem(_item.ItemType);
 
         Inventory.Remove(_item);
+    }
+
+    public void AddMonsterToBox(Monster _monster)
+    {
+        MonsterBox.Add(_monster);
+    }
+
+    public void AddFruit()
+    {
+        FruitCount++;
+    }
+
+    public void UseFruit()
+    {
+        if (FruitCount > 0)
+        {
+            FruitCount--;
+            Monster monster = GameManager.Instance.PlayerInfo.Monster;
+            Stat hpStat = monster.Stats[StatType.CurHp];
+            float maxHp = monster.Stats[StatType.MaxHp].FinalValue;
+            hpStat.ModifyBaseValue(HEAL_AMOUNT, 0, maxHp);
+        }
     }
 }

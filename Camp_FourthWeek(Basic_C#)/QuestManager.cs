@@ -9,8 +9,12 @@ public class QuestManager
     public static QuestManager Instance => instance;
 
     //퀘스트를 관리하는 Dic(다른 퀘스트에 같은 TargetID가 있을 수 있기 때문
-    public Dictionary<QuestTargetType, List<QuestCondition>> QuestConditionsMap { get; private set; } =
-        new Dictionary<QuestTargetType, List<QuestCondition>>();
+    public Dictionary<(QuestTargetType, QuestConditionType), List<QuestCondition>> QuestConditionsMap
+    {
+        get;
+        private set;
+    } =
+        new Dictionary<(QuestTargetType, QuestConditionType), List<QuestCondition>>();
 
     //현재 내가 수락한 실질적인 Quest List
     public List<Quest> CurrentAcceptQuestList { get; private set; } = new List<Quest>();
@@ -27,12 +31,12 @@ public class QuestManager
         for (int i = 0; i < quest.Conditions.Count; i++)
         {
             var condition = quest.Conditions[i];
-            if (!QuestConditionsMap.ContainsKey(condition.TargetType))
+            if (!QuestConditionsMap.ContainsKey((condition.TargetType, condition.ConditionType)))
             {
-                QuestConditionsMap[condition.TargetType] = new List<QuestCondition>();
+                QuestConditionsMap[(condition.TargetType, condition.ConditionType)] = new List<QuestCondition>();
             }
 
-            QuestConditionsMap[condition.TargetType].Add(condition);
+            QuestConditionsMap[(condition.TargetType, condition.ConditionType)].Add(condition);
         }
 
         quest.State = QuestState.InProgress;
@@ -67,14 +71,15 @@ public class QuestManager
         CurrentAcceptQuestList.Remove(_quest);
         foreach (var condition in _quest.Conditions)
         {
-            if (QuestConditionsMap.TryGetValue(condition.TargetType, out List<QuestCondition> conditions))
+            if (QuestConditionsMap.TryGetValue((condition.TargetType, condition.ConditionType),
+                    out List<QuestCondition> conditions))
             {
                 conditions.Remove(condition);
             }
         }
     }
 
-    public void UpdateCurrentCount(QuestTargetType _type, int _targetID)
+    public void UpdateCurrentCount((QuestTargetType, QuestConditionType) _type, int _targetID)
     {
         if (QuestConditionsMap.TryGetValue(_type, out List<QuestCondition> conditions))
         {

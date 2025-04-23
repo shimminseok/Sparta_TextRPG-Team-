@@ -20,9 +20,8 @@ public class MonsterBoxAction : ActionBase
         Console.WriteLine("포켓몬에 관한 행동을 볼 수 있습니다.");
         Console.WriteLine("\n[포켓몬 목록]");
 
-        var player = GameManager.Instance.PlayerInfo;
 
-        var monsters = player.Monsters;
+        var monsters = InventoryManager.Instance.MonsterBox;
         int totalMonster = monsters.Count;
         int pageStart = curPokemonPage * PagepokemonSize;
         int pageEnd = Math.Min(pageStart + PagepokemonSize, totalMonster);
@@ -30,7 +29,7 @@ public class MonsterBoxAction : ActionBase
         for (int i = pageStart; i < pageEnd; i++)
         {
             var m = monsters[i];
-            var isEquipped = (m == player.Monster) ? "[E]" : " ";
+            var isEquipped = (m == PlayerInfo.Monster) ? "[E]" : " ";
             var name = m.Name;
             var level = m.Lv;
             var hp = m.Stats[StatType.CurHp].FinalValue;
@@ -56,7 +55,7 @@ public class MonsterBoxAction : ActionBase
     public void MovePage(int _dir)
     {
         SetFeedBackMessage("");
-        var totalPage = GameManager.Instance.PlayerInfo.Monsters.Count;
+        var totalPage = InventoryManager.Instance.MonsterBox.Count;
         int maxPage = (int)Math.Ceiling(totalPage / (float)PagepokemonSize);
         int nextPage = curPokemonPage + _dir;
 
