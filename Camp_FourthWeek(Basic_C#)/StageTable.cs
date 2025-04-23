@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Camp_FourthWeek_Basic_C__;
 
 public static class StageTable

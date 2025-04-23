@@ -90,6 +90,7 @@ public interface IAction
 public class PlayerInfo
 {
     public int Gold = 1500;
+    public int ClearStage = 1;
 
     public PlayerInfo(MonsterType _monster, string _name)
     {
