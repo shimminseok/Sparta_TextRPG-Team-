@@ -128,8 +128,15 @@ public class Item(int _key, string _name, ItemType _type, List<Stat> _stats, str
     public readonly List<Stat> Stats = _stats;
     public int Key { get; private set; } = _key;
 
-    public bool IsEquippedBy(Monster m) => m.ItemId == Key;
+    public bool IsEquippedBy(Monster m) => m.Item == this;
     public bool IsEquipment => EquipmentManager.IsEquipped(this);
+
+    public Item Copy()
+    {
+        return new Item(Key, Name, ItemType, new List<Stat>(Stats.Select(x => x.Copy(x))),
+            Description,
+            Cost);
+    }
 }
 
 public class Stat
@@ -212,6 +219,11 @@ public class Stat
             default: return string.Empty;
         }
     }
+
+    public Stat Copy(Stat _stat)
+    {
+        return new Stat(_stat);
+    }
 }
 
 public class Stage
@@ -255,7 +267,8 @@ public class Monster
         }
 
         Skills = new List<int>(_monster.Skills);
-        ItemId = _monster.ItemId;
+        // ItemId = _monster.ItemId;
+        Item = _monster.Item.Copy();
         Lv = _monster.Lv;
         Exp = _monster.Exp;
     }
@@ -263,8 +276,11 @@ public class Monster
     public MonsterType Type { get; private set; }
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; }
+
     public List<int> Skills { get; private set; }
-    public int ItemId { get; set; }
+
+    // public int ItemId { get; set; }
+    public Item Item { get; set; }
     public int Lv { get; private set; }
     public int Exp { get; private set; }
 

@@ -28,7 +28,11 @@ public abstract partial class ActionBase : IAction
         if (_isView)
         {
             foreach (var action in _actionMap)
+            {
+                if (action.Key < 0)
+                    continue;
                 Console.WriteLine($"{action.Key}. {action.Value.Name}");
+            }
         }
 
         Console.WriteLine();

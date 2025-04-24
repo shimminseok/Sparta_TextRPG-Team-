@@ -18,7 +18,7 @@ public class EquipAction : ActionBase
         var currentMonster = player.Monster;
         var message = string.Empty;
 
-        if (currentMonster.ItemId == item.Key)
+        if (currentMonster.Item == item)
         {
             EquipmentManager.UnequipItem(currentMonster);
         }
@@ -26,25 +26,6 @@ public class EquipAction : ActionBase
         {
             EquipmentManager.EquipmentItem(item);
         }
-        // if (item.IsEquippedBy(currentMonster))
-        // {
-        //     message = $"{item.Name}장착해제 했습니다.";
-        //     EquipmentManager.UnequipItem((item.ItemType));
-        //     currentMonster.ItemId = 0;
-        // }
-        // else
-        // {
-        //     message = $"{item.Name}장착 되었습니다.";
-        //     Monster? monster = InventoryManager.Instance.MonsterBox.Find(monster => monster.ItemId == item.Key);
-        //
-        //     if (monster != null)
-        //     {
-        //         monster.ItemId = 0;
-        //     }
-        //
-        //     player.Monster.ItemId = item.Key;
-        //     EquipmentManager.EquipmentItem(item);
-        // }
 
         Console.WriteLine(message);
         PrevAction?.Execute();
