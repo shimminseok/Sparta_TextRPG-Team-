@@ -208,7 +208,7 @@ namespace Camp_FourthWeek_Basic_C__
 
 
                   }),
-                  new List<int>() { 201, 122 } // 
+                  new List<int>() { 222, 122 } // 
                   );
         }
         public static void PrintPanel()
