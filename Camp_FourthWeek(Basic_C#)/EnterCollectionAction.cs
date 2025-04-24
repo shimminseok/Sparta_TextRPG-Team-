@@ -53,8 +53,9 @@ public class EnterCollectionAction : PagedListActionBase
     public override void OnExcute()
     {
         base.OnExcute();
-        // 이거 주석 해제해 줘야함
-        /*
+
+   
+      int LineCount = 5;
         var lines = GetPageContent();
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
         for (int i = 0; i < lines.Count; i++)
@@ -66,7 +67,7 @@ public class EnterCollectionAction : PagedListActionBase
         if (Page < MaxPage - 1)
             lineDic.Add(9, "-2. 다음 페이지");
         SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Collection, null, (5, lineDic)));
-        */
+
     }
 
     /*public override void OnExcute()
