@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Text;
 
 namespace Camp_FourthWeek_Basic_C__;
 
@@ -92,9 +93,9 @@ public class PlayerInfo
 {
     public int Gold = 1500;
 
-    public PlayerInfo(MonsterType _monster, string _name)
+    public PlayerInfo(Monster _monster, string _name)
     {
-        Monster = MonsterTable.GetMonsterByType(_monster).Copy();
+        Monster = _monster;
         InventoryManager.Instance.AddMonsterToBox(Monster);
         Name = _name;
         Skills = Monster.Skills;
@@ -103,11 +104,6 @@ public class PlayerInfo
     public void ChangeMonsterStat(Monster _monster)
     {
         Monster = _monster;
-        // Stats.Clear();
-        // foreach (var kv in _monster.Stats)
-        // {
-        //     Stats[kv.Key] = new Stat(kv.Key, kv.Value.BaseValue);
-        // }
         Skills = _monster.Skills;
     }
 
@@ -119,17 +115,32 @@ public class PlayerInfo
     public List<int> Skills { get; private set; }
 }
 
-public class Item(int _key, string _name, ItemType _type, List<Stat> _stats, string _description, int _cost)
+public class Item
 {
-    public readonly int Cost = _cost;
-    public readonly string Description = _description;
-    public readonly ItemType ItemType = _type;
-    public readonly string Name = _name;
-    public readonly List<Stat> Stats = _stats;
-    public int Key { get; private set; } = _key;
+    public int Key { get; set; }
+    public int Cost;
+    public string Description;
+    public ItemType ItemType;
+    public string Name;
+    public List<Stat> Stats;
+    public int UniqueNumber;
 
     public bool IsEquippedBy(Monster m) => m.Item == this;
     public bool IsEquipment => EquipmentManager.IsEquipped(this);
+
+    public Item(int _key, string _name, ItemType _type, List<Stat> _stats, string _description, int _cost)
+    {
+        Key = _key;
+        Name = _name;
+        ItemType = _type;
+        Stats = _stats;
+        Description = _description;
+        Cost = _cost;
+    }
+
+    public Item()
+    {
+    }
 
     public Item Copy()
     {
@@ -247,12 +258,34 @@ public class Stage
 
 public class Monster
 {
+    public Monster()
+    {
+    }
+
     public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill)
     {
         Type = _type;
         Name = _name;
         Stats = _stat;
         Skills = _skill;
+    }
+
+    public Monster(MonsterType _type)
+    {
+        var monster = MonsterTable.GetMonsterByType(_type).Copy();
+        Type = monster.Type;
+        Name = monster.Name;
+
+        Stats = new Dictionary<StatType, Stat>();
+        foreach (var stat in monster.Stats)
+        {
+            Stats[stat.Key] = new Stat(stat.Value);
+        }
+
+        Skills = new List<int>(monster.Skills);
+        Item = monster.Item?.Copy();
+        Lv = monster.Lv;
+        Exp = monster.Exp;
     }
 
     public Monster(Monster _monster)
@@ -267,27 +300,27 @@ public class Monster
         }
 
         Skills = new List<int>(_monster.Skills);
-        // ItemId = _monster.ItemId;
         Item = _monster.Item.Copy();
         Lv = _monster.Lv;
         Exp = _monster.Exp;
     }
 
-    public MonsterType Type { get; private set; }
-    public string Name { get; private set; }
-    public Dictionary<StatType, Stat> Stats { get; }
+    public MonsterType Type { get; set; }
+    public string Name { get; set; }
+    public Dictionary<StatType, Stat> Stats { get; set; }
 
-    public List<int> Skills { get; private set; }
+    public List<int> Skills { get; set; }
 
     // public int ItemId { get; set; }
     public Item Item { get; set; }
-    public int Lv { get; private set; }
-    public int Exp { get; private set; }
+    public int Lv { get; set; }
+    public int Exp { get; set; }
 
     public Monster Copy()
     {
         //Dictionary 복제 -> Dictionary 복제하는데 Stat이 클래스라서 Stat을 복제하면서 해야함.
         Dictionary<StatType, Stat> newStat = new Dictionary<StatType, Stat>();
+
 
         foreach (var copyDict in Stats) //foreach문을 이용하여 딕셔너리의 모든 키-값에 접근할 수 있음. (foreach var '지역변수' in '딕셔너리 이름')
             // Stats : Dictionary<StatType, Stat>의 Stats이므로 copyDict도 <StatType, stat> 타입임
@@ -358,12 +391,11 @@ public class Skill
 public class SaveData
 {
     public int DungeonClearCount;
-    public List<int> EquipmentItem;
     public int Gold;
 
     // Item을 전부 변환 시킬 필요가 없음. int값만 가지고 와서 Table에서 가져오는 방식을 사용
-    public List<int> Inventory;
-    public MonsterType Monster;
+    public List<SaveItem> Inventory;
+    public SaveMonsterData Monster;
 
     public string Name;
 
@@ -380,7 +412,6 @@ public class SaveData
         Monster = _data.Monster;
         DungeonClearCount = _data.DungeonClearCount;
         Inventory = _data.Inventory;
-        EquipmentItem = _data.EquipmentItem;
         Gold = _data.Gold;
         Quests = _data.Quests;
         ClearQuests = _data.ClearQuests;
@@ -388,6 +419,44 @@ public class SaveData
     }
 
     public SaveData()
+    {
+    }
+}
+
+public class SaveMonsterData
+{
+    public MonsterType Key;
+    public int EquipItemKey;
+    public int Exp;
+    public Stat CurrentHP;
+    public Stat CurrentMP;
+
+    public SaveMonsterData(Monster _monster)
+    {
+        Key = _monster.Type;
+        EquipItemKey = _monster.Item?.UniqueNumber ?? 0;
+        Exp = _monster.Exp;
+        CurrentHP = _monster.Stats[StatType.CurHp];
+        CurrentMP = _monster.Stats[StatType.CurMp];
+    }
+
+    public SaveMonsterData()
+    {
+    }
+}
+
+public class SaveItem
+{
+    public int ItemKey;
+    public int UniqueNumber;
+
+    public SaveItem(Item _item)
+    {
+        ItemKey = _item.Key;
+        UniqueNumber = _item.UniqueNumber;
+    }
+
+    public SaveItem()
     {
     }
 }

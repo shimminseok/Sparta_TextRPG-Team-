@@ -17,14 +17,17 @@ public class InventoryManager()
 
     public const float HEAL_AMOUNT = 30f;
 
-    public List<Item> Inventory { get; } = new();
-    public List<Monster> MonsterBox { get; } = new();
+    public List<Item> Inventory { get; set; } = new();
+    public List<Monster> MonsterBox { get; set; } = new();
 
     public int FruitCount { get; private set; } = 3;
 
     public void AddItem(Item _item)
     {
+        Random random = new Random();
+        _item.UniqueNumber = random.Next(0, int.MaxValue);
         Inventory.Add(_item);
+
         //퀘스트 확인한번하기 ㅎ
         QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Item, QuestConditionType.Buy), _item.Key);
     }

@@ -6,17 +6,19 @@
     using System.Runtime.CompilerServices;
     using System.Text;
     using static Camp_FourthWeek_Basic_C__.Program;
-    
- 
+
 
     internal class Program
     {
         static void Main(string[] args)
         {
+            // IntroSceneAction introSceneAction = new IntroSceneAction();
+            // introSceneAction.Execute();
             TextRPG textRPG = new TextRPG();
             textRPG.StartGame();
         }
     }
+
     public class TextRPG
     {
         public void StartGame()
@@ -25,4 +27,3 @@
         }
     }
 }
-
