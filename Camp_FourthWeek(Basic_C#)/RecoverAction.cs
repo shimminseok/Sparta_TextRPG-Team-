@@ -7,7 +7,7 @@ public class RecoverAction : ActionBase
         PrevAction = _prevAction;
     }
 
-    public override string Name => "휴식하기";
+    public override string Name => "회복";
 
     public override void OnExcute()
     {
@@ -22,10 +22,12 @@ public class RecoverAction : ActionBase
             var before = curHP.FinalValue;
             curHP.ModifyBaseValue(PlayerInfo.Stats[StatType.MaxHp].FinalValue, 0,
                 PlayerInfo.Stats[StatType.MaxHp].FinalValue);
+            Console.WriteLine("회복중..");
+            Thread.Sleep(3000);
             message = $"체력이 회복되었습니다 HP {before} -> {curHP.FinalValue}";
         }
 
         PrevAction!.SetFeedBackMessage(message);
-        PrevAction.Execute();
+        PrevAction?.Execute();
     }
 }
