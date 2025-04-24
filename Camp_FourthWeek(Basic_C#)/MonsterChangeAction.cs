@@ -12,6 +12,7 @@ public class MonsterChangeAction : PagedListActionBase
             //테스트용 포켓몬 추가
             { 99, new TestMonsterModify(this) },
         };
+        isViewSubMap = false;
     }
 
     protected override List<string> GetPageContent()
@@ -35,7 +36,7 @@ public class MonsterChangeAction : PagedListActionBase
             var level = m.Lv;
             var hp = m.Stats[StatType.CurHp].FinalValue;
             var mp = m.Stats[StatType.CurMp].FinalValue;
-            var itemName = m.ItemId != 0 ? ItemTable.GetItemById(m.ItemId)?.Name ?? "알수 없음" : "없음";
+            var itemName = m.Item == null ? "없음" : m.Item.Name;
             output.Add($"{isEquipped}{name,-10} | LV {level} | HP {hp} / MP {mp} | 장착 중인 도구: {itemName} |");
 
             if (!SubActionMap.ContainsKey(index))

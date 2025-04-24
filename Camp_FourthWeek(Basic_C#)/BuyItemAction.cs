@@ -9,21 +9,21 @@ public class BuyItemAction : ActionBase
     public BuyItemAction(IAction _prevAction)
     {
         PrevAction = _prevAction;
+        SaleItems = ItemTable.ItemDic.Values.ToList();
     }
 
     public override string Name => "상점 - 아이템 구매";
 
     public override void OnExcute()
     {
-        SaleItems = ItemTable.ItemDic.Values
-            .Where(item => !InventoryManager.Instance.Inventory.Any(x => x.Key == item.Key))
-            .ToList();
+        // SaleItems = ItemTable.ItemDic.Values
+        //     .Where(item => !InventoryManager.Instance.Inventory.Any(x => x.Key == item.Key))
+        //     .ToList();
         SubActionMap.Clear();
         for (var i = 0; i < SaleItems.Count; i++)
-            if (SubActionMap.ContainsKey(i + 1))
-                SubActionMap[i + 1] = new BuyAction(SaleItems[i], this);
-            else
-                SubActionMap.Add(i + 1, new BuyAction(SaleItems[i], this));
+        {
+            SubActionMap[i + 1] = new BuyAction(SaleItems[i], this);
+        }
 
         Console.WriteLine("필요한 아이템을 구매할 수 있습니다.");
         Console.WriteLine("[보유 골드]");

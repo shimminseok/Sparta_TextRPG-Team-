@@ -5,8 +5,7 @@ public abstract class PagedListActionBase : ActionBase
     protected const int VIEW_COUNT = 3;
     protected int Page;
     protected int MaxPage;
-    protected int PageSize;
-
+    protected bool isViewSubMap = true;
     protected abstract List<string> GetPageContent();
     protected abstract PagedListActionBase CreateNew(int newPage);
 
@@ -38,6 +37,6 @@ public abstract class PagedListActionBase : ActionBase
 
         PageNavigationFactory.AddPageNavigation(SubActionMap, p => CreateNew(p), Page, MaxPage);
 
-        SelectAndRunAction(SubActionMap, true);
+        SelectAndRunAction(SubActionMap, isViewSubMap);
     }
 }

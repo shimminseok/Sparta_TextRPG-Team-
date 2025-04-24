@@ -18,26 +18,12 @@ public class EquipAction : ActionBase
         var currentMonster = player.Monster;
         var message = string.Empty;
 
-
-        if (item.IsEquippedBy(currentMonster))
+        if (currentMonster.Item == item)
         {
-            message = $"{item.Name}장착해제 했습니다.";
-            EquipmentManager.UnequipItem((item.ItemType));
-            currentMonster.ItemId = 0;
+            EquipmentManager.UnequipItem(currentMonster);
         }
         else
         {
-            message = $"{item.Name}장착 되었습니다.";
-            foreach (var m in InventoryManager.Instance.MonsterBox)
-            {
-                if (m.ItemId == item.Key)
-                {
-                    m.ItemId = 0;
-                    break;
-                }
-            }
-
-            player.Monster.ItemId = item.Key;
             EquipmentManager.EquipmentItem(item);
         }
 
