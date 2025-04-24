@@ -19,7 +19,7 @@ public abstract class PagedListActionBase : ActionBase
 
     public override void OnExcute()
     {
-        SubActionMap.Clear();
+        // SubActionMap.Clear();
         var lines = GetPageContent();
         foreach (var line in lines)
         {
