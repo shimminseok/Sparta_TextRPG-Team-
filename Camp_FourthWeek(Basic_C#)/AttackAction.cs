@@ -46,14 +46,13 @@ namespace Camp_FourthWeek_Basic_C__
             Console.WriteLine($"HP {monsterOriginHp} -> " +
                 $"{(EnterBattleAction.MonsterStateDic[monster] == MonsterState.Dead ? "Dead" : $"{monster.Stats[StatType.CurHp].FinalValue}")}");
 
-            //enemy턴 =====================================================================================================여기서 dead시 공격 못하게
+            //enemy턴
             Console.WriteLine("1. 다음");
             Console.Write(">> ");
 
             InputNumber();
             Console.Clear();
             bool isPlayerDead = false;
-            float playerCurHpStatus = 0; //플레이어의 최종 HP를 ResultAction에서 사용하기 위해
             List<Monster> aliveMonsterList = new List<Monster>();
 
             foreach (Monster mon in EnterBattleAction.MonsterSelectList)
@@ -65,10 +64,11 @@ namespace Camp_FourthWeek_Basic_C__
             }
             foreach (var monster in aliveMonsterList)
             {
+
                 float playerOriginHp = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
                 PlayerInfo.Monster.Stats[StatType.CurHp].ModifyAllValue(monster.Stats[StatType.Attack].FinalValue);
                 string playerDead = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue <= 0 ? "Dead" : PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue.ToString();
-                
+
                 Console.WriteLine($"Lv{monster.Lv}  {monster.Name}의 공격!");
                 Console.WriteLine($"{PlayerInfo.Monster.Name}을(를) 맞췄습니다. [데미지 : {monster.Stats[StatType.Attack].FinalValue}]");
 
@@ -81,23 +81,19 @@ namespace Camp_FourthWeek_Basic_C__
                     isPlayerDead = (playerDead == "Dead");
                     break;
                 }
-            }
 
-            if (!isPlayerDead) //플레이어 HP가 0보다 큰 경우(ResultAction에서 승리 시 플레이어의 HP출력하기 위해)
-            {
-                playerCurHpStatus = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
             }
             
             //결과 실행
             //성공 실패
             if (isAllMonstersDead) //몬스터가 다 죽었을 때
             {
-                SubActionMap[1] = new ResultAction(true, this, playerCurHpStatus);
+                SubActionMap[1] = new ResultAction(true, new MainMenuAction());
                 SubActionMap[1].Execute();
             }
             if(isPlayerDead)  //내가 죽었을 때
             {
-                SubActionMap[1] = new ResultAction(false, this, playerCurHpStatus);
+                SubActionMap[1] = new ResultAction(false, new MainMenuAction());
                 SubActionMap[1].Execute();
             }
 
