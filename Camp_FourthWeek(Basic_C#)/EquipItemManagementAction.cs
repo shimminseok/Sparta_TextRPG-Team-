@@ -70,6 +70,35 @@ public class EquipItemManagementAction : PagedListActionBase
         return output;
     }
 
+    public override void OnExcute()
+    {
+        base.OnExcute();
+        SubActionMap.Clear();
+        var lines = GetPageContent();
+        foreach (var line in lines)
+        {
+            Console.WriteLine(line);
+        }
+
+        Console.WriteLine();
+        Console.WriteLine($"[{Page + 1}/{MaxPage}] 페이지");
+        Console.WriteLine();
+
+        if (Page > 0)
+            Console.WriteLine("-1. 이전 페이지");
+        if (Page < MaxPage - 1)
+            Console.WriteLine("-2. 다음 페이지");
+        if (isView)
+        {
+            SelectAndRunAction(SubActionMap, isViewSubMap);
+        }
+        else if (!isView)
+        {
+            SelectAndRunAction(SubActionMap, false);
+        }
+
+    }
+
     protected override PagedListActionBase CreateNew(int newPage)
     {
         return new EquipItemManagementAction(PrevAction, newPage);

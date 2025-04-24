@@ -19,7 +19,11 @@ public abstract class PagedListActionBase : ActionBase
 
     public override void OnExcute()
     {
-        // SubActionMap.Clear();
+
+
+        PageNavigationFactory.AddPageNavigation(SubActionMap, p => CreateNew(p), Page, MaxPage);
+        /*
+    SubActionMap.Clear();
         var lines = GetPageContent();
         foreach (var line in lines)
         {
@@ -34,10 +38,6 @@ public abstract class PagedListActionBase : ActionBase
             Console.WriteLine("-1. 이전 페이지");
         if (Page < MaxPage - 1)
             Console.WriteLine("-2. 다음 페이지");
-
-
-        PageNavigationFactory.AddPageNavigation(SubActionMap, p => CreateNew(p), Page, MaxPage);
-
         if (isView)
         {
             SelectAndRunAction(SubActionMap, isViewSubMap);
@@ -45,5 +45,6 @@ public abstract class PagedListActionBase : ActionBase
         {
             SelectAndRunAction(SubActionMap, false);
         }
+        */
     }
 }

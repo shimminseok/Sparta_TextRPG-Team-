@@ -50,6 +50,25 @@ public class EnterCollectionAction : PagedListActionBase
 
         return output;
     }
+    public override void OnExcute()
+    {
+        base.OnExcute();
+
+   
+      int LineCount = 5;
+        var lines = GetPageContent();
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+        for (int i = 0; i < lines.Count; i++)
+        {
+            lineDic.Add(LineCount + i, lines[i]);
+        }
+        if (Page > 0)
+            lineDic.Add(8, "-1. 이전 페이지");
+        if (Page < MaxPage - 1)
+            lineDic.Add(9, "-2. 다음 페이지");
+        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Collection, null, (5, lineDic)));
+
+    }
 
     /*public override void OnExcute()
     {
