@@ -321,13 +321,14 @@ public class Monster
 public class Skill
 {
     public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType,
-        int _targetCount)
+        int _targetCount, Func<Skill, string> _descriptionFunc)
     {
         Id = _id;
         Name = _name;
         Stats = _stat;
         SkillAttackType = _skillAttackType;
         TargetCount = _targetCount;
+        descriptionFunc = _descriptionFunc;
     }
 
     public int Id { get; private set; }
@@ -335,6 +336,8 @@ public class Skill
     public Dictionary<StatType, Stat> Stats { get; private set; }
     public SkillAttackType SkillAttackType { get; private set; }
     public int TargetCount { get; private set; }
+    private Func<Skill, string> descriptionFunc;
+    public string Description => descriptionFunc?.Invoke(this);
 }
 
 public class SaveData
