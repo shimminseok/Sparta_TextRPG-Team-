@@ -49,7 +49,7 @@ namespace Camp_FourthWeek_Basic_C__
         public static bool IsEquipped(Item _item)
         {
             Monster equipMonster =
-                InventoryManager.Instance.MonsterBox.Find(monster => monster.Item == _item);
+                InventoryManager.Instance.MonsterBox.Find(monster => monster.Item?.UniqueNumber == _item.UniqueNumber);
             return equipMonster != null;
         }
 

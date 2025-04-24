@@ -19,9 +19,9 @@ public class GameManager
         }
     }
 
-    public PlayerInfo PlayerInfo { get; private set; } = new(MonsterType.Pikachu, "Test");
+    public PlayerInfo? PlayerInfo { get; private set; }
 
-    public void Init(MonsterType _monster, string _name)
+    public void Init(Monster _monster, string _name)
     {
         PlayerInfo = new PlayerInfo(_monster, _name);
         if (loadData == null)
@@ -29,8 +29,10 @@ public class GameManager
         LoadInventoryAndEquipment();
         LoadDungeonClearProgress();
         LoadQuestProgress();
-        LoadPlayerGold();
         LoadCollectionData();
+        LoadPlayerGold();
+        PlayerInfo.Monster = LoadCurrentMonsterData();
+        EquipmentManager.EquipmentItem(PlayerInfo.Monster.Item);
     }
 
     public void SaveGame()
@@ -49,17 +51,17 @@ public class GameManager
         var saveData = new SaveData
         {
             Name = PlayerInfo.Name,
-            Monster = PlayerInfo.Monster.Type,
+            Monster = GetCurrentMonsterData(),
             Gold = PlayerInfo.Gold,
             Inventory = GetInventoryItemKeys(),
-            // EquipmentItem = GetEquippedItemKeys(),
             DungeonClearCount = LevelManager.ClearDungeonCount,
             Quests = GetCurrentQuestData(),
             ClearQuests = QuestManager.Instance.ClearQuestList.ToList(),
             CollectionData = GetCurrentCollectionData()
         };
         var sJson = JsonConvert.SerializeObject(saveData, Formatting.Indented);
-        string encrypted = AESUtil.Encrypt(sJson);
+        // string encrypted = AESUtil.Encrypt(sJson);
+        string encrypted = sJson;
 
         File.WriteAllText(path, encrypted);
     }
@@ -76,12 +78,13 @@ public class GameManager
         try
         {
             var encrypted = File.ReadAllText(path);
-            string decrypted = AESUtil.Decrypt(encrypted);
+            string decrypted = encrypted;
+            // string decrypted = AESUtil.Decrypt(encrypted);
             var data = JsonConvert.DeserializeObject<SaveData>(decrypted);
             if (data != null)
             {
                 loadData = new SaveData(data);
-                Init(loadData.Monster, loadData.Name);
+                Init(new Monster(loadData.Monster.Key), loadData.Name);
                 var mainAction = new MainMenuAction();
                 mainAction.Execute();
             }
@@ -98,16 +101,15 @@ public class GameManager
 
     private void LoadInventoryAndEquipment()
     {
-        foreach (var itemId in loadData.Inventory)
+        List<Item> inventory = new List<Item>();
+        foreach (var saveItem in loadData.Inventory)
         {
-            var item = ItemTable.GetItemById(itemId);
-            InventoryManager.Instance.AddItem(item);
-
-            if (loadData.EquipmentItem.Contains(item.Key))
-            {
-                EquipmentManager.EquipmentItem(item);
-            }
+            var item = ItemTable.GetItemById(saveItem.ItemKey).Copy();
+            item.UniqueNumber = saveItem.UniqueNumber;
+            inventory.Add(item);
         }
+
+        InventoryManager.Instance.Inventory = inventory.ToList();
     }
 
     private void LoadDungeonClearProgress()
@@ -133,28 +135,42 @@ public class GameManager
         PlayerInfo.Gold = loadData.Gold;
     }
 
-    void LoadCollectionData()
+    private void LoadCollectionData()
     {
         CollectionManager.Instnace.GetLoadData(loadData.CollectionData);
+    }
+
+    private Monster LoadCurrentMonsterData()
+    {
+        var loadMonster = loadData.Monster;
+        var monster = PlayerInfo.Monster;
+        monster.Stats[StatType.CurHp] = loadMonster.CurrentHP;
+        monster.Stats[StatType.CurMp] = loadMonster.CurrentMP;
+        monster.Exp = loadMonster.Exp;
+        monster.Item = InventoryManager.Instance.Inventory.Find(x => x.UniqueNumber == loadMonster.EquipItemKey);
+        return monster;
     }
 
     #endregion
 
     #region [SaveGame]
 
-    private List<int> GetInventoryItemKeys()
+    private List<SaveItem> GetInventoryItemKeys()
     {
-        return InventoryManager.Instance.Inventory
-            .Select(item => item.Key)
-            .ToList();
+        var saveItemList = new List<SaveItem>();
+        for (int i = 0; i < InventoryManager.Instance.Inventory.Count; i++)
+        {
+            var saveItem = new SaveItem(InventoryManager.Instance.Inventory[i]);
+            saveItemList.Add(saveItem);
+        }
+
+        return saveItemList.ToList();
     }
 
-    // private List<int> GetEquippedItemKeys()
-    // {
-    //     return EquipmentManager.EquipmentItems.Values
-    //         .Select(item => item.Key)
-    //         .ToList();
-    // }
+    private SaveMonsterData GetCurrentMonsterData()
+    {
+        return new SaveMonsterData(PlayerInfo.Monster);
+    }
 
     private List<SaveQeust> GetCurrentQuestData()
     {
