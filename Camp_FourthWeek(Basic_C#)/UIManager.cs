@@ -166,14 +166,32 @@ namespace Camp_FourthWeek_Basic_C__
               }
 
              //전투
-             UIUpdater(UIName.Battle, new Dictionary<int, Tuple<int, int>?>
+             
+
+
+             UIUpdater(UIName.Inventory);
+             UIUpdater(UIName.SetPokectmon);
+             UIUpdater(UIName.Equipment);
+             UIUpdater(UIName.Fruit);
+             UIUpdater(UIName.Quest_Main) ;
+             UIUpdater(UIName.Quest_List_Working) ;
+             UIUpdater(UIName.Quest_List_Acceptyet) ;
+             UIUpdater(UIName.Quest_Detail_Working) ;
+             UIUpdater(UIName.Quest_Detail_Acceptyet) ;
+             UIUpdater(UIName.Collection);
+             UIUpdater(UIName.Location);
+             UIUpdater(UIName.Center);
+            */
+
+
+            UIUpdater(UIName.Battle, new Dictionary<int, Tuple<int, int>?>
                   {
                       {0, new Tuple<int, int>(0,0) }, // 배경
                       {1, new Tuple<int, int>(7,28)}, // 내 포켓몬
                       {2, new Tuple<int, int>(5,6) }, // 적 1
 
                   },
-                  (18,new Dictionary<int, string>
+                  (18, new Dictionary<int, string>
                   {   
                       // 플레이어 정보
                       {0, 5.ToString()},
@@ -190,25 +208,8 @@ namespace Camp_FourthWeek_Basic_C__
 
 
                   }),
-                  new List<int>() { 201, 102} // 
+                  new List<int>() { 201, 122 } // 
                   );
-
-
-             UIUpdater(UIName.Inventory);
-             UIUpdater(UIName.SetPokectmon);
-             UIUpdater(UIName.Equipment);
-             UIUpdater(UIName.Fruit);
-             UIUpdater(UIName.Quest_Main) ;
-             UIUpdater(UIName.Quest_List_Working) ;
-             UIUpdater(UIName.Quest_List_Acceptyet) ;
-             UIUpdater(UIName.Quest_Detail_Working) ;
-              UIUpdater(UIName.Quest_Detail_Acceptyet) ;
-                  UIUpdater(UIName.Collection);
-                        UIUpdater(UIName.Location);
-            */
-            UIUpdater(UIName.Center);
-
-
         }
         public static void PrintPanel()
         {
