@@ -11,11 +11,11 @@ public class EnterRestAction : ActionBase
         };
     }
 
-    public override string Name => "휴식 하기";
+    public override string Name => "포켓몬 센터";
 
     public override void OnExcute()
     {
-        Console.WriteLine($"500G를 내면 체력을 회복할 수 있습니다. (보유 골드 : {PlayerInfo.Gold})");
+        Console.WriteLine($"500G를 내면 장착한 포켓몬의 체력을 회복할 수 있습니다. (보유 골드 : {PlayerInfo.Gold})");
         SelectAndRunAction(SubActionMap);
     }
 }
