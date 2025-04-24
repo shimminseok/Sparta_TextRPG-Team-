@@ -22,20 +22,18 @@ namespace Camp_FourthWeek_Basic_C__
             float hpRatio = monster.Stats[StatType.CurHp].FinalValue / monster.Stats[StatType.MaxHp].FinalValue;
             float catchChance = maximumCatchChance - (maximumCatchChance - basicCatchChance) * hpRatio;
 
-            if (rand.NextDouble() < catchChance)
+            if(rand.NextDouble()<catchChance)
             {
                 QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Monster, QuestConditionType.Catch),
                     (int)monster.Type);
-                InventoryManager.Instance.AddMonsterToBox(monster.Copy());
-
+                InventoryManager.Instance.AddMonsterToBox(monster);
+                EnterBattleAction.MonsterStateDic[monster] = MonsterState.Catched;
                 Console.WriteLine("포획 성공!");
             }
             else
             {
                 Console.WriteLine("포획 실패............................");
             }
-
-
             SelectAndRunAction(SubActionMap);
         }
     }

@@ -12,10 +12,21 @@
         public override void OnExcute()
         {
             EnterBattleAction.DisplayMonsterList();
-            for (int i = 0; i < EnterBattleAction.MonsterSelectList.Count; i++)
+
+            List<Monster> aliveMonsterList = new List<Monster>();
+
+            foreach (Monster mon in EnterBattleAction.MonsterSelectList)
+            {
+                if (EnterBattleAction.MonsterStateDic[mon] == MonsterState.Normal)
+                {
+                    aliveMonsterList.Add(mon);
+                }
+            }
+
+            for (int i = 0; i < aliveMonsterList.Count; i++)
             {
                 if (!SubActionMap.ContainsKey(i + 1))
-                    SubActionMap.Add(i + 1, new CatchAction(EnterBattleAction.MonsterSelectList[i], this));
+                    SubActionMap.Add(i + 1, new CatchAction(aliveMonsterList[i], PrevAction));
             }
 
 
