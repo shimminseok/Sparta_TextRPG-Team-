@@ -37,12 +37,14 @@ namespace Camp_FourthWeek_Basic_C__
             monster.Stats[StatType.CurHp].ModifyAllValue(damage);
 
             //FinalValue <= 0인 경우 Dead로 바꿔주기
-            string monsterDead = monster.Stats[StatType.CurHp].FinalValue <= 0 ? "Dead" : monster.Stats[StatType.CurHp].FinalValue.ToString();
+            if (monster.Stats[StatType.CurHp].FinalValue <= 0)
+                EnterBattleAction.MonsterStateDic[monster] = MonsterState.Dead;
 
             // 몬스터 체력이 모두 0인지 확인
             bool isAllMonstersDead = EnterBattleAction.MonsterSelectList.All(m => m.Stats[StatType.CurHp].FinalValue <= 0);
 
-            Console.WriteLine($"HP {monsterOriginHp} -> {monsterDead}");
+            Console.WriteLine($"HP {monsterOriginHp} -> " +
+                $"{(EnterBattleAction.MonsterStateDic[monster] == MonsterState.Dead ? "Dead" : $"{monster.Stats[StatType.CurHp].FinalValue}")}");
 
             //enemy턴 =====================================================================================================여기서 dead시 공격 못하게
             Console.WriteLine("1. 다음");
@@ -52,7 +54,16 @@ namespace Camp_FourthWeek_Basic_C__
             Console.Clear();
             bool isPlayerDead = false;
             float playerCurHpStatus = 0; //플레이어의 최종 HP를 ResultAction에서 사용하기 위해
-            foreach (var monster in EnterBattleAction.MonsterSelectList)
+            List<Monster> aliveMonsterList = new List<Monster>();
+
+            foreach (Monster mon in EnterBattleAction.MonsterSelectList)
+            {
+                if (EnterBattleAction.MonsterStateDic[mon] == MonsterState.Normal)
+                {
+                    aliveMonsterList.Add(mon);
+                }
+            }
+            foreach (var monster in aliveMonsterList)
             {
                 float playerOriginHp = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
                 PlayerInfo.Monster.Stats[StatType.CurHp].ModifyAllValue(monster.Stats[StatType.Attack].FinalValue);
@@ -61,7 +72,7 @@ namespace Camp_FourthWeek_Basic_C__
                 Console.WriteLine($"Lv{monster.Lv}  {monster.Name}의 공격!");
                 Console.WriteLine($"{PlayerInfo.Name}을(를) 맞췄습니다. [데미지 : {monster.Stats[StatType.Attack].FinalValue}]");
 
-                Console.WriteLine($"Lv.{PlayerInfo.Monster.Lv}  {PlayerInfo.Name}");
+                Console.WriteLine($"Lv.{PlayerInfo.Monster.Lv}  {PlayerInfo.Monster.Name}");
                 Console.WriteLine($"{playerOriginHp} -> {playerDead}\n");
 
                 if (playerDead == "Dead") //플레이어가 죽으면 출력 종료
