@@ -205,8 +205,6 @@ namespace Camp_FourthWeek_Basic_C__
                       {7, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Squirtle].Name}" },
                       {8, $"H   P  : {70.ToString()} / {50.ToString()}" },
                       {9, $"    {GetBar(50,100)}" },
-
-
                   }),
                   new List<int>() { 222, 122 } // 
                   );
