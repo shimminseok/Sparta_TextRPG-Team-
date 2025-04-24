@@ -311,7 +311,14 @@ public class Monster
     // public int ItemId { get; set; }
     public Item Item { get; set; }
     public int Lv { get; set; }
-    public int Exp { get; set; }
+    private int exp; 
+
+    public int Exp
+    {
+        get => exp;         
+        set => AddExp(value); 
+    }
+
 
     public Monster Copy()
     {
@@ -345,14 +352,19 @@ public class Monster
         return monster;
     }
 
-    public void AddExp(int _exp)
+    private void AddExp(int amount)
     {
-        Exp += _exp;
+        exp += amount;
         int maxExp = ExpTable.GetExpByLevel(Lv + 1);
-        if (Exp > maxExp) //Todo : 추후 경험치 테이블에서 현재 레벨에 맞게 값을 가져와 적용
+        while(true)
         {
-            Exp -= maxExp;
-            LevelUp();
+            if (exp >= maxExp)
+            {
+                exp -= maxExp;
+                LevelUp();
+            }
+            else
+                break;
         }
     }
 

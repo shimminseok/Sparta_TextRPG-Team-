@@ -9,11 +9,6 @@ namespace Camp_FourthWeek_Basic_C__
 {
     internal class ResultAction : ActionBase
     {
-        private static int maxKey;
-        public static void SetmaxKey(int vaule) //포켓몬 몇마리 잡았는지 받아오기
-        {
-            maxKey = vaule;
-        }
         public override string Name => "결과";
         private bool isWin;
 
@@ -27,12 +22,15 @@ namespace Camp_FourthWeek_Basic_C__
         {
             if (isWin)
             {
-                Console.WriteLine("Victort");
-                Console.WriteLine($"풀숲에서 포켓몬을 {maxKey}마리 잡았다.");
-
+                int getExp = EnterBattleAction.MonsterSelectList.Count * 10;
+                int curExp = PlayerInfo.Monster.Exp;
+                PlayerInfo.Monster.Exp += getExp;
+                Console.WriteLine("Victory");
+                Console.WriteLine($"풀숲에서 포켓몬을 {EnterBattleAction.MonsterSelectList.Count}마리 잡았다.");
                 Console.WriteLine("[캐릭터 정보]");
-                Console.WriteLine($"Lv.{PlayerInfo.Monster.Lv}  {PlayerInfo.Name}");
+                Console.WriteLine($"Lv.{PlayerInfo.Monster.Lv}  {PlayerInfo.Monster.Name}");
                 Console.WriteLine($"HP {PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue}");
+                Console.WriteLine($"exp {curExp} -> {PlayerInfo.Monster.Exp}");
             }
             else
             {
