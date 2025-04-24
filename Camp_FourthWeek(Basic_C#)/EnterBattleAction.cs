@@ -106,11 +106,11 @@ namespace Camp_FourthWeek_Basic_C__
             Console.WriteLine("\n[내정보]");
             string name = PlayerInfo.Name;
             int level = PlayerInfo.Monster.Lv;
-            float maxHP = PlayerInfo.Stats[StatType.MaxHp].BaseValue;
-            float curHP = PlayerInfo.Stats[StatType.CurHp].BaseValue;
+            float maxHP = PlayerInfo.Monster.Stats[StatType.MaxHp].BaseValue;
+            float curHP = PlayerInfo.Monster.Stats[StatType.CurHp].BaseValue;
 
-            float maxMP = PlayerInfo.Stats[StatType.MaxMp].BaseValue;
-            float curMP = PlayerInfo.Stats[StatType.CurMp].BaseValue;
+            float maxMP = PlayerInfo.Monster.Stats[StatType.MaxMp].BaseValue;
+            float curMP = PlayerInfo.Monster.Stats[StatType.CurMp].BaseValue;
 
             Console.WriteLine($"Lv.{level}  {name}");
             Console.WriteLine($"HP {curHP}/{maxHP}");

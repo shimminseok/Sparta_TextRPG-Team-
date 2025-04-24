@@ -13,16 +13,18 @@ namespace Camp_FourthWeek_Basic_C__
         public static void EquipmentItem(Item _equipItem)
         {
             PlayerInfo player = GameManager.Instance.PlayerInfo;
-            if(EquipmentItems.TryGetValue(_equipItem.ItemType, out var item))
+            if (EquipmentItems.TryGetValue(_equipItem.ItemType, out var item))
             {
                 //장착한 아이템이 있다면
                 UnequipItem(item.ItemType);
             }
+
             for (int i = 0; i < _equipItem.Stats.Count; i++)
             {
                 Stat stat = _equipItem.Stats[i];
-                player?.Stats[stat.Type].ModifyEquipmentValue(stat.FinalValue);
+                player?.Monster.Stats[stat.Type].ModifyEquipmentValue(stat.FinalValue);
             }
+
             EquipmentItems[_equipItem.ItemType] = _equipItem;
         }
 
@@ -34,9 +36,10 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 for (int i = 0; i < equipItem.Stats.Count; i++)
                 {
-                    player.Stats[equipItem.Stats[i].Type].ModifyEquipmentValue(-equipItem.Stats[i].FinalValue);
+                    player.Monster.Stats[equipItem.Stats[i].Type].ModifyEquipmentValue(-equipItem.Stats[i].FinalValue);
                 }
             }
+
             EquipmentItems.Remove(_type);
         }
 

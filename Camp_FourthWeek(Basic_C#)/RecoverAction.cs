@@ -18,10 +18,10 @@ public class RecoverAction : ActionBase
         }
         else
         {
-            var curHP = PlayerInfo.Stats[StatType.CurHp];
+            var curHP = PlayerInfo.Monster.Stats[StatType.CurHp];
             var before = curHP.FinalValue;
-            curHP.ModifyBaseValue(PlayerInfo.Stats[StatType.MaxHp].FinalValue, 0,
-                PlayerInfo.Stats[StatType.MaxHp].FinalValue);
+            curHP.ModifyBaseValue(PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue, 0,
+                PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue);
             Console.WriteLine("회복중..");
             Thread.Sleep(3000);
             message = $"체력이 회복되었습니다 HP {before} -> {curHP.FinalValue}";
