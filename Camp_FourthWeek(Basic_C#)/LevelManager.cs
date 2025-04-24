@@ -10,6 +10,7 @@ namespace Camp_FourthWeek_Basic_C__
     {
         public static int ClearDungeonCount { get; private set; } = 0;
         public static int CurrentLevel { get; private set; } = 1;
+
         public static void Init()
         {
             for (int i = 0; i < ClearDungeonCount; i++)
@@ -17,6 +18,7 @@ namespace Camp_FourthWeek_Basic_C__
                 UpdateLevel();
             }
         }
+
         public static void AddClearCount()
         {
             ClearDungeonCount++;
@@ -26,8 +28,8 @@ namespace Camp_FourthWeek_Basic_C__
         public static void UpdateLevel()
         {
             CurrentLevel = ClearDungeonCount + 1;
-            GameManager.Instance.PlayerInfo?.Stats[StatType.Attack].ModifyBaseValue(0.5f);
-            GameManager.Instance.PlayerInfo?.Stats[StatType.Defense].ModifyBaseValue(1f);
+            GameManager.Instance.PlayerInfo?.Monster.Stats[StatType.Attack].ModifyBaseValue(0.5f);
+            GameManager.Instance.PlayerInfo?.Monster.Stats[StatType.Defense].ModifyBaseValue(1f);
         }
     }
 }

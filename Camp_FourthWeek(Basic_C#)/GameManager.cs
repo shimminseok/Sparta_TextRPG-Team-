@@ -36,7 +36,7 @@ public class GameManager
     public void SaveGame()
     {
         var inventory = InventoryManager.Instance.Inventory.Select(x => x.Key).ToList();
-        var equipmentItem = EquipmentManager.EquipmentItems.Values.Select(x => x.Key).ToList();
+        // var equipmentItem = EquipmentManager.EquipmentItems.Values.Select(x => x.Key).ToList();
 
         /*
          * SaveData Class를 Json으로 저장합니다.
@@ -52,7 +52,7 @@ public class GameManager
             Monster = PlayerInfo.Monster.Type,
             Gold = PlayerInfo.Gold,
             Inventory = GetInventoryItemKeys(),
-            EquipmentItem = GetEquippedItemKeys(),
+            // EquipmentItem = GetEquippedItemKeys(),
             DungeonClearCount = LevelManager.ClearDungeonCount,
             Quests = GetCurrentQuestData(),
             ClearQuests = QuestManager.Instance.ClearQuestList.ToList(),
@@ -149,12 +149,12 @@ public class GameManager
             .ToList();
     }
 
-    private List<int> GetEquippedItemKeys()
-    {
-        return EquipmentManager.EquipmentItems.Values
-            .Select(item => item.Key)
-            .ToList();
-    }
+    // private List<int> GetEquippedItemKeys()
+    // {
+    //     return EquipmentManager.EquipmentItems.Values
+    //         .Select(item => item.Key)
+    //         .ToList();
+    // }
 
     private List<SaveQeust> GetCurrentQuestData()
     {

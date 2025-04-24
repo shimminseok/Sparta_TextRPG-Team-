@@ -26,14 +26,7 @@ public class TestMonsterModify : ActionBase
             Console.WriteLine($"{newType}는 이미 보유 중.");
         }
 
-        if (MonsterTable.MonsterDataDic.TryGetValue(newType, out var monster))
-        {
-            InventoryManager.Instance.AddMonsterToBox(monster);
-        }
-        else
-        {
-            Console.WriteLine($"{newType}데이터를 찾을수없지롱");
-        }
+        InventoryManager.Instance.AddMonsterToBox(MonsterTable.GetMonsterByType(MonsterType.Pikachu).Copy());
 
         PrevAction?.Execute();
     }

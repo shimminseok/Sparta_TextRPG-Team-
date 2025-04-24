@@ -21,12 +21,13 @@ public abstract partial class ActionBase : IAction
     }
 
     public abstract void OnExcute();
-    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap,bool _isView=false)
+
+    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap, bool _isView = true)
     {
         Console.WriteLine();
-        if (!_isView)
+        if (_isView)
         {
-            foreach (var action in _actionMap) 
+            foreach (var action in _actionMap)
                 Console.WriteLine($"{action.Key}. {action.Value.Name}");
         }
 

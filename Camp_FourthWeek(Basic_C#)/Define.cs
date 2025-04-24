@@ -94,10 +94,8 @@ public class PlayerInfo
 
     public PlayerInfo(MonsterType _monster, string _name)
     {
-        Monster = MonsterTable.MonsterDataDic[_monster];
-        // Monsters.Add(Monster);
+        Monster = MonsterTable.GetMonsterByType(_monster).Copy();
         InventoryManager.Instance.AddMonsterToBox(Monster);
-        Stats = Monster.Stats.ToDictionary();
         Name = _name;
         Skills = Monster.Skills;
     }
@@ -105,18 +103,19 @@ public class PlayerInfo
     public void ChangeMonsterStat(Monster _monster)
     {
         Monster = _monster;
-        Stats.Clear();
-        foreach (var kv in _monster.Stats)
-        {
-            Stats[kv.Key] = new Stat(kv.Key, kv.Value.BaseValue);
-        }
-
+        // Stats.Clear();
+        // foreach (var kv in _monster.Stats)
+        // {
+        //     Stats[kv.Key] = new Stat(kv.Key, kv.Value.BaseValue);
+        // }
         Skills = _monster.Skills;
     }
 
     public string Name { get; private set; }
+
     public Monster Monster { get; set; }
-    public Dictionary<StatType, Stat> Stats { get; }
+
+    // public Dictionary<StatType, Stat> Stats { get; }
     public List<int> Skills { get; private set; }
 }
 
@@ -321,13 +320,14 @@ public class Monster
 public class Skill
 {
     public Skill(int _id, string _name, Dictionary<StatType, Stat> _stat, SkillAttackType _skillAttackType,
-        int _targetCount)
+        int _targetCount, Func<Skill, string> _descriptionFunc)
     {
         Id = _id;
         Name = _name;
         Stats = _stat;
         SkillAttackType = _skillAttackType;
         TargetCount = _targetCount;
+        descriptionFunc = _descriptionFunc;
     }
 
     public int Id { get; private set; }
@@ -335,6 +335,8 @@ public class Skill
     public Dictionary<StatType, Stat> Stats { get; private set; }
     public SkillAttackType SkillAttackType { get; private set; }
     public int TargetCount { get; private set; }
+    private Func<Skill, string> descriptionFunc;
+    public string Description => descriptionFunc?.Invoke(this);
 }
 
 public class SaveData

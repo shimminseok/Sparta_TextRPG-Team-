@@ -3,41 +3,40 @@ namespace Camp_FourthWeek_Basic_C__;
 using System.Text;
 using static Camp_FourthWeek_Basic_C__.StringUtil;
 
-public class EquipItemManagementAction : ActionBase
+public class EquipItemManagementAction : PagedListActionBase
 {
-    private readonly PlayerInfo player;
-
-    public EquipItemManagementAction(IAction _prevAction, PlayerInfo _player, InventoryManager _inventory)
-    {
-        PrevAction = _prevAction;
-        player = _player;
-    }
-
     public override string Name => "도구관리";
 
-    public override void OnExcute()
+
+    public EquipItemManagementAction(IAction _prevAction, int _page = 0) : base(_prevAction, _page)
     {
-        SubActionMap.Clear();
-        Console.WriteLine("보유 중인 도구를 장착시킬 수 있습니다.");
-
-        Console.WriteLine("[장착 중인 도구]");
-        Console.WriteLine();
+        PrevAction = _prevAction;
+    }
 
 
-        Console.WriteLine("[보유 도구 목록]");
+    protected override List<string> GetPageContent()
+    {
+        MaxPage = (int)Math.Ceiling(InventoryManager.Instance.Inventory.Count / (float)VIEW_COUNT);
+        var output = new List<string>();
 
-        var currentMonster = player.Monster;
+        output.Add("보유 중인 도구를 장착시킬 수 있습니다.");
+        output.Add("[장착 중인 도구]");
 
-        for (var i = 0; i < InventoryManager.Instance.Inventory.Count; i++)
+        var inventory = InventoryManager.Instance.Inventory;
+        var currentMonster = PlayerInfo.Monster;
+
+        int start = Page * VIEW_COUNT;
+        int end = Math.Min(start + VIEW_COUNT, inventory.Count);
+
+        for (var i = start; i < end; i++)
         {
-            var item = InventoryManager.Instance.Inventory[i];
+            var item = inventory[i];
             var sb = new StringBuilder();
             sb.Append($"{PadRightWithKorean($"- {i + 1}", 5)}");
 
 
             if (item.IsEquippedBy(currentMonster))
             {
-                Console.ForegroundColor = ConsoleColor.Green;
                 sb.Append("[E]");
             }
 
@@ -58,10 +57,9 @@ public class EquipItemManagementAction : ActionBase
 
             sb.Append($"{PadRightWithKorean($"{item.Description}{equippedMonsterName}", 50)}");
 
-            Console.WriteLine(sb.ToString());
-            Console.ResetColor();
+            output.Add(sb.ToString());
 
-            if (!SubActionMap.ContainsKey(i + 1))
+            if (!SubActionMap.ContainsKey(i - start + 1))
             {
                 bool equippedByOther = monster != null && monster != currentMonster;
                 if (!equippedByOther)
@@ -69,7 +67,11 @@ public class EquipItemManagementAction : ActionBase
             }
         }
 
-        Console.WriteLine();
-        SelectAndRunAction(SubActionMap);
+        return output;
+    }
+
+    protected override PagedListActionBase CreateNew(int newPage)
+    {
+        return new EquipItemManagementAction(PrevAction, newPage);
     }
 }
