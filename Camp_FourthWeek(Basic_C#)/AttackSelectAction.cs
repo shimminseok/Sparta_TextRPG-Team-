@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Camp_FourthWeek_Basic_C__
+﻿namespace Camp_FourthWeek_Basic_C__
 {
     internal class AttackSelectAction : ActionBase
     {
@@ -16,23 +10,26 @@ namespace Camp_FourthWeek_Basic_C__
         {
             SubActionMap.Clear();
             EnterBattleAction.DisplayMonsterList();
-            List<Monster> aliveMonsterList = new List<Monster>();
-
-
-            foreach (Monster mon in EnterBattleAction.MonsterSelectList)
+            List<Monster> aliveMonsterList = EnterBattleAction.GetAliveMonsters();
+            if(skill is not null)
             {
-                if (EnterBattleAction.MonsterStateDic[mon] == MonsterState.Normal)
+                if(skill.SkillAttackType== SkillAttackType.Random)
                 {
-                    aliveMonsterList.Add(mon);
+                    int count = skill.TargetCount;
+                    Random rand = new Random(DateTime.Now.Millisecond);
+                    var randomTargets = aliveMonsterList.OrderBy(_ => rand.Next()).Take(count).ToList();
+                    new AttackAction(randomTargets, skill, PrevAction).Execute();
+                }
+                if (skill.SkillAttackType == SkillAttackType.All)
+                {
+                    new AttackAction(aliveMonsterList, skill, PrevAction).Execute();
                 }
             }
-
-
             for (int i = 0; i < aliveMonsterList.Count; i++)
             {
                 if (!SubActionMap.ContainsKey(i + 1))
                 {
-                    SubActionMap.Add(i + 1, new AttackAction(aliveMonsterList[i], PrevAction));
+                    SubActionMap.Add(i + 1, new AttackAction(aliveMonsterList[i], skill, PrevAction));
                 }
             }
             int maxKey = SubActionMap.Keys.Max(); //포켓몬 몇마리인지(최대) 받아서 ResultAction.cs에서 출력!

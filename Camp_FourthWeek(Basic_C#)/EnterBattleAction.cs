@@ -90,6 +90,18 @@
                 }
             }
         }
+        public static List<Monster> GetAliveMonsters()
+        {
+            var list = new List<Monster>();
+            foreach (Monster mon in MonsterSelectList)
+            {
+                if (MonsterStateDic[mon] == MonsterState.Normal)
+                {
+                    list.Add(mon);
+                }
+            }
+            return list;
+        }
 
         public void BattlePlayerInfo()
         {

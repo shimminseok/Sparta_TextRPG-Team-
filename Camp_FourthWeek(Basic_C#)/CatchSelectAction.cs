@@ -13,15 +13,7 @@
         {
             EnterBattleAction.DisplayMonsterList();
 
-            List<Monster> aliveMonsterList = new List<Monster>();
-
-            foreach (Monster mon in EnterBattleAction.MonsterSelectList)
-            {
-                if (EnterBattleAction.MonsterStateDic[mon] == MonsterState.Normal)
-                {
-                    aliveMonsterList.Add(mon);
-                }
-            }
+            List<Monster> aliveMonsterList = EnterBattleAction.GetAliveMonsters();
 
             for (int i = 0; i < aliveMonsterList.Count; i++)
             {

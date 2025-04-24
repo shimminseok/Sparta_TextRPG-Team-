@@ -21,7 +21,7 @@
             for (int i = 0; i < skills.Count; i++)
             {
                 if (!SubActionMap.ContainsKey(i + 1))
-                    SubActionMap.Add(i + 1, new AttackSelectAction(this, skills[i]));
+                    SubActionMap.Add(i + 1, new AttackSelectAction(PrevAction, skills[i]));
             }
 
             SelectAndRunAction(SubActionMap);
