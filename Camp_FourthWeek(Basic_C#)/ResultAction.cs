@@ -24,11 +24,13 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 int getExp = EnterBattleAction.MonsterSelectList.Count * 10;
                 int curExp = PlayerInfo.Monster.Exp;
+                int curLv = PlayerInfo.Monster.Lv;
+                string curName = PlayerInfo.Monster.Name;
                 PlayerInfo.Monster.Exp += getExp;
                 Console.WriteLine("Victory");
                 Console.WriteLine($"풀숲에서 포켓몬을 {EnterBattleAction.MonsterSelectList.Count}마리 잡았다.");
                 Console.WriteLine("[캐릭터 정보]");
-                Console.WriteLine($"Lv.{PlayerInfo.Monster.Lv}  {PlayerInfo.Monster.Name}");
+                Console.WriteLine($"Lv.{curLv}  {curName} {(curLv==PlayerInfo.Monster.Lv ? "" : $"-> Lv.{PlayerInfo.Monster.Lv} {PlayerInfo.Monster.Name}")}");
                 Console.WriteLine($"HP {PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue}");
                 Console.WriteLine($"exp {curExp} -> {PlayerInfo.Monster.Exp}");
             }

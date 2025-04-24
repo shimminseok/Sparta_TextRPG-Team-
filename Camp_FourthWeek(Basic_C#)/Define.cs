@@ -265,6 +265,7 @@ public class Monster
         Name = _name;
         Stats = _stat;
         Skills = _skill;
+        Exp = 0;
     }
 
     public Monster(MonsterType _type)
@@ -355,12 +356,12 @@ public class Monster
     private void AddExp(int amount)
     {
         exp += amount;
-        int maxExp = ExpTable.GetExpByLevel(Lv + 1);
+        
         while(true)
         {
+            int maxExp = ExpTable.GetExpByLevel(Lv + 1);
             if (exp >= maxExp)
             {
-                exp -= maxExp;
                 LevelUp();
             }
             else
@@ -371,7 +372,7 @@ public class Monster
     private void LevelUp()
     {
         Lv++;
-        //Todo : 진화를 여기서 하면 화면에 어떻게 뿌릴것인가?
+        //Todo : 진화
     }
 }
 
