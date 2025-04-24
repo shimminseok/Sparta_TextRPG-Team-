@@ -70,7 +70,7 @@ namespace Camp_FourthWeek_Basic_C__
                 string playerDead = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue <= 0 ? "Dead" : PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue.ToString();
                 
                 Console.WriteLine($"Lv{monster.Lv}  {monster.Name}의 공격!");
-                Console.WriteLine($"{PlayerInfo.Name}을(를) 맞췄습니다. [데미지 : {monster.Stats[StatType.Attack].FinalValue}]");
+                Console.WriteLine($"{PlayerInfo.Monster.Name}을(를) 맞췄습니다. [데미지 : {monster.Stats[StatType.Attack].FinalValue}]");
 
                 Console.WriteLine($"Lv.{PlayerInfo.Monster.Lv}  {PlayerInfo.Monster.Name}");
                 Console.WriteLine($"{playerOriginHp} -> {playerDead}\n");
