@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Camp_FourthWeek_Basic_C__
 {
@@ -38,14 +39,96 @@ namespace Camp_FourthWeek_Basic_C__
             //FinalValue <= 0인 경우 Dead로 바꿔주기
             string monsterDead = monster.Stats[StatType.CurHp].FinalValue <= 0 ? "Dead" : monster.Stats[StatType.CurHp].FinalValue.ToString();
 
-            Console.WriteLine($"{monsterOriginHp} -> {monsterDead}");
+            // 몬스터 체력이 모두 0인지 확인
+            bool isAllMonstersDead = EnterBattleAction.MonsterSelectList.All(m => m.Stats[StatType.CurHp].FinalValue <= 0);
 
-/*            if (PrevAction != null)
+            Console.WriteLine($"HP {monsterOriginHp} -> {monsterDead}");
+
+            //enemy턴 =====================================================================================================여기서 dead시 공격 못하게
+            Console.WriteLine("1. 다음");
+            Console.Write(">> ");
+
+            InputNumber();
+            Console.Clear();
+            bool isPlayerDead = false;
+            float playerCurHpStatus = 0; //플레이어의 최종 HP를 ResultAction에서 사용하기 위해
+            foreach (var monster in EnterBattleAction.MonsterSelectList)
+            {
+                float playerOriginHp = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
+                PlayerInfo.Monster.Stats[StatType.CurHp].ModifyAllValue(monster.Stats[StatType.Attack].FinalValue);
+                string playerDead = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue <= 0 ? "Dead" : PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue.ToString();
+                
+                Console.WriteLine($"Lv{monster.Lv}  {monster.Name}의 공격!");
+                Console.WriteLine($"{PlayerInfo.Name}을(를) 맞췄습니다. [데미지 : {monster.Stats[StatType.Attack].FinalValue}]");
+
+                Console.WriteLine($"Lv.{PlayerInfo.Monster.Lv}  {PlayerInfo.Name}");
+                Console.WriteLine($"{playerOriginHp} -> {playerDead}\n");
+
+                if (playerDead == "Dead") //플레이어가 죽으면 출력 종료
+                {
+                    //Dead일 때 break;
+                    isPlayerDead = (playerDead == "Dead");
+                    break;
+                }
+            }
+
+            if (!isPlayerDead) //플레이어 HP가 0보다 큰 경우(ResultAction에서 승리 시 플레이어의 HP출력하기 위해)
+            {
+                playerCurHpStatus = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
+            }
+
+            Console.WriteLine("1. 다음");
+            InputNumber();
+            //결과 실행
+            //성공 실패
+            if (isAllMonstersDead) //몬스터가 다 죽었을 때
+            {
+                SubActionMap[1] = new ResultAction(true, this, playerCurHpStatus);
+                SubActionMap[1].Execute();
+            }
+            if(isPlayerDead)  //내가 죽었을 때
+            {
+                SubActionMap[1] = new ResultAction(false, this, playerCurHpStatus);
+                SubActionMap[1].Execute();
+            }
+            
+            //1. 모든 몬스터의 HP가 0일때,
+            //승패판정이 나야할 때,
+            //true, false 값 isWin에 넣고
+            //SubActionMap[1] = new ResultAction(true, this);
+            //
+
+            //2. 모든 몬스터가 HP가 0이 안되면
+            //prevActin 실행 //지금 이 코드
+
+            if (PrevAction != null)
             {
                 PrevAction.Execute();
-            }*/
+            }
+        }
 
-            SelectAndRunAction(SubActionMap);
+        public void InputNumber()
+        {
+            while (true)
+            {
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out int number))
+                {
+                    if (number == 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("잘못된 입력입니다.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                }
+            }
         }
 
         public AttackAction(Monster _monster, IAction _prevAction)

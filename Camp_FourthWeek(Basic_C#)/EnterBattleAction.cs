@@ -87,7 +87,17 @@ namespace Camp_FourthWeek_Basic_C__
                 string monsterDead = monster.Stats[StatType.CurHp].FinalValue <= 0
                     ? "Dead"
                     : monster.Stats[StatType.CurHp].FinalValue.ToString();
-                Console.WriteLine($"Lv. {monster.Lv} {monster.Name} HP {monsterDead}"); //화면에 출력
+                //몬스터 Dead인 경우 선택 불가&색 바꾸기/=================================================================================================================================
+                if (monsterDead == "Dead")
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Lv. {monster.Lv} {monster.Name} HP {monsterDead}"); //화면에 출력
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.WriteLine($"Lv. {monster.Lv} {monster.Name} HP {monsterDead}"); //화면에 출력
+                }
             }
         }
 
