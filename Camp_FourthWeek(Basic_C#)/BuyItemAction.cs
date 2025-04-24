@@ -2,11 +2,11 @@ namespace Camp_FourthWeek_Basic_C__;
 
 using static Camp_FourthWeek_Basic_C__.StringUtil;
 
-public class BuyItemAction : ActionBase
+public class BuyItemAction : PagedListActionBase
 {
     private List<Item> SaleItems = new();
 
-    public BuyItemAction(IAction _prevAction)
+    public BuyItemAction(IAction _prevAction, int _page = 0) : base(_prevAction, _page)
     {
         PrevAction = _prevAction;
         SaleItems = ItemTable.ItemDic.Values.ToList();
@@ -14,31 +14,27 @@ public class BuyItemAction : ActionBase
 
     public override string Name => "상점 - 아이템 구매";
 
-    public override void OnExcute()
+    protected override List<string> GetPageContent()
     {
+        isView=false;
         // SaleItems = ItemTable.ItemDic.Values
         //     .Where(item => !InventoryManager.Instance.Inventory.Any(x => x.Key == item.Key))
         //     .ToList();
+        var output = new List<string>();
         SubActionMap.Clear();
+        MaxPage = (int)Math.Ceiling(SaleItems.Count / (float)VIEW_COUNT);
+        int pageStart = Page * VIEW_COUNT;
+        int pageEnd = Math.Min(pageStart + VIEW_COUNT, SaleItems.Count);
         for (var i = 0; i < SaleItems.Count; i++)
         {
             SubActionMap[i + 1] = new BuyAction(SaleItems[i], this);
         }
 
-        Console.WriteLine("필요한 아이템을 구매할 수 있습니다.");
-        Console.WriteLine("[보유 골드]");
-        Console.WriteLine($"{PlayerInfo.Gold}G");
-        Console.WriteLine("[아이템 목록]");
-        ShowItemInfo();
-
-
-        Console.WriteLine();
-        SelectAndRunAction(SubActionMap);
-    }
-
-    private void ShowItemInfo()
-    {
-        for (var i = 0; i < SaleItems.Count; i++)
+        output.Add("필요한 아이템을 구매할 수 있습니다.");
+        output.Add("[보유 골드]");
+        output.Add($"{PlayerInfo.Gold}G");
+        output.Add("[아이템 목록]");
+        for (var i = pageStart; i < pageEnd; i++)
         {
             var item = SaleItems[i];
             var sb = UiManager.ItemPrinter(item, i);
@@ -53,8 +49,16 @@ public class BuyItemAction : ActionBase
             }
 
             sb.Append(" | ");
-            Console.WriteLine(sb.ToString());
+            output.Add(sb.ToString());
             Console.ResetColor();
         }
+
+        Console.WriteLine();
+        return output;
+    }
+
+    protected override PagedListActionBase CreateNew(int newPage)
+    {
+        return new BuyItemAction(PrevAction, newPage);
     }
 }

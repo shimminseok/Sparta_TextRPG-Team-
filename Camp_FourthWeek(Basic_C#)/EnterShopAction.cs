@@ -2,11 +2,11 @@ namespace Camp_FourthWeek_Basic_C__;
 
 using static Camp_FourthWeek_Basic_C__.StringUtil;
 
-public class EnterShopAction : ActionBase
+public class EnterShopAction : PagedListActionBase
 {
     public List<Item> SaleItems = new();
 
-    public EnterShopAction(IAction _prevAction)
+    public EnterShopAction(IAction _prevAction, int _page = 0) : base(_prevAction, _page)
     {
         PrevAction = _prevAction;
         SubActionMap = new Dictionary<int, IAction>
@@ -20,21 +20,20 @@ public class EnterShopAction : ActionBase
 
     public override string Name => "상점";
 
-    public override void OnExcute()
+    protected override List<string> GetPageContent()
     {
-        Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
-        Console.WriteLine();
-        ShowSaleItems();
-        SelectAndRunAction(SubActionMap);
-    }
+        var output = new List<string>();
 
-    private void ShowSaleItems()
-    {
-        Console.WriteLine("[보유 골드]");
-        Console.WriteLine($"{PlayerInfo.Gold}G");
-        Console.WriteLine();
-        Console.WriteLine("[아이템 목록]");
-        for (var i = 0; i < SaleItems.Count; i++)
+        
+        
+        MaxPage = (int)Math.Ceiling(SaleItems.Count / (float)VIEW_COUNT);
+        int pageStart = Page * VIEW_COUNT;
+        int pageEnd = Math.Min(pageStart + VIEW_COUNT, SaleItems.Count);
+        output.Add("필요한 아이템을 얻을 수 있는 상점입니다.");
+        output.Add("[보유 골드]");
+        output.Add($"{PlayerInfo.Gold}G");
+        output.Add("[아이템 목록]");
+        for (var i = pageStart; i < pageEnd; i++)
         {
             var item = SaleItems[i];
             var sb = UiManager.ItemPrinter(item, i);
@@ -50,8 +49,13 @@ public class EnterShopAction : ActionBase
             }
 
             sb.Append(" | ");
-            Console.WriteLine(sb.ToString());
+            output.Add(sb.ToString());
             Console.ResetColor();
         }
+        return output;
+    }
+    protected override PagedListActionBase CreateNew(int newPage)
+    {
+        return new EnterShopAction(PrevAction, newPage);
     }
 }
