@@ -21,6 +21,11 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 if (!SubActionMap.ContainsKey(i + 1))
                 {
+                    Monster monster = EnterBattleAction.MonsterSelectList[i];
+                    if (monster.Stats[StatType.CurHp].FinalValue <= 0)
+                    {
+                        continue;
+                    }
                     SubActionMap.Add(i + 1, new AttackAction(EnterBattleAction.MonsterSelectList[i], PrevAction));
                 }
             }
