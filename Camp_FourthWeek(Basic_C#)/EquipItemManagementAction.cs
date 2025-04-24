@@ -6,6 +6,8 @@ using static Camp_FourthWeek_Basic_C__.StringUtil;
 public class EquipItemManagementAction : ActionBase
 {
     private readonly PlayerInfo player;
+    private int curItemPage = 0;
+    private const int pageItemSize = 3;
 
     public EquipItemManagementAction(IAction _prevAction, PlayerInfo _player, InventoryManager _inventory)
     {
@@ -24,13 +26,19 @@ public class EquipItemManagementAction : ActionBase
         Console.WriteLine();
 
 
-        Console.WriteLine("[보유 도구 목록]");
-
+        var inventory = InventoryManager.Instance.Inventory;
         var currentMonster = player.Monster;
 
-        for (var i = 0; i < InventoryManager.Instance.Inventory.Count; i++)
+        int total = inventory.Count;
+        var maxPage= (int)Math.Ceiling(total/(float)pageItemSize);
+        int start = curItemPage * pageItemSize;
+        int end = Math.Min(start + pageItemSize, total);
+        Console.WriteLine($"[보유 도구 목록] ({curItemPage + 1}/{maxPage})");
+
+
+        for (var i = start; i < end; i++)
         {
-            var item = InventoryManager.Instance.Inventory[i];
+            var item = inventory[i];
             var sb = new StringBuilder();
             sb.Append($"{PadRightWithKorean($"- {i + 1}", 5)}");
 
@@ -61,15 +69,36 @@ public class EquipItemManagementAction : ActionBase
             Console.WriteLine(sb.ToString());
             Console.ResetColor();
 
-            if (!SubActionMap.ContainsKey(i + 1))
+            if (!SubActionMap.ContainsKey(i - start + 1)) 
             {
                 bool equippedByOther = monster != null && monster != currentMonster;
                 if (!equippedByOther)
                     SubActionMap[i + 1] = new EquipAction(item, this);
             }
         }
+        Console.WriteLine();
+        Console.WriteLine("-1. 다음페이지");
+        Console.WriteLine("-2. 이전페이지");
+        Console.WriteLine();
+        SubActionMap[-1] = new ItemPageMoveAction(this, this, 1);
+        SubActionMap[-2] = new ItemPageMoveAction(this, this, -1);
 
         Console.WriteLine();
-        SelectAndRunAction(SubActionMap);
+        SelectAndRunAction(SubActionMap,true);
+    } 
+    public void MovePage(int _dir)
+    {
+        SetFeedBackMessage("");
+        var totalPage = InventoryManager.Instance.Inventory.Count;
+        int maxPage = (int)Math.Ceiling(totalPage / (float)pageItemSize);
+        int nextPage = curItemPage + _dir;
+
+        if (nextPage < 0 || nextPage >= maxPage)
+        {
+            SetFeedBackMessage("더이상 페이지가 없습니다.");
+            return;
+        }
+
+        curItemPage = nextPage;
     }
 }

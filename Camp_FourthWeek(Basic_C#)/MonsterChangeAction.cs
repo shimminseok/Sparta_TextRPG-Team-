@@ -20,14 +20,15 @@ public class MonsterChangeAction : ActionBase
     {
         Console.WriteLine("이곳에서 포켓몬을 교체 할 수 있습니다.");
         Console.WriteLine();
-        Console.WriteLine("[포켓몬 목록]");
 
         var monsters = InventoryManager.Instance.MonsterBox;
         var totalMonster = monsters.Count;
+        var maxPage= (int)Math.Ceiling(totalMonster/(float)PagepokemonSize);
         int pageStart = curPokemonPage * PagepokemonSize;
         int pageEnd = Math.Min(pageStart + PagepokemonSize, totalMonster);
 
         int index = 1;
+        Console.WriteLine($"[포켓몬 목록] (페이지 {curPokemonPage + 1}/{maxPage})");
 
         for (int i = pageStart; i < pageEnd; i++)
         {
@@ -48,6 +49,7 @@ public class MonsterChangeAction : ActionBase
             index++;
         }
 
+        Console.WriteLine("99. [테스트용 랜덤 포켓몬 추가]");
         Console.WriteLine();
         Console.WriteLine("-1. 다음페이지");
         Console.WriteLine("-2. 이전페이지");

@@ -7,8 +7,8 @@ public class PokemonChangePageMoveAction: ActionBase
     public override string Name =>"";
     public PokemonChangePageMoveAction(IAction _prevAction, MonsterChangeAction _changeAction, int _dir)
     {
-        changeAction = _changeAction;
         PrevAction = _prevAction;
+        changeAction = _changeAction;
         dir = _dir;
     }
     public override void OnExcute()

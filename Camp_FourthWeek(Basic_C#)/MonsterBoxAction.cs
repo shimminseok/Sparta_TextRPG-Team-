@@ -18,13 +18,15 @@ public class MonsterBoxAction : ActionBase
     public override void OnExcute()
     {
         Console.WriteLine("포켓몬에 관한 행동을 볼 수 있습니다.");
-        Console.WriteLine("\n[포켓몬 목록]");
 
 
         var monsters = InventoryManager.Instance.MonsterBox;
         int totalMonster = monsters.Count;
+        var maxPage= (int)Math.Ceiling(totalMonster/(float)PagepokemonSize);
         int pageStart = curPokemonPage * PagepokemonSize;
         int pageEnd = Math.Min(pageStart + PagepokemonSize, totalMonster);
+        
+        Console.WriteLine($"\n[포켓몬 목록] (페이지 {curPokemonPage + 1}/{maxPage})");
 
         for (int i = pageStart; i < pageEnd; i++)
         {
