@@ -16,6 +16,7 @@ public class EquipItemManagementAction : PagedListActionBase
 
     protected override List<string> GetPageContent()
     {
+        SubActionMap.Clear();
         MaxPage = (int)Math.Ceiling(InventoryManager.Instance.Inventory.Count / (float)VIEW_COUNT);
         var output = new List<string>();
 
@@ -42,11 +43,13 @@ public class EquipItemManagementAction : PagedListActionBase
 
             sb.Append($"{PadRightWithKorean($"{item.Name}", 18)}");
             for (var j = 0; j < item.Stats.Count; j++)
+            {
                 sb.Append(
                     $" | {PadRightWithKorean($"{item.Stats[j].GetStatName()} +{item.Stats[j].FinalValue}", 10)} ");
-            sb.Append(" | ");
+                sb.Append(" | ");
+            }
 
-            var monster = InventoryManager.Instance.MonsterBox.FirstOrDefault(m => m.ItemId == item.Key);
+            Monster? monster = InventoryManager.Instance.MonsterBox.FirstOrDefault(m => m.Item == item);
             string equippedMonsterName = string.Empty;
 
             if (item.IsEquipment)
@@ -59,12 +62,9 @@ public class EquipItemManagementAction : PagedListActionBase
 
             output.Add(sb.ToString());
 
-            if (!SubActionMap.ContainsKey(i - start + 1))
-            {
-                bool equippedByOther = monster != null && monster != currentMonster;
-                if (!equippedByOther)
-                    SubActionMap[i + 1] = new EquipAction(item, this);
-            }
+            bool equippedByOther = monster != null && monster != currentMonster;
+            if (!equippedByOther)
+                SubActionMap[i + 1] = new EquipAction(item, this);
         }
 
         return output;

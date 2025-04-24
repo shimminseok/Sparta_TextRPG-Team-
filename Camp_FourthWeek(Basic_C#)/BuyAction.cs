@@ -24,7 +24,7 @@ public class BuyAction : ActionBase
             else
             {
                 PlayerInfo.Gold -= item.Cost;
-                InventoryManager.Instance.AddItem(item);
+                InventoryManager.Instance.AddItem(item.Copy());
                 message = $"{item.Name}을(를) 구매했습니다!";
             }
         }
