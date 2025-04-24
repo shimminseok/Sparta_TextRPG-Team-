@@ -4,6 +4,7 @@ public abstract class PagedListActionBase : ActionBase
 {
     protected const int VIEW_COUNT = 3;
     protected int Page;
+    protected int lineCount = 5;
     protected int MaxPage;
     protected bool isViewSubMap = true;
     protected abstract List<string> GetPageContent();
@@ -19,24 +20,25 @@ public abstract class PagedListActionBase : ActionBase
     public override void OnExcute()
     {
         // SubActionMap.Clear();
+
         var lines = GetPageContent();
-        foreach (var line in lines)
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+        for(int i = 0; i < lines.Count; i++)
         {
-            Console.WriteLine(line);
+            lineDic.Add(lineCount + i, lines[i]);
         }
 
-        Console.WriteLine();
         Console.WriteLine($"[{Page + 1}/{MaxPage}] 페이지");
-        Console.WriteLine();
+         Console.WriteLine();
 
-        if (Page > 0)
-            Console.WriteLine("-1. 이전 페이지");
+       if (Page > 0)
+            lineDic.Add(8,"-1. 이전 페이지");
         if (Page < MaxPage - 1)
-            Console.WriteLine("-2. 다음 페이지");
+            lineDic.Add(9,"-2. 다음 페이지");
 
 
-        PageNavigationFactory.AddPageNavigation(SubActionMap, p => CreateNew(p), Page, MaxPage);
+       PageNavigationFactory.AddPageNavigation(SubActionMap, p => CreateNew(p), Page, MaxPage);
 
-        SelectAndRunAction(SubActionMap, isViewSubMap);
+        SelectAndRunAction(SubActionMap, isViewSubMap,() => UiManager.UIUpdater(UIName.Collection, null, (5, lineDic)));
     }
 }

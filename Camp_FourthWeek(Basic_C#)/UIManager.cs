@@ -226,10 +226,11 @@ namespace Camp_FourthWeek_Basic_C__
             Console.Write(sb.ToString());
         }
 
-        public static void UIUpdater(UIName name, Dictionary<int, Tuple<int, int>?>? fixPivotDic = null, (int, Dictionary<int, string>)? addFormat = null, List<int>? addUIList =null)
+        public static string UIUpdater(UIName name, Dictionary<int, Tuple<int, int>?>? fixPivotDic = null, (int, Dictionary<int, string>)? addFormat = null, List<int>? addUIList =null)
         {
             Console.Clear();
             ResetUIPanel();
+
 
             List<int> printUI = UITable.UITableDic[name];
             if(addUIList != null)
@@ -262,15 +263,22 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 foreach (var value in printUI)
                 {
-                    ChangeUiPanel(name, UITable.UIDic[value]);
+                    ChangeUiPanel(name, UITable.UIDic[value], null, addFormat);
                 }
             }
             // 출력
             PrintPanel();
 
             // 커서 위치 변경
-            if(cusorPosition!=null)
-                ReadLineAt(cusorPosition.Item1, cusorPosition.Item2);
+            if (cusorPosition != null)
+            {
+                return ReadLineAt(cusorPosition.Item1, cusorPosition.Item2);
+            }
+            else
+            {
+                return "잘못된 입력입니다.";
+            }
+
         }
   
         public static void ChangeUiPanel(UIName name, UI ui, Tuple<int,int>? fixedPivot = null, (int, Dictionary<int, string>)? addFormat = null)
@@ -337,7 +345,7 @@ namespace Camp_FourthWeek_Basic_C__
                 }
             }
         }
-        public static void ReadLineAt(int left, int top)
+        public static string ReadLineAt(int left, int top)
         {
             string inputBuffer = "";
             int displayWidth = 0;
@@ -347,7 +355,10 @@ namespace Camp_FourthWeek_Basic_C__
                 ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
 
                 if (keyInfo.Key == ConsoleKey.Enter)
-                    break;
+                {
+                    return inputBuffer;
+                }
+               
 
                 if (keyInfo.Key == ConsoleKey.Backspace)
                 {
