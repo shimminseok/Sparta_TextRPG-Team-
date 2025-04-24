@@ -24,6 +24,9 @@ namespace Camp_FourthWeek_Basic_C__
                     SubActionMap.Add(i + 1, new AttackAction(EnterBattleAction.MonsterSelectList[i], PrevAction));
                 }
             }
+            int maxKey = SubActionMap.Keys.Max(); //포켓몬 몇마리인지(최대) 받아서 ResultAction.cs에서 출력!
+            ResultAction.SetmaxKey(maxKey);
+
             SelectAndRunAction(SubActionMap);
         }
 
