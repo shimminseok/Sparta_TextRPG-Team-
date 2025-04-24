@@ -12,6 +12,7 @@ public class MonsterChangeAction : PagedListActionBase
             //테스트용 포켓몬 추가
             { 99, new TestMonsterModify(this) },
         };
+        isViewSubMap = false;
     }
 
     protected override List<string> GetPageContent()

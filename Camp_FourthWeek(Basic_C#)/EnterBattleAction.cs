@@ -92,7 +92,9 @@ namespace Camp_FourthWeek_Basic_C__
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"Lv. {monster.Lv} {monster.Name} HP {monsterDead}"); //화면에 출력
-                    Console.ForegroundColor = ConsoleColor.White;
+                    QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Monster, QuestConditionType.Kill),
+                        (int)monster.Type);
+                    Console.ResetColor();
                 }
                 else
                 {

@@ -94,8 +94,7 @@ public class PlayerInfo
 
     public PlayerInfo(MonsterType _monster, string _name)
     {
-        Monster = MonsterTable.MonsterDataDic[_monster];
-        // Monsters.Add(Monster);
+        Monster = MonsterTable.GetMonsterByType(_monster).Copy();
         InventoryManager.Instance.AddMonsterToBox(Monster);
         Name = _name;
         Skills = Monster.Skills;

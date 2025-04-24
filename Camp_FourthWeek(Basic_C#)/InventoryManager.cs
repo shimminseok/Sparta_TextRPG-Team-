@@ -31,8 +31,9 @@ public class InventoryManager()
 
     public void RemoveItem(Item _item)
     {
-        if (EquipmentManager.IsEquipped(_item))
-            EquipmentManager.UnequipItem(_item.ItemType);
+        Monster monster = EquipmentManager.GetEquippedMonster(_item);
+        if (monster != null)
+            EquipmentManager.UnequipItem(monster);
 
         Inventory.Remove(_item);
     }
