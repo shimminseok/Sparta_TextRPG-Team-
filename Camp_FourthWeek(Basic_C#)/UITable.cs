@@ -209,7 +209,7 @@ public static class UITable
         },// 퀘스트 상세 진행중
         {
         UIName.Collection,
-        (10,new Dictionary<int, string>
+        (5,new Dictionary<int, string>
         {
             { 0, "[ 포켓몬 도감 ]" },
             { 1, "지금까지 수집한 포켓몬 목록을 확인 할 수 있습니다."},
