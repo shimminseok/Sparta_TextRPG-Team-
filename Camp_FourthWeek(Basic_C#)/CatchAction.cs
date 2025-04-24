@@ -34,7 +34,38 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 Console.WriteLine("포획 실패............................");
             }
-            SelectAndRunAction(SubActionMap);
+            InputNumber();
+            CheckBattleEnd();
+            new EnemyAttackAction(PrevAction).Execute();
+        }
+        private void CheckBattleEnd()
+        {
+            bool isAllMonstersDead = !EnterBattleAction.GetAliveMonsters().Any();
+
+            if (isAllMonstersDead)
+            {
+                SubActionMap[1] = new ResultAction(true, new MainMenuAction());
+                SubActionMap[1].Execute();
+            }
+        }
+        public void InputNumber()
+        {
+            Console.WriteLine("1. 다음");
+            Console.Write(">> ");
+            while (true)
+            {
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out int number))
+                {
+                    if (number == 1)
+                        break;
+                    else
+                        Console.WriteLine("잘못된 입력입니다.");
+                }
+                else
+                    Console.WriteLine("잘못된 입력입니다.");
+            }
         }
     }
 }
