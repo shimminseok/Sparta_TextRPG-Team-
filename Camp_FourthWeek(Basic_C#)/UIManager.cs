@@ -126,7 +126,7 @@ namespace Camp_FourthWeek_Basic_C__
 
         private static char[,] uiPanel = new char[height, width];
         private static Dictionary<int, List<int>> uiDic = new Dictionary<int, List<int>>();
-        private static Tuple<int, int>? cusorPosition;
+        private static Tuple<int, int>? cusorPosition = new Tuple<int, int>(0,0);
         public static void TextShowUI()
         {
             /*
@@ -232,17 +232,18 @@ namespace Camp_FourthWeek_Basic_C__
             ResetUIPanel();
 
 
-            List<int> printUI = UITable.UITableDic[name];
-            if(addUIList != null)
+            List<int> printUI = new List<int>(UITable.UITableDic[name]);
+            if (addUIList != null)
             {
                 foreach(var value in addUIList)
                 {
                     printUI.Add(value);
                 }
             }
+
             
             int dicCount = 0;
-
+                
             if(fixPivotDic != null)
             {
                 foreach (int value in printUI)

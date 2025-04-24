@@ -270,7 +270,7 @@ public static class UITable
             UIName.Main, new List<int>{8}
         },// 스테이터스
         {
-            UIName.Status, new List<int>{9,102}
+            UIName.Status, new List<int>{9}
         },// 메인
         {
             UIName.Battle, new List<int>{10}
