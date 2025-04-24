@@ -10,7 +10,7 @@ public class BuyAction : ActionBase
         PrevAction = _prevAction;
     }
 
-    public override string Name => $"{item.Name} 구매";
+    public override string Name => $"";
 
     public override void OnExcute()
     {

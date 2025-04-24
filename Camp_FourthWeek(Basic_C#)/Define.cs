@@ -53,10 +53,7 @@ public enum StatType
 public enum ItemType
 {
     Weapon,
-    Helmet,
     Armor,
-    Groves,
-    Shoes
 }
 
 public enum MainManu
