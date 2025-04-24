@@ -87,9 +87,7 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 playerCurHpStatus = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
             }
-
-            Console.WriteLine("1. 다음");
-            InputNumber();
+            
             //결과 실행
             //성공 실패
             if (isAllMonstersDead) //몬스터가 다 죽었을 때
@@ -102,15 +100,9 @@ namespace Camp_FourthWeek_Basic_C__
                 SubActionMap[1] = new ResultAction(false, this, playerCurHpStatus);
                 SubActionMap[1].Execute();
             }
-            
-            //1. 모든 몬스터의 HP가 0일때,
-            //승패판정이 나야할 때,
-            //true, false 값 isWin에 넣고
-            //SubActionMap[1] = new ResultAction(true, this);
-            //
 
-            //2. 모든 몬스터가 HP가 0이 안되면
-            //prevActin 실행 //지금 이 코드
+            Console.WriteLine("1. 다음");
+            InputNumber();
 
             if (PrevAction != null)
             {
