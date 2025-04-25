@@ -301,7 +301,8 @@ public class Monster
         Stats[StatType.CurMp] = _saveData.CurrentMP;
     }
 
-    public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill, MonsterType? evolveType = null)
+    public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill,
+        MonsterType? evolveType = null)
     {
         Type = _type;
         Name = _name;
@@ -414,15 +415,17 @@ public class Monster
     private void LevelUp()
     {
         Lv++;
-        
-        if(Lv%10==0 && EvolveType != null)
+
+        if (Lv % 10 == 0 && EvolveType != null)
         {
             Evolve(EvolveType.Value);
         }
-        Stats[StatType.Attack].SetLevelValue(2f*(Lv-1));
+
+        Stats[StatType.Attack].SetLevelValue(2f * (Lv - 1));
         Stats[StatType.MaxHp].SetLevelValue(10f * (Lv - 1));
         Stats[StatType.MaxMp].SetLevelValue(10f * (Lv - 1));
     }
+
     private void Evolve(MonsterType _monsterType)
     {
         var monster = MonsterTable.GetMonsterByType(_monsterType).Copy();
@@ -430,7 +433,6 @@ public class Monster
         Stats = monster.Stats;
         Skills = monster.Skills;
         EvolveType = monster.EvolveType;
-
     }
 
     public void SetUniqueNumber()
@@ -481,8 +483,8 @@ public class SaveData
 
     // Item을 전부 변환 시킬 필요가 없음. int값만 가지고 와서 Table에서 가져오는 방식을 사용
     public List<SaveItem> Inventory;
-    public SaveMonsterData Monster;
-
+    public SaveMonsterData EquipMonster;
+    public List<SaveMonsterData> MonsterBox;
     public string Name;
 
     //QuestData
@@ -495,13 +497,14 @@ public class SaveData
     public SaveData(SaveData _data)
     {
         Name = _data.Name;
-        Monster = _data.Monster;
+        EquipMonster = _data.EquipMonster;
         DungeonClearCount = _data.DungeonClearCount;
         Inventory = _data.Inventory;
         Gold = _data.Gold;
         Quests = _data.Quests;
         ClearQuests = _data.ClearQuests;
         CollectionData = _data.CollectionData;
+        MonsterBox = _data.MonsterBox;
     }
 
     public SaveData()

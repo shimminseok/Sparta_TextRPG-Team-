@@ -27,6 +27,7 @@ public class GameManager
         if (loadData == null)
             return;
         LoadInventoryAndEquipment();
+        LoadMonterBox();
         LoadDungeonClearProgress();
         LoadQuestProgress();
         LoadCollectionData();
@@ -51,7 +52,7 @@ public class GameManager
         var saveData = new SaveData
         {
             Name = PlayerInfo.Name,
-            Monster = GetCurrentMonsterData(),
+            EquipMonster = GetCurrentMonsterData(),
             Gold = PlayerInfo.Gold,
             Inventory = GetInventoryItemKeys(),
             DungeonClearCount = LevelManager.ClearDungeonCount,
@@ -84,7 +85,7 @@ public class GameManager
             if (data != null)
             {
                 loadData = new SaveData(data);
-                Init(new Monster(loadData.Monster.Key), loadData.Name);
+                Init(new Monster(loadData.EquipMonster.Key), loadData.Name);
                 var mainAction = new MainMenuAction();
                 mainAction.Execute();
             }
@@ -110,6 +111,19 @@ public class GameManager
         }
 
         InventoryManager.Instance.Inventory = inventory.ToList();
+    }
+
+    void LoadMonterBox()
+    {
+        List<Monster> monsters = new List<Monster>();
+        foreach (var saveMonster in loadData.MonsterBox)
+        {
+            var monster = MonsterTable.GetMonsterByType(saveMonster.Key).Copy();
+            monster.SetUniqueNumber(saveMonster.UniqueNumber);
+            monsters.Add(monster);
+        }
+
+        InventoryManager.Instance.MonsterBox = monsters;
     }
 
     private void LoadDungeonClearProgress()
@@ -142,14 +156,8 @@ public class GameManager
 
     private void LoadCurrentMonsterData()
     {
-        var loadMonster = loadData.Monster;
+        var loadMonster = loadData.EquipMonster;
         PlayerInfo.Monster = new Monster(loadMonster);
-        // var monster = PlayerInfo.Monster;
-        // monster.Stats[StatType.CurHp] = loadMonster.CurrentHP;
-        // monster.Stats[StatType.CurMp] = loadMonster.CurrentMP;
-        // monster.Lv = loadMonster.Level;
-        // monster.Exp = loadMonster.Exp;
-        // monster.Item = InventoryManager.Instance.Inventory.Find(x => x.UniqueNumber == loadMonster.EquipItemKey);
     }
 
     #endregion
