@@ -21,6 +21,7 @@ public enum QuestConditionType
 {
     Equip, // 장착하기
     Buy, // 구매하기
+    Sell, //판매하기
     Catch, // 포획
     Use, // 사용하기
     Kill,

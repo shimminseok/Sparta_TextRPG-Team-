@@ -16,7 +16,8 @@ namespace Camp_FourthWeek_Basic_C__
             //아이템의 장착은 현재 착용한 몬스터에만 가능하고
             //만약 해당 아이템을 장착한 몬스터가 있으면 빼주고
             if (_equipItem == null) return;
-
+            //장착되어있는 몬스터의 아이템을 무조건 빼줌
+            UnequipItem(playerInfo.Monster);
             var equippedMonster = GetEquippedMonster(_equipItem);
             if (equippedMonster != null)
             {
@@ -30,6 +31,7 @@ namespace Camp_FourthWeek_Basic_C__
             }
 
             playerInfo.Monster.EquipItem(_equipItem);
+            QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Item, QuestConditionType.Equip), _equipItem.Key);
         }
 
         public static void UnequipItem(Monster _targetMonster)
@@ -67,7 +69,7 @@ namespace Camp_FourthWeek_Basic_C__
         public static Monster GetEquippedMonster(Item _targetItem)
         {
             return InventoryManager.Instance.MonsterBox.Find(monster =>
-                monster.Item.UniqueNumber == _targetItem.UniqueNumber);
+                monster.Item?.UniqueNumber == _targetItem.UniqueNumber);
         }
     }
 }

@@ -123,7 +123,7 @@ public class Item
     public int UniqueNumber { get; private set; }
 
     //현재 몬스터가 장착한 아이템인지
-    public bool IsEquippedBy(Monster m) => m.Item.UniqueNumber == UniqueNumber;
+    public bool IsEquippedBy(Monster m) => m.Item?.UniqueNumber == UniqueNumber;
 
     //몬스터 박스에 있는 몬스터들이 장착한 아이템인지
     public bool IsEquipment => EquipmentManager.IsEquipped(UniqueNumber);
@@ -482,10 +482,10 @@ public class SaveData
     public int Gold;
 
     // Item을 전부 변환 시킬 필요가 없음. int값만 가지고 와서 Table에서 가져오는 방식을 사용
-    public List<SaveItem> Inventory;
-    public SaveMonsterData EquipMonster;
-    public List<SaveMonsterData> MonsterBox;
     public string Name;
+    public SaveMonsterData EquipMonster;
+    public List<SaveItem> Inventory = new List<SaveItem>();
+    public List<SaveMonsterData> MonsterBox = new List<SaveMonsterData>();
 
     //QuestData
     public List<SaveQeust> Quests = new List<SaveQeust>();

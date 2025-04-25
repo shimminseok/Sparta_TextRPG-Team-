@@ -55,6 +55,7 @@ public class GameManager
             EquipMonster = GetCurrentMonsterData(),
             Gold = PlayerInfo.Gold,
             Inventory = GetInventoryItemKeys(),
+            MonsterBox = GetCurrentMonsterBoxData(),
             DungeonClearCount = LevelManager.ClearDungeonCount,
             Quests = GetCurrentQuestData(),
             ClearQuests = QuestManager.Instance.ClearQuestList.ToList(),
@@ -179,6 +180,13 @@ public class GameManager
     private SaveMonsterData GetCurrentMonsterData()
     {
         return new SaveMonsterData(PlayerInfo.Monster);
+    }
+
+    private List<SaveMonsterData> GetCurrentMonsterBoxData()
+    {
+        return InventoryManager.Instance.MonsterBox
+            .Select(monster => new SaveMonsterData(monster))
+            .ToList();
     }
 
     private List<SaveQeust> GetCurrentQuestData()

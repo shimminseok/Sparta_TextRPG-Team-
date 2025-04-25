@@ -25,6 +25,7 @@ public class BuyAction : ActionBase
             {
                 PlayerInfo.Gold -= item.Cost;
                 InventoryManager.Instance.AddItem(item.Copy());
+                QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Item, QuestConditionType.Buy), item.Key);
                 message = $"{item.Name}을(를) 구매했습니다!";
             }
         }

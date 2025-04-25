@@ -10,47 +10,40 @@ public class BuyItemAction : PagedListActionBase
     {
         PrevAction = _prevAction;
         SaleItems = ItemTable.ItemDic.Values.ToList();
+        MaxPage = (int)Math.Ceiling(SaleItems.Count / (float)VIEW_COUNT);
     }
 
     public override string Name => "상점 - 아이템 구매";
 
     protected override List<string> GetPageContent()
     {
-        isView=false;
+        isView = false;
         // SaleItems = ItemTable.ItemDic.Values
         //     .Where(item => !InventoryManager.Instance.Inventory.Any(x => x.Key == item.Key))
         //     .ToList();
         var output = new List<string>();
         SubActionMap.Clear();
-        MaxPage = (int)Math.Ceiling(SaleItems.Count / (float)VIEW_COUNT);
         int pageStart = Page * VIEW_COUNT;
         int pageEnd = Math.Min(pageStart + VIEW_COUNT, SaleItems.Count);
         for (var i = 0; i < SaleItems.Count; i++)
         {
             SubActionMap[i + 1] = new BuyAction(SaleItems[i], this);
         }
+
         for (var i = pageStart; i < pageEnd; i++)
         {
             var item = SaleItems[i];
             var sb = UiManager.ItemPrinter(item, i);
-            if (InventoryManager.Instance.Inventory.Exists(x => x.Name == item.Name))
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                sb.Append($"{PadRightWithKorean("구매완료", 10)}");
-            }
-            else
-            {
-                sb.Append($"{PadRightWithKorean($"{item.Cost}G", 10)}");
-            }
+            sb.Append($"{PadRightWithKorean($"{item.Cost}G", 10)}");
 
             sb.Append(" | ");
             output.Add(sb.ToString());
-            Console.ResetColor();
         }
 
         Console.WriteLine();
         return output;
     }
+
     public override void OnExcute()
     {
         var lines = GetPageContent();
@@ -64,6 +57,7 @@ public class BuyItemAction : PagedListActionBase
         {
             lineDic.Add(LineCount + i, lines[i]);
         }
+
         if (Page > 0)
             lineDic.Add(11, "-1. 이전 페이지");
         if (Page < MaxPage - 1)
@@ -71,6 +65,7 @@ public class BuyItemAction : PagedListActionBase
 
         SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Shop_Buy, null, (8, lineDic)));
     }
+
     protected override PagedListActionBase CreateNew(int newPage)
     {
         return new BuyItemAction(PrevAction, newPage);

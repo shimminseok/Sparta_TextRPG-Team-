@@ -27,9 +27,6 @@ public class InventoryManager()
         Random random = new Random();
         _item.SetUniqueNumber();
         Inventory.Add(_item);
-
-        //퀘스트 확인한번하기 ㅎ
-        QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Item, QuestConditionType.Buy), _item.Key);
     }
 
     public void RemoveItem(Item _item)
