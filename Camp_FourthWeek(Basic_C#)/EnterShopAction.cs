@@ -14,7 +14,7 @@ public class EnterShopAction : PagedListActionBase
             { 1, new BuyItemAction(this) },
             { 2, new SellItemAction(this) }
         };
-
+        Page = _page;
         SaleItems = ItemTable.ItemDic.Values.ToList();
     }
 
@@ -50,13 +50,14 @@ public class EnterShopAction : PagedListActionBase
             output.Add(sb.ToString());
             Console.ResetColor();
         }
+
         return output;
     }
 
-        public override void OnExcute()
+    public override void OnExcute()
     {
-        base.OnExcute();
         var lines = GetPageContent();
+        base.OnExcute();
         foreach (var line in lines)
         {
             Console.WriteLine(line);
@@ -74,6 +75,7 @@ public class EnterShopAction : PagedListActionBase
 
         SelectAndRunAction(SubActionMap, isViewSubMap);
     }
+
     protected override PagedListActionBase CreateNew(int newPage)
     {
         return new EnterShopAction(PrevAction, newPage);
