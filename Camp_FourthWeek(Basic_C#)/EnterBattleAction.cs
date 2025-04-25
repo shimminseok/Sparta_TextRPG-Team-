@@ -7,7 +7,7 @@
     public class EnterBattleAction : ActionBase
     {
         public override string Name => "전투 시작";
-        private Stage currentStage;
+        public static Stage CurrentStage { get; private set; }
         public static List<Monster> MonsterSelectList = new List<Monster>(); //랜덤으로 선택된 몬스터를 넣을 공간
         public static Dictionary<Monster,MonsterState> MonsterStateDic = new Dictionary<Monster, MonsterState>(); //랜덤으로 선택된 몬스터를 넣을 공간
 
@@ -16,7 +16,7 @@
         public EnterBattleAction(Stage _currentStage, IAction _prevAction)
         {
             PrevAction = _prevAction;
-            currentStage = _currentStage;
+            CurrentStage = _currentStage;
             SubActionMap = new Dictionary<int, IAction>
             {
                 { 1, new AttackSelectAction(this) },
@@ -24,7 +24,7 @@
                 { 4, new CatchSelectAction(this) }
             };
 
-            monstersAllList = currentStage.SpawnedMonsters
+            monstersAllList = CurrentStage.SpawnedMonsters
                 .Select(_type => MonsterTable.MonsterDataDic[_type])
                 .ToList();
 
@@ -106,7 +106,7 @@
         public void BattlePlayerInfo()
         {
             Console.WriteLine("\n[내정보]");
-            string name = PlayerInfo.Name;
+            string name = PlayerInfo.Monster.Name;
             int level = PlayerInfo.Monster.Lv;
             float maxHP = PlayerInfo.Monster.Stats[StatType.MaxHp].BaseValue;
             float curHP = PlayerInfo.Monster.Stats[StatType.CurHp].BaseValue;

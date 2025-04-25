@@ -32,7 +32,19 @@ namespace Camp_FourthWeek_Basic_C__
                 Console.WriteLine("[캐릭터 정보]");
                 Console.WriteLine($"Lv.{curLv}  {curName} {(curLv==PlayerInfo.Monster.Lv ? "" : $"-> Lv.{PlayerInfo.Monster.Lv} {PlayerInfo.Monster.Name}")}");
                 Console.WriteLine($"HP {PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue}");
-                Console.WriteLine($"exp {curExp} -> {PlayerInfo.Monster.Exp}");
+                Console.WriteLine($"exp {curExp} -> {PlayerInfo.Monster.Exp}\n");
+
+                Console.WriteLine("[획득 아이템]");
+                int rewardGold = EnterBattleAction.CurrentStage.RewardGold;
+                PlayerInfo.Gold += rewardGold;
+                Console.WriteLine($"{rewardGold} Gold");
+                foreach (Monster mon in EnterBattleAction.MonsterSelectList)
+                {
+                    if (EnterBattleAction.MonsterStateDic[mon] == MonsterState.Catched)
+                    {
+                        Console.WriteLine($"{mon.Name}(포켓몬)");
+                    }
+                }
             }
             else
             {
