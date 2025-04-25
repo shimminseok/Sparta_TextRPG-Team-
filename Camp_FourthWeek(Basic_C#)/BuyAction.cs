@@ -30,10 +30,11 @@ public class BuyAction : ActionBase
             }
         }
 
-        if (PrevAction != null)
-        {
-            PrevAction.SetFeedBackMessage(message);
-            PrevAction.Execute();
-        }
+        NextAction = PrevAction;
+        // if (PrevAction != null)
+        // {
+        //     PrevAction.SetFeedBackMessage(message);
+        //     PrevAction.Execute();
+        // }
     }
 }

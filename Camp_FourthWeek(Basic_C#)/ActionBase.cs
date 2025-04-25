@@ -29,6 +29,8 @@ public abstract partial class ActionBase : IAction
         Func<string>? inputProvider = null)
     {
         Console.WriteLine();
+        if (_actionMap.Count == 0)
+            return;
         if (_isView)
         {
             foreach (var action in _actionMap)
@@ -39,8 +41,7 @@ public abstract partial class ActionBase : IAction
             }
         }
 
-        if (_actionMap.Count == 0)
-            return;
+
         while (true)
         {
             if (int.TryParse(inputProvider?.Invoke() ?? Console.ReadLine(), out var id))
