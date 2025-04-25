@@ -31,7 +31,7 @@ namespace Camp_FourthWeek_Basic_C__
 
             EnterBattleAction.lineDic.Clear();
             var player = PlayerInfo.Monster;
-
+            BattlePlayerInfo();
 
             EnterBattleAction.lineDic.Add(attackCount++, $"{player.Name}의 공격!");
             foreach (var target in monsters)
@@ -153,6 +153,29 @@ namespace Camp_FourthWeek_Basic_C__
             bool isEvade = random.NextDouble() < _target.Stats[StatType.EvadeChance].FinalValue * 0.01f;
             bool isCritical = random.NextDouble() < _origin.Stats[StatType.CriticalChance].FinalValue * 0.01f;
             return (isEvade, isCritical);
+        }
+
+        public void BattlePlayerInfo()
+        {
+            string name = PlayerInfo.Monster.Name;
+            int level = PlayerInfo.Monster.Lv;
+            float maxHP = PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue;
+            float curHP = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
+
+            float maxMP = PlayerInfo.Monster.Stats[StatType.MaxMp].FinalValue;
+            float curMP = PlayerInfo.Monster.Stats[StatType.CurMp].FinalValue;
+
+
+            EnterBattleAction.lineDic = new Dictionary<int, string>
+            {
+                // 플레이어 정보
+                { 0, $"{level}" },
+                { 1, $"{name}" },
+                { 2, $"HP : {curHP}/{maxHP}" },
+                { 3, StringUtil.GetBar(curHP, maxHP) },
+                { 4, $"PP : {curMP}/{maxMP}" },
+                { 5, StringUtil.GetBar(curMP, maxMP) },
+            };
         }
     }
 }

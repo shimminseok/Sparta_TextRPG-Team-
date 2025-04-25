@@ -40,6 +40,8 @@ namespace Camp_FourthWeek_Basic_C__
                 .ToList();
             bool isPlayerDead = false;
             int attackCount = 24;
+            EnterBattleAction.lineDic.Clear();
+            BattlePlayerInfo();
             foreach (var monster in aliveMonsters)
             {
                 EnterBattleAction.lineDic.Add(attackCount++, $"Lv{monster.Lv} {monster.Name}의 공격!");
@@ -106,6 +108,29 @@ namespace Camp_FourthWeek_Basic_C__
             SelectAndRunAction(SubActionMap, false,
                 () => UiManager.UIUpdater(uiname, EnterBattleAction.pivotDict, (num, EnterBattleAction.lineDic),
                     EnterBattleAction.monsterUIList));
+        }
+
+        public void BattlePlayerInfo()
+        {
+            string name = PlayerInfo.Monster.Name;
+            int level = PlayerInfo.Monster.Lv;
+            float maxHP = PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue;
+            float curHP = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
+
+            float maxMP = PlayerInfo.Monster.Stats[StatType.MaxMp].FinalValue;
+            float curMP = PlayerInfo.Monster.Stats[StatType.CurMp].FinalValue;
+
+
+            EnterBattleAction.lineDic = new Dictionary<int, string>
+            {
+                // 플레이어 정보
+                { 0, $"{level}" },
+                { 1, $"{name}" },
+                { 2, $"HP : {curHP}/{maxHP}" },
+                { 3, StringUtil.GetBar(curHP, maxHP) },
+                { 4, $"PP : {curMP}/{maxMP}" },
+                { 5, StringUtil.GetBar(curMP, maxMP) },
+            };
         }
 
         private void CheckBattleEnd(bool isPlayerDead)

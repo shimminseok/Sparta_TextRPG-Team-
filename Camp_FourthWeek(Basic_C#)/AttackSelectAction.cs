@@ -29,7 +29,6 @@ namespace Camp_FourthWeek_Basic_C__
             EnterBattleAction.lineDic.Clear();
             BattlePlayerInfo();
             EnterBattleAction.DisplayMonsterList();
-            // int pivotCount = 2;
             int pivotCount = EnterBattleAction.pivotDict.Last().Key + 1;
             int playerAction = 19;
             if (skill is not null)
