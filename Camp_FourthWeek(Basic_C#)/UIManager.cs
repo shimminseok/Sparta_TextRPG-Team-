@@ -395,33 +395,33 @@ namespace Camp_FourthWeek_Basic_C__
                 Console.SetCursorPosition(left + displayWidth, height - top);
             }
         }
-        public static int IntroRoop()
+        public static string IntroRoop()
         {
             while (true)
             {
                 UIUpdater(UIName.Intro_GameStart_1);
                 Thread.Sleep(animSpeed);
-                var result = CheckIntroInput(); if (result.HasValue) return result.Value;
+                var result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
 
                 UIUpdater(UIName.Intro_GameStart_2);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value;
+                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
 
                 UIUpdater(UIName.Intro_GameStart_3);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value;
+                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
 
                 UIUpdater(UIName.Intro_GameStart_2);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value;
+                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
 
                 UIUpdater(UIName.Intro_GameStart_1);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value;
+                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
 
                 UIUpdater(UIName.Intro_GameStart_4);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value;
+                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
             }
         }
 

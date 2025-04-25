@@ -10,15 +10,13 @@ public class CreateNickNameAction : ActionBase
         SubActionMap.Clear();
         do
         {
-            Console.WriteLine("모험가님의 이름을 설정해주세요.");
-            nickName = Console.ReadLine();
+            nickName = UiManager.UIUpdater(UIName.Intro_TextBox);
         } while (string.IsNullOrEmpty(nickName));
 
-        Console.WriteLine($"{nickName}님 안녕하세요.");
         SubActionMap = new Dictionary<int, IAction>
         {
             { 1, new SelectedMonsterAction(nickName) }
         };
-        SelectAndRunAction(SubActionMap);
+        SelectAndRunAction(SubActionMap, true, null, true);
     }
 }
