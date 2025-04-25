@@ -22,8 +22,8 @@ public abstract class PagedListActionBase : ActionBase
 
 
         PageNavigationFactory.AddPageNavigation(SubActionMap, p => CreateNew(p), Page, MaxPage);
-
-        SubActionMap.Clear();
+        /*
+         SubActionMap.Clear();
         var lines = GetPageContent();
         foreach (var line in lines)
         {
@@ -45,5 +45,6 @@ public abstract class PagedListActionBase : ActionBase
         {
             SelectAndRunAction(SubActionMap, false);
         }
+        */
     }
 }
