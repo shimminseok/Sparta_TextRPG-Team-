@@ -16,7 +16,7 @@ public class MonsterBoxAction : PagedListActionBase
     protected override List<string> GetPageContent()
     {
         var output = new List<string>();
-        output.Add("포켓몬에 관한 행동을 볼 수 있습니다.");
+        //output.Add("포켓몬에 관한 행동을 볼 수 있습니다.");
 
         var monsters = InventoryManager.Instance.MonsterBox;
         int totalMonster = monsters.Count;
@@ -42,29 +42,19 @@ public class MonsterBoxAction : PagedListActionBase
     public override void OnExcute()
     {
         base.OnExcute();
-        SubActionMap.Clear();
+
+        int LineCount = 7;
         var lines = GetPageContent();
-        foreach (var line in lines)
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+        for (int i = 0; i < lines.Count; i++)
         {
-            Console.WriteLine(line);
+            lineDic.Add(LineCount + i, lines[i]);
         }
-
-        Console.WriteLine();
-        Console.WriteLine($"[{Page + 1}/{MaxPage}] 페이지");
-        Console.WriteLine();
-
         if (Page > 0)
-            Console.WriteLine("-1. 이전 페이지");
+            lineDic.Add(8, "-1. 이전 페이지");
         if (Page < MaxPage - 1)
-            Console.WriteLine("-2. 다음 페이지");
-        if (isView)
-        {
-            SelectAndRunAction(SubActionMap, isViewSubMap);
-        }
-        else if (!isView)
-        {
-            SelectAndRunAction(SubActionMap, false);
-        }
+            lineDic.Add(9, "-2. 다음 페이지");
+        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.SetPokectmon, null, (5, lineDic)));
 
     }
     protected override PagedListActionBase CreateNew(int newPage)

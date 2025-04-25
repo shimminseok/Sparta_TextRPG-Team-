@@ -14,7 +14,7 @@ public class EnterShopAction : PagedListActionBase
             { 1, new BuyItemAction(this) },
             { 2, new SellItemAction(this) }
         };
-
+        Page = _page;
         SaleItems = ItemTable.ItemDic.Values.ToList();
     }
 
@@ -24,8 +24,6 @@ public class EnterShopAction : PagedListActionBase
     {
         var output = new List<string>();
 
-        
-        
         MaxPage = (int)Math.Ceiling(SaleItems.Count / (float)VIEW_COUNT);
         int pageStart = Page * VIEW_COUNT;
         int pageEnd = Math.Min(pageStart + VIEW_COUNT, SaleItems.Count);
@@ -52,8 +50,32 @@ public class EnterShopAction : PagedListActionBase
             output.Add(sb.ToString());
             Console.ResetColor();
         }
+
         return output;
     }
+
+    public override void OnExcute()
+    {
+        var lines = GetPageContent();
+        base.OnExcute();
+        foreach (var line in lines)
+        {
+            Console.WriteLine(line);
+        }
+
+        Console.WriteLine();
+        Console.WriteLine($"[{Page + 1}/{MaxPage}] 페이지");
+        Console.WriteLine();
+
+        if (Page > 0)
+            Console.WriteLine("-1. 이전 페이지");
+        if (Page < MaxPage - 1)
+            Console.WriteLine("-2. 다음 페이지");
+
+
+        SelectAndRunAction(SubActionMap, isViewSubMap);
+    }
+
     protected override PagedListActionBase CreateNew(int newPage)
     {
         return new EnterShopAction(PrevAction, newPage);

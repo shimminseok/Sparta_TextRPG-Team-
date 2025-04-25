@@ -46,6 +46,7 @@ public abstract partial class ActionBase : IAction
             while (true)
                 if (int.TryParse(Console.ReadLine(), out var id))
                 {
+           
                     if (id == 0)
                     {
                         if (PrevAction == null && this is MainMenuAction)
