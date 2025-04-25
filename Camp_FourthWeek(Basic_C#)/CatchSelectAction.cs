@@ -11,6 +11,7 @@
 
         public override void OnExcute()
         {
+            SubActionMap.Clear();
             EnterBattleAction.DisplayMonsterList();
 
             List<Monster> aliveMonsterList = EnterBattleAction.GetAliveMonsters();

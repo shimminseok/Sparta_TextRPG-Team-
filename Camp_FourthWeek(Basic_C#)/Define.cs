@@ -165,6 +165,7 @@ public class Stat
 {
     public float BaseValue { get; private set; }
     public float BuffValue { get; private set; } = 0;
+    public float LevelValue { get; private set; } = 0;
     public float EquipmentValue { get; private set; }
     public StatType Type { get; private set; }
 
@@ -177,6 +178,7 @@ public class Stat
         Type = stat.Type;
         BaseValue = stat.BaseValue;
         BuffValue = stat.BuffValue;
+        LevelValue = stat.LevelValue;
         EquipmentValue = stat.EquipmentValue;
     }
 
@@ -186,12 +188,18 @@ public class Stat
         BaseValue = _value;
     }
 
-    public float FinalValue => BaseValue + EquipmentValue + BuffValue;
+    public float FinalValue => BaseValue + EquipmentValue + BuffValue + LevelValue;
 
     public void ModifyBaseValue(float _value, float _min = 0, float _max = int.MaxValue)
     {
         BaseValue += _value;
         BaseValue = Math.Clamp(BaseValue, _min, _max);
+    }
+
+    public void SetLevelValue(float _value, float _min = 0, float _max = int.MaxValue)
+    {
+        LevelValue = _value;
+        LevelValue = Math.Clamp(LevelValue, _min, _max);
     }
 
     public void ModifyEquipmentValue(float _value)
@@ -406,10 +414,14 @@ public class Monster
     private void LevelUp()
     {
         Lv++;
+        
         if(Lv%10==0 && EvolveType != null)
         {
             Evolve(EvolveType.Value);
         }
+        Stats[StatType.Attack].SetLevelValue(2f*(Lv-1));
+        Stats[StatType.MaxHp].SetLevelValue(10f * (Lv - 1));
+        Stats[StatType.MaxMp].SetLevelValue(10f * (Lv - 1));
     }
     private void Evolve(MonsterType _monsterType)
     {
