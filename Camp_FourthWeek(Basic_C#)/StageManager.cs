@@ -9,17 +9,14 @@ public class StageManager
 
     public readonly PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
     public int ClearStage = 0;
-    public Stage CurrentStage => StageTable.GetDungeonById(ClearStage);
+    public Stage CurrentStage;
 
-    public string ClearCurrentStage(Stage _stage)
+    public void ClearCurrentStage()
     {
-        if (ClearStage < _stage.Key)
-            ClearStage = _stage.Key;
+        if (ClearStage < CurrentStage.Key)
+            ClearStage = CurrentStage.Key;
 
-        int prevGold = playerInfo.Gold;
-        playerInfo.Gold += _stage.RewardGold;
-
-        return $"[{_stage.StageName}] 클리어\n골드: {prevGold} -> {playerInfo.Gold}";
+        playerInfo.Gold += CurrentStage.RewardGold;
     }
 
     public string UnClearStage(Stage _stage)

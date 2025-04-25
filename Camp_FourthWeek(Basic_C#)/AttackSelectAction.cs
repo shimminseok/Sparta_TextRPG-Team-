@@ -77,9 +77,6 @@ namespace Camp_FourthWeek_Basic_C__
                 }
             }
 
-            if (SubActionMap.Count == 0)
-                return;
-
             SelectAndRunAction(SubActionMap, false,
                 () => UiManager.UIUpdater(UIName.Battle_AttackSelect, EnterBattleAction.pivotDict,
                     (18, EnterBattleAction.lineDic), EnterBattleAction.monsterUIList));

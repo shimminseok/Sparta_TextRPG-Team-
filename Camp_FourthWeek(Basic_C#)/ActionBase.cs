@@ -39,6 +39,8 @@ public abstract partial class ActionBase : IAction
             }
         }
 
+        if (_actionMap.Count == 0)
+            return;
         while (true)
         {
             if (int.TryParse(inputProvider?.Invoke() ?? Console.ReadLine(), out var id))

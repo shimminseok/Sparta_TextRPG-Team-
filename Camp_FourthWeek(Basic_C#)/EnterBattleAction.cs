@@ -45,6 +45,7 @@ namespace Camp_FourthWeek_Basic_C__
                 { 2, new SkillSelectAction(this) },
                 { 3, new CatchSelectAction(this) }
             };
+            StageManager.Instance.CurrentStage = _currentStage;
         }
 
 

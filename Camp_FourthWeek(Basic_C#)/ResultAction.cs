@@ -38,6 +38,7 @@ namespace Camp_FourthWeek_Basic_C__
                     $"Lv.{curLv}  {curName} {(curLv == PlayerInfo.Monster.Lv ? "" : $"-> Lv.{PlayerInfo.Monster.Lv} {PlayerInfo.Monster.Name}")}");
                 lineDic.Add(LineCount++, $"HP {PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue}");
                 lineDic.Add(LineCount++, $"exp {curExp} -> {PlayerInfo.Monster.Exp}");
+                StageManager.Instance.ClearCurrentStage();
             }
             else
             {
@@ -51,7 +52,7 @@ namespace Camp_FourthWeek_Basic_C__
                 lineDic.Add(i, "");
             }
 
-
+            SubActionMap[1] = new MainMenuAction();
             SelectAndRunAction(SubActionMap, false,
                 () => UiManager.UIUpdater(UIName.Battle_Result, null, (20, lineDic)));
         }

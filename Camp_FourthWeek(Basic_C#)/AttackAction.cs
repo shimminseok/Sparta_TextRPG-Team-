@@ -97,8 +97,7 @@ namespace Camp_FourthWeek_Basic_C__
 
             attackCount = 24;
             CheckBattleEnd();
-            if (SubActionMap.Count == 0)
-                return;
+
 
             SelectAndRunAction(SubActionMap, false,
                 () => UiManager.UIUpdater(uiname, EnterBattleAction.pivotDict, (num, EnterBattleAction.lineDic),

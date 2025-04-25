@@ -102,8 +102,6 @@ namespace Camp_FourthWeek_Basic_C__
             pivotDict.Add(pivotCount, new Tuple<int, int>(0, 0));
             EnterBattleAction.monsterUIList.Add(28);
             CheckBattleEnd(isPlayerDead);
-            if (SubActionMap.Count == 0)
-                return;
             attackCount = 24;
             SelectAndRunAction(SubActionMap, false,
                 () => UiManager.UIUpdater(uiname, EnterBattleAction.pivotDict, (num, EnterBattleAction.lineDic),
