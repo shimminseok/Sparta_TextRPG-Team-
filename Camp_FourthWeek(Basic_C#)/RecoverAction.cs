@@ -20,10 +20,13 @@ public class RecoverAction : ActionBase
         else
         {
             var curHP = PlayerInfo.Monster.Stats[StatType.CurHp];
+            var curMP = PlayerInfo.Monster.Stats[StatType.CurMp];
             var before = curHP.FinalValue;
             int recoverGold = 500; //회복비용
             curHP.ModifyBaseValue(PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue, 0,
                 PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue);
+            curMP.ModifyBaseValue(PlayerInfo.Monster.Stats[StatType.MaxMp].FinalValue, 0,
+                PlayerInfo.Monster.Stats[StatType.MaxMp].FinalValue);
             PlayerInfo.Gold -= recoverGold;
             Console.WriteLine("회복중..");
             Thread.Sleep(3000);
