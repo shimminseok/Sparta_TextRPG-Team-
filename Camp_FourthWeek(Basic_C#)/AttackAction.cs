@@ -4,6 +4,10 @@ namespace Camp_FourthWeek_Basic_C__
 {
     internal class AttackAction : ActionBase
     {
+        static Dictionary<int, string> lineDic;
+        static Dictionary<int, Tuple<int, int>?> pivotDict;
+        static List<int> monsterUIList;
+        static Tuple<int, int>[] pivotArr = new Tuple<int, int>[] { new Tuple<int, int>(5, 6), new Tuple<int, int>(60, 6), new Tuple<int, int>(115, 6) };
         private List<Monster> monsters;
         public override string Name => $"Lv. {monsters[0].Lv} {monsters[0].Name} 공격";
         private Skill? skill;
@@ -15,12 +19,13 @@ namespace Camp_FourthWeek_Basic_C__
             monsters = _monsters;
             skill = _skill;
         }
-
-        public AttackAction(Monster monster, Skill? _skill, IAction _prevAction)
+        public AttackAction(Monster monster, Skill? _skill, IAction _prevAction, List<int> _monsterUIList, Dictionary<int, string> _lineDic)
             : this(new List<Monster> { monster }, _skill, _prevAction)
         {
+            monsterUIList = _monsterUIList;
+            lineDic = _lineDic;
         }
-
+        int attackCount = 24;
         public override void OnExcute()
         {
             random = new Random(DateTime.Now.Millisecond);
@@ -28,6 +33,18 @@ namespace Camp_FourthWeek_Basic_C__
                 UseMp();
 
             var player = PlayerInfo.Monster;
+
+            if(lineDic != null)
+            {
+                for (int i = attackCount; i <= 40; i++)
+                {
+                    if (lineDic.ContainsKey(i))
+                        lineDic.Remove(i);
+                }
+            }
+         
+  
+            lineDic.Add(attackCount++, $"{player.Name}의 공격!");
             foreach (var target in monsters)
             {
                 var (isEvade, isCritical) = CalculateBattleChances(player, target);
@@ -40,46 +57,56 @@ namespace Camp_FourthWeek_Basic_C__
                 float originHp = target.Stats[StatType.CurHp].FinalValue;
                 if (isCritical)
                     damage *= player.Stats[StatType.CriticlaDamage].FinalValue;
-                damage = (int)Math.Round(damage, 0);
+
                 if (!isEvade)
                     target.Stats[StatType.CurHp].ModifyAllValue(damage);
                 if (target.Stats[StatType.CurHp].FinalValue <= 0)
-                {
                     EnterBattleAction.MonsterStateDic[target] = MonsterState.Dead;
-                    QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Monster, QuestConditionType.Kill),
-                        (int)target.Type);
-                }
-
                 bool isDead = EnterBattleAction.MonsterStateDic[target] == MonsterState.Dead;
-                Console.WriteLine($"{player.Name}의 공격!");
 
                 if (isEvade)
                 {
-                    Console.WriteLine("그러나 맞지 않았다.");
+                    lineDic.Add(attackCount++, $"그러나 맞지 않았다.");
                 }
                 else
                 {
                     if (isCritical)
                     {
-                        Console.WriteLine($"급소에 맞았다!");
+                        lineDic.Add(attackCount++, $"급소에 맞았다!");
+                        lineDic.Add(attackCount++, $" Lv.{target.Lv} {target.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
                     }
-
-                    Console.WriteLine($"Lv.{target.Lv} {target.Name}을(를) 맞췄습니다. [데미지 : {damage}]\n");
-                    Console.WriteLine($"Lv.{target.Lv} {target.Name}");
+                    else
+                    {
+                        lineDic.Add(attackCount++, $" Lv.{target.Lv} {target.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
+                    }
+                }
+                for(int i = attackCount; i < 40; i++)
+                {
+                    lineDic.Add(i, "");
                 }
 
-                Console.WriteLine(
-                    $"HP {originHp} -> {(isDead ? "Dead" : target.Stats[StatType.CurHp].FinalValue.ToString())}");
-                Console.WriteLine("\n");
+               // Console.WriteLine($"HP {originHp} -> {(isDead ? "Dead" : target.Stats[StatType.CurHp].FinalValue.ToString())}");
             }
+
+
+            pivotDict = new Dictionary<int, Tuple<int, int>?>
+                  {
+                      {0, new Tuple<int, int>(0,0) }, // 배경
+                      {1, new Tuple<int, int>(7,28)}, // 내 포켓몬
+                  };
+            int pivotCount = 2;
+            for (int i =  0; i < monsterUIList.Count-1 && i < pivotArr.Length ; i++)
+            {
+                pivotDict.Add(pivotCount++, pivotArr[i]);
+            }
+            pivotDict.Add(pivotCount, new Tuple<int, int>(0, 0));
+            monsterUIList.Add(28);
 
             InputNumber();
 
-            Console.Clear();
-
             CheckBattleEnd();
-
-            new EnemyAttackAction(PrevAction).Execute();
+            attackCount = 24;
+            new EnemyAttackAction(PrevAction,monsterUIList,lineDic).Execute();
         }
 
 
@@ -96,11 +123,12 @@ namespace Camp_FourthWeek_Basic_C__
 
         public static void InputNumber()
         {
-            Console.WriteLine("1. 다음");
-            Console.Write(">> ");
+
+
+
             while (true)
             {
-                string input = Console.ReadLine();
+                string input = UiManager.UIUpdater(UIName.Battle_AttackEnemy, pivotDict, (25, lineDic), monsterUIList);
 
                 if (int.TryParse(input, out int number))
                 {
@@ -113,7 +141,6 @@ namespace Camp_FourthWeek_Basic_C__
                     Console.WriteLine("잘못된 입력입니다.");
             }
         }
-
         public void UseMp()
         {
             float playerMp = PlayerInfo.Monster.Stats[StatType.CurMp].FinalValue;
@@ -123,10 +150,8 @@ namespace Camp_FourthWeek_Basic_C__
                 PrevAction?.SetFeedBackMessage("Mp가 부족합니다");
                 PrevAction?.Execute();
             }
-
             PlayerInfo.Monster.Stats[StatType.CurMp].ModifyAllValue(skillMp);
         }
-
         public static float GetCalculatedDamage(float _originDamage)
         {
             float minDamage = _originDamage * 0.9f; //공격력의 최소값
@@ -144,5 +169,7 @@ namespace Camp_FourthWeek_Basic_C__
             bool isCritical = random.NextDouble() < _origin.Stats[StatType.CriticalChance].FinalValue * 0.01f;
             return (isEvade, isCritical);
         }
+
+        
     }
 }
