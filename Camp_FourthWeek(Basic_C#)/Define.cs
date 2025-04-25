@@ -491,7 +491,7 @@ public class Skill
 
 public class SaveData
 {
-    public int DungeonClearCount;
+    public int ClearStage;
     public int Gold;
 
     // Item을 전부 변환 시킬 필요가 없음. int값만 가지고 와서 Table에서 가져오는 방식을 사용
@@ -511,7 +511,7 @@ public class SaveData
     {
         Name = _data.Name;
         EquipMonster = _data.EquipMonster;
-        DungeonClearCount = _data.DungeonClearCount;
+        ClearStage = _data.ClearStage;
         Inventory = _data.Inventory;
         Gold = _data.Gold;
         Quests = _data.Quests;

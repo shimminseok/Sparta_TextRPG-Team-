@@ -13,7 +13,6 @@ public class StageManager
 
     public string ClearCurrentStage(Stage _stage)
     {
-        LevelManager.AddClearCount();
         if (ClearStage < _stage.Key)
             ClearStage = _stage.Key;
 

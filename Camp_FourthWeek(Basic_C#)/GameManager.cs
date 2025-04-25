@@ -28,12 +28,12 @@ public class GameManager
             return;
         LoadInventoryAndEquipment();
         LoadMonterBox();
-        LoadDungeonClearProgress();
         LoadQuestProgress();
         LoadCollectionData();
         LoadPlayerGold();
         LoadCurrentMonsterData();
         EquipmentManager.EquipmentItem(PlayerInfo.Monster.Item);
+        StageManager.Instance.ClearStage = loadData.ClearStage;
     }
 
     public void SaveGame()
@@ -56,7 +56,6 @@ public class GameManager
             Gold = PlayerInfo.Gold,
             Inventory = GetInventoryItemKeys(),
             MonsterBox = GetCurrentMonsterBoxData(),
-            DungeonClearCount = LevelManager.ClearDungeonCount,
             Quests = GetCurrentQuestData(),
             ClearQuests = QuestManager.Instance.ClearQuestList.ToList(),
             CollectionData = GetCurrentCollectionData()
@@ -132,14 +131,6 @@ public class GameManager
         }
 
         InventoryManager.Instance.MonsterBox = monsters;
-    }
-
-    private void LoadDungeonClearProgress()
-    {
-        for (int i = 0; i < loadData.DungeonClearCount; i++)
-        {
-            LevelManager.AddClearCount();
-        }
     }
 
     private void LoadQuestProgress()
