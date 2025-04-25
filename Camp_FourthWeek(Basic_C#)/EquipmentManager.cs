@@ -15,6 +15,7 @@ namespace Camp_FourthWeek_Basic_C__
         {
             //아이템의 장착은 현재 착용한 몬스터에만 가능하고
             //만약 해당 아이템을 장착한 몬스터가 있으면 빼주고
+            if (_equipItem == null) return;
 
             var equippedMonster = GetEquippedMonster(_equipItem);
             if (equippedMonster != null)
@@ -28,7 +29,7 @@ namespace Camp_FourthWeek_Basic_C__
                 playerInfo?.Monster.Stats[stat.Type].ModifyEquipmentValue(stat.FinalValue);
             }
 
-            playerInfo.Monster.Item = _equipItem;
+            playerInfo.Monster.EquipItem(_equipItem);
         }
 
         public static void UnequipItem(Monster _targetMonster)
@@ -42,18 +43,27 @@ namespace Camp_FourthWeek_Basic_C__
                         .ModifyEquipmentValue(-targetItem.Stats[i].FinalValue);
                 }
 
-                _targetMonster.Item = null;
+                _targetMonster.UnEquipItem();
             }
         }
 
-        public static bool IsEquipped(Item _item)
+        /// <summary>
+        /// 현재 MonsterBox에 있는 몬스터중에 해당 아이템을 장착한 몬스터가 있는지
+        /// </summary>
+        /// <param name="_item"></param>
+        /// <returns></returns>
+        public static bool IsEquipped(int _uniqueNumber)
         {
             Monster equipMonster =
-                InventoryManager.Instance.MonsterBox.Find(monster => monster.Item?.UniqueNumber == _item.UniqueNumber);
+                InventoryManager.Instance.MonsterBox.Find(monster => monster.Item?.UniqueNumber == _uniqueNumber);
             return equipMonster != null;
         }
 
-
+        /// <summary>
+        /// 해당 아이템을 장착한 몬스터를 리턴해주는 함수
+        /// </summary>
+        /// <param name="_targetItem"></param>
+        /// <returns></returns>
         public static Monster GetEquippedMonster(Item _targetItem)
         {
             return InventoryManager.Instance.MonsterBox.Find(monster => monster.Item == _targetItem);

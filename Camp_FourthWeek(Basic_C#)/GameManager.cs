@@ -31,7 +31,7 @@ public class GameManager
         LoadQuestProgress();
         LoadCollectionData();
         LoadPlayerGold();
-        PlayerInfo.Monster = LoadCurrentMonsterData();
+        LoadCurrentMonsterData();
         EquipmentManager.EquipmentItem(PlayerInfo.Monster.Item);
     }
 
@@ -105,7 +105,7 @@ public class GameManager
         foreach (var saveItem in loadData.Inventory)
         {
             var item = ItemTable.GetItemById(saveItem.ItemKey).Copy();
-            item.UniqueNumber = saveItem.UniqueNumber;
+            item.SetUniqueNumber(saveItem.UniqueNumber);
             inventory.Add(item);
         }
 
@@ -140,15 +140,16 @@ public class GameManager
         CollectionManager.Instnace.GetLoadData(loadData.CollectionData);
     }
 
-    private Monster LoadCurrentMonsterData()
+    private void LoadCurrentMonsterData()
     {
         var loadMonster = loadData.Monster;
-        var monster = PlayerInfo.Monster;
-        monster.Stats[StatType.CurHp] = loadMonster.CurrentHP;
-        monster.Stats[StatType.CurMp] = loadMonster.CurrentMP;
-        monster.Exp = loadMonster.Exp;
-        monster.Item = InventoryManager.Instance.Inventory.Find(x => x.UniqueNumber == loadMonster.EquipItemKey);
-        return monster;
+        PlayerInfo.Monster = new Monster(loadMonster);
+        // var monster = PlayerInfo.Monster;
+        // monster.Stats[StatType.CurHp] = loadMonster.CurrentHP;
+        // monster.Stats[StatType.CurMp] = loadMonster.CurrentMP;
+        // monster.Lv = loadMonster.Level;
+        // monster.Exp = loadMonster.Exp;
+        // monster.Item = InventoryManager.Instance.Inventory.Find(x => x.UniqueNumber == loadMonster.EquipItemKey);
     }
 
     #endregion
