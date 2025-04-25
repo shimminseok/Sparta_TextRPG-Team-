@@ -1,11 +1,23 @@
 namespace Camp_FourthWeek_Basic_C__;
 
-public class IntroSceneAction
+public class IntroSceneAction : ActionBase
 {
-    public void StartGame()
+    public override string Name { get; }
+
+    public IntroSceneAction()
     {
-        Console.WriteLine("아무키나 누르면 시작할 수 있지롱");
-        Console.ReadKey();
-        GameManager.Instance.LoadGame();
+        Thread introAnimation = new Thread(IntroAnimation);
+        introAnimation.Start();
+        SubActionMap[1] = GameManager.Instance.LoadGame();
+    }
+
+    public override void OnExcute()
+    {
+        SelectAndRunAction(SubActionMap, false);
+    }
+
+    public void IntroAnimation()
+    {
+        UiManager.IntroRoop();
     }
 }

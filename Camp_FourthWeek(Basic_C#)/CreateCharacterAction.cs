@@ -8,7 +8,6 @@ public class CreateCharacterAction : ActionBase
         {
             { 1, new CreateNickNameAction() }
         };
-
     }
 
     public override string Name => "캐릭터 생성";

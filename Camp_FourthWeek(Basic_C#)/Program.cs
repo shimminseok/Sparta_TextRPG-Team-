@@ -12,10 +12,13 @@
     {
         static void Main(string[] args)
         {
-            // IntroSceneAction introSceneAction = new IntroSceneAction();
-            // introSceneAction.Execute();
-            TextRPG textRPG = new TextRPG();
-            textRPG.StartGame();
+            IAction? currentAction = new IntroSceneAction();
+
+            while (currentAction != null)
+            {
+                currentAction.Execute();
+                currentAction = (currentAction as ActionBase)?.NextAction;
+            }
         }
     }
 
@@ -23,7 +26,9 @@
     {
         public void StartGame()
         {
-            GameManager.Instance.LoadGame();
+            IntroSceneAction introSceneAction = new IntroSceneAction();
+            introSceneAction.Execute();
+            // GameManager.Instance.LoadGame();
         }
     }
 }

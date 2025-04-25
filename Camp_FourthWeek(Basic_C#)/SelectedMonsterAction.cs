@@ -14,17 +14,17 @@ public class SelectedMonsterAction : ActionBase
         }
     }
 
-    public override string Name => "포켓몬 선택 선택";
+    public override string Name => "포켓몬 선택";
 
     public override void OnExcute()
     {
-        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Intro_SetStarting, new Dictionary<int, Tuple<int, int>?>
-                  {
-                      {0, new Tuple<int, int>(0,10) },
-                      {1, new Tuple<int, int>(20,10) },
-                      {2, new Tuple<int, int>(70,10) },
-                      {3, new Tuple<int, int>(120,10) },
-
-                  }));
+        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Intro_SetStarting,
+            new Dictionary<int, Tuple<int, int>?>
+            {
+                { 0, new Tuple<int, int>(0, 10) },
+                { 1, new Tuple<int, int>(20, 10) },
+                { 2, new Tuple<int, int>(70, 10) },
+                { 3, new Tuple<int, int>(120, 10) },
+            }));
     }
 }

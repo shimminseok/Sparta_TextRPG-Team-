@@ -68,13 +68,17 @@ public class GameManager
         File.WriteAllText(path, encrypted);
     }
 
-    public void LoadGame()
+    public bool HasLoadData()
     {
-        if (!File.Exists(path))
+        return File.Exists(path);
+    }
+
+    public IAction LoadGame()
+    {
+        if (!HasLoadData())
         {
-            var start = new CreateCharacterAction();
-            start.Execute();
-            return;
+            var start = new CreateNickNameAction();
+            return start;
         }
 
         try
@@ -88,15 +92,17 @@ public class GameManager
                 loadData = new SaveData(data);
                 Init(new Monster(loadData.EquipMonster.Key), loadData.Name);
                 var mainAction = new MainMenuAction();
-                mainAction.Execute();
+                return mainAction;
             }
         }
         catch (Exception e)
         {
             Console.WriteLine("⚠ 저장 파일이 손상되었거나 복호화에 실패했습니다.");
             File.Delete(path); // 손상된 파일 삭제 (선택)
-            new CreateCharacterAction().Execute();
+            return new CreateNickNameAction();
         }
+
+        return null;
     }
 
     #region [LoadGame]
