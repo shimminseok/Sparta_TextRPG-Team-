@@ -97,7 +97,7 @@ public class GameManager
         catch (Exception e)
         {
             Console.WriteLine("⚠ 저장 파일이 손상되었거나 복호화에 실패했습니다.");
-            // File.Delete(path);
+            File.Delete(path);
             return new CreateNickNameAction();
         }
 
