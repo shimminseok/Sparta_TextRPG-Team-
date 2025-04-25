@@ -451,17 +451,17 @@ namespace Camp_FourthWeek_Basic_C__
             sb.Append($"{PadRightWithKorean($"- {_index + 1}", 5)}"); //아이템 이름
 
 
-            sb.Append($"{PadRightWithKorean(_item.Name, 18)} | ");
+            sb.Append($"{PadRightWithKorean(_item.Name, 10)} | ");
             var statBuilder = new StringBuilder();
             foreach (var stat in _item.Stats)
             {
-                statBuilder.Append($"{PadRightWithKorean($"{stat.GetStatName()}", 10)}");
+                statBuilder.Append($"{PadRightWithKorean($"{stat.GetStatName()}", 5)}");
                 statBuilder.Append($"{PadRightWithKorean($"+{stat.FinalValue}", 5)}");
             }
 
-            sb.Append($"{PadRightWithKorean(statBuilder.ToString(), 35)}");
+            sb.Append($"{PadRightWithKorean(statBuilder.ToString(), 10)}");
             if (_isShowDescript)
-                sb.Append($" | {PadRightWithKorean(_item.Description, 50)}");
+                sb.Append($" | {PadRightWithKorean(_item.Description, 20)}");
             return sb;
         }
 

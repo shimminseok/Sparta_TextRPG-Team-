@@ -29,11 +29,6 @@ public class BuyItemAction : PagedListActionBase
         {
             SubActionMap[i + 1] = new BuyAction(SaleItems[i], this);
         }
-
-        output.Add("필요한 아이템을 구매할 수 있습니다.");
-        output.Add("[보유 골드]");
-        output.Add($"{PlayerInfo.Gold}G");
-        output.Add("[아이템 목록]");
         for (var i = pageStart; i < pageEnd; i++)
         {
             var item = SaleItems[i];
@@ -56,7 +51,26 @@ public class BuyItemAction : PagedListActionBase
         Console.WriteLine();
         return output;
     }
+    public override void OnExcute()
+    {
+        var lines = GetPageContent();
+        base.OnExcute();
 
+        int LineCount = 8;
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+        lineDic.Add(7, $"{PlayerInfo.Gold} G");
+
+        for (int i = 0; i < lines.Count; i++)
+        {
+            lineDic.Add(LineCount + i, lines[i]);
+        }
+        if (Page > 0)
+            lineDic.Add(11, "-1. 이전 페이지");
+        if (Page < MaxPage - 1)
+            lineDic.Add(12, "-2. 다음 페이지");
+
+        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Shop_Buy, null, (8, lineDic)));
+    }
     protected override PagedListActionBase CreateNew(int newPage)
     {
         return new BuyItemAction(PrevAction, newPage);

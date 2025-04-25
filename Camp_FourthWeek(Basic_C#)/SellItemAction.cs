@@ -37,6 +37,21 @@ public class SellItemAction : PagedListActionBase
         
         return output;
     }
+    public override void OnExcute()
+    {
+        var lines = GetPageContent();
+        base.OnExcute();
+
+        int LineCount = 6;
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+
+        for (int i = 0; i < lines.Count; i++)
+        {
+            lineDic.Add(LineCount + i, lines[i]);
+        }
+
+        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Shop_Sell, null, (8, lineDic)));
+    }
     protected override PagedListActionBase CreateNew(int newPage)
     {
         return new SellItemAction(PrevAction, newPage);
