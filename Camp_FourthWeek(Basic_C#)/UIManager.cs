@@ -263,8 +263,11 @@ namespace Camp_FourthWeek_Basic_C__
                     }
                     else
                     {
-                        ChangeUiPanel(name, UITable.UIDic[value], fixPivotDic[dicCount], addFormat);
-                        dicCount++;
+                        if (fixPivotDic.TryGetValue(dicCount, out var fix))
+                        {
+                            ChangeUiPanel(name, UITable.UIDic[value], fix, addFormat);
+                            dicCount++;
+                        }
                     }
                 }
             }

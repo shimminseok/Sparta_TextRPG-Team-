@@ -12,7 +12,7 @@ public class RecoverAction : ActionBase
     public override void OnExcute()
     {
         var message = string.Empty;
-        
+
         if (PlayerInfo.Gold < 500)
         {
             message = "골드가 부족합니다.";
@@ -33,7 +33,6 @@ public class RecoverAction : ActionBase
             message = $"체력이 회복되었습니다 HP {before} -> {curHP.FinalValue}";
         }
 
-        PrevAction!.SetFeedBackMessage(message);
-        PrevAction?.Execute();
+        NextAction = PrevAction;
     }
 }

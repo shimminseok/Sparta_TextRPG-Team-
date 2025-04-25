@@ -8,27 +8,29 @@ namespace Camp_FourthWeek_Basic_C__
 {
     public class EnemyAttackAction : ActionBase
     {
-        static Dictionary<int, string> lineDic;
         static Dictionary<int, Tuple<int, int>?> pivotDict;
-        static List<int> monsterUIList;
-        static Tuple<int, int>[] pivotArr = new Tuple<int, int>[] { new Tuple<int, int>(5, 6), new Tuple<int, int>(60, 6), new Tuple<int, int>(115, 6) };
+
+        static Tuple<int, int>[] pivotArr = new Tuple<int, int>[]
+            { new Tuple<int, int>(5, 6), new Tuple<int, int>(60, 6), new Tuple<int, int>(115, 6) };
+
         public override string Name => "적 턴";
-        public EnemyAttackAction(IAction _prevAction, List<int> _monsterUIList, Dictionary<int, string> _lineDic)
+        private UIName uiname = UIName.Battle_AttackEnemy;
+        private int num = 25;
+
+        public EnemyAttackAction(IAction _prevAction)
         {
             PrevAction = _prevAction;
-            monsterUIList = _monsterUIList;
-            lineDic = _lineDic;
         }
+
         public override void OnExcute()
         {
-            if(lineDic != null)
+            if (EnterBattleAction.lineDic != null)
             {
                 for (int i = 24; i <= 40; i++)
                 {
-                    lineDic.Remove(i);
+                    EnterBattleAction.lineDic.Remove(i);
                 }
             }
-     
 
 
             var player = PlayerInfo.Monster;
@@ -40,7 +42,7 @@ namespace Camp_FourthWeek_Basic_C__
             int attackCount = 24;
             foreach (var monster in aliveMonsters)
             {
-                lineDic.Add(attackCount++, $"Lv{monster.Lv} {monster.Name}의 공격!");
+                EnterBattleAction.lineDic.Add(attackCount++, $"Lv{monster.Lv} {monster.Name}의 공격!");
 
 
                 var (isEvade, isCritical) = AttackAction.CalculateBattleChances(monster, player);
@@ -59,71 +61,67 @@ namespace Camp_FourthWeek_Basic_C__
 
                 if (isEvade)
                 {
-                    lineDic.Add(attackCount++, $"그러나 맞지 않았다.");
+                    EnterBattleAction.lineDic.Add(attackCount++, $"그러나 맞지 않았다.");
                 }
                 else
                 {
                     if (isCritical)
                     {
-                        lineDic.Add(attackCount++, $"급소에 맞았다!");
-                        lineDic.Add(attackCount++, $"{player.Name}을(를) 맞췄습니다 [데미지 : {damage}]");
+                        EnterBattleAction.lineDic.Add(attackCount++, $"급소에 맞았다!");
+                        EnterBattleAction.lineDic.Add(attackCount++, $"{player.Name}을(를) 맞췄습니다 [데미지 : {damage}]");
                     }
                     else
                     {
-                        lineDic.Add(attackCount++, $"{player.Name}을(를) 맞췄습니다 [데미지 : {damage}]");
+                        EnterBattleAction.lineDic.Add(attackCount++, $"{player.Name}을(를) 맞췄습니다 [데미지 : {damage}]");
                     }
-                    //Console.WriteLine($"{player.Name}을(를) 맞췄습니다 [데미지 : {damage}]");
-                    // Console.WriteLine($"Lv.{player.Lv} {player.Name}");
-                    lineDic.Add(attackCount++, $"{beforeHp} -> {(isPlayerDead ? "Dead" : afterHp.ToString())}");
 
-                    //  Console.WriteLine($"{beforeHp} -> {(isPlayerDead ? "Dead" : afterHp.ToString())}\n");
+                    EnterBattleAction.lineDic.Add(attackCount++,
+                        $"{beforeHp} -> {(isPlayerDead ? "Dead" : afterHp.ToString())}");
                 }
-                lineDic.Add(attackCount++, $"");
+
+                EnterBattleAction.lineDic.Add(attackCount++, $"");
                 if (isPlayerDead)
                     break;
                 Console.WriteLine("\n");
             }
-  
+
 
             pivotDict = new Dictionary<int, Tuple<int, int>?>
-                  {
-                      {0, new Tuple<int, int>(0,0) }, // 배경
-                      {1, new Tuple<int, int>(7,28)}, // 내 포켓몬
-                  };
+            {
+                { 0, new Tuple<int, int>(0, 0) }, // 배경
+                { 1, new Tuple<int, int>(7, 28) }, // 내 포켓몬
+            };
             int pivotCount = 2;
-            for (int i = 0; i < monsterUIList.Count - 2&& i < pivotArr.Length; i++)
+            for (int i = 0; i < EnterBattleAction.monsterUIList.Count - 1 && i < pivotArr.Length; i++)
             {
                 pivotDict.Add(pivotCount++, pivotArr[i]);
             }
+
             pivotDict.Add(pivotCount, new Tuple<int, int>(0, 0));
-            monsterUIList.Add(28);
-
-            while (true)
-            {
-                string input = UiManager.UIUpdater(UIName.Battle_AttackEnemy, pivotDict, (45, lineDic), monsterUIList);
-
-                if (int.TryParse(input, out int number))
-                {
-                    if (number == 1)
-                        break;
-                    else
-                        Console.WriteLine("잘못된 입력입니다.");
-                }
-                else
-                    Console.WriteLine("잘못된 입력입니다.");
-            }
+            EnterBattleAction.monsterUIList.Add(28);
             CheckBattleEnd(isPlayerDead);
-
-            PrevAction?.Execute();
+            if (SubActionMap.Count == 0)
+                return;
+            attackCount = 24;
+            SelectAndRunAction(SubActionMap, false,
+                () => UiManager.UIUpdater(uiname, EnterBattleAction.pivotDict, (num, EnterBattleAction.lineDic),
+                    EnterBattleAction.monsterUIList));
         }
+
         private void CheckBattleEnd(bool isPlayerDead)
         {
             if (isPlayerDead)
             {
-                SubActionMap[1] = new ResultAction(false, new MainMenuAction());
-                SubActionMap[1].Execute();
-            }
-        }
+                uiname = UIName.Battle_Result;
+                EnterBattleAction.pivotDict = null;
+                num = 20;
+                EnterBattleAction.monsterUIList = null;
 
+                NextAction = new ResultAction(false, new MainMenuAction());
+                return;
+            }
+
+            SubActionMap[1] = PrevAction;
+        }
     }
 }

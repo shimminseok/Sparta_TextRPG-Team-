@@ -33,8 +33,9 @@ namespace Camp_FourthWeek_Basic_C__
                 PlayerInfo.Monster.Exp += getExp;
                 lineDic.Add(LineCount++, "[ Victory ] ");
                 lineDic.Add(LineCount++, $"풀숲에서 포켓몬을 {EnterBattleAction.MonsterSelectList.Count}마리 잡았다.");
-                lineDic.Add(LineCount++,"[캐릭터 정보]");
-                lineDic.Add(LineCount++, $"Lv.{curLv}  {curName} {(curLv == PlayerInfo.Monster.Lv ? "" : $"-> Lv.{PlayerInfo.Monster.Lv} {PlayerInfo.Monster.Name}")}");
+                lineDic.Add(LineCount++, "[캐릭터 정보]");
+                lineDic.Add(LineCount++,
+                    $"Lv.{curLv}  {curName} {(curLv == PlayerInfo.Monster.Lv ? "" : $"-> Lv.{PlayerInfo.Monster.Lv} {PlayerInfo.Monster.Name}")}");
                 lineDic.Add(LineCount++, $"HP {PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue}");
                 lineDic.Add(LineCount++, $"exp {curExp} -> {PlayerInfo.Monster.Exp}");
             }
@@ -45,14 +46,14 @@ namespace Camp_FourthWeek_Basic_C__
                 lineDic.Add(LineCount++, "서둘러서 포켓몬을 치료해야 한다.");
             }
 
-            for(int i = LineCount; i < 18;i++)
+            for (int i = LineCount; i < 18; i++)
             {
                 lineDic.Add(i, "");
             }
 
 
-
-            SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Battle_Result,null,(20,lineDic)));
+            SelectAndRunAction(SubActionMap, false,
+                () => UiManager.UIUpdater(UIName.Battle_Result, null, (20, lineDic)));
         }
     }
 }
