@@ -63,9 +63,6 @@ public static class ExpTable
             return exp;
         }
 
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("Exp not found");
-        Console.ResetColor();
         return -1;
     }
 }
