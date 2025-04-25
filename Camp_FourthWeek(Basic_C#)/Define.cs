@@ -283,17 +283,17 @@ public class Monster
 
     public Monster(SaveMonsterData _saveData)
     {
-        Type = _saveData.Key;
-        Lv = _saveData.Level;
-        Exp = _saveData.Exp;
-        Item = InventoryManager.Instance.Inventory.FirstOrDefault(x => x.UniqueNumber == _saveData.EquipItemKey);
-        UniqueNumber = _saveData.UniqueNumber;
-        var monster = MonsterTable.GetMonsterByType(Type);
+        var monster = MonsterTable.GetMonsterByType(_saveData.Key);
         Stats = new Dictionary<StatType, Stat>();
         foreach (var stat in monster.Stats)
         {
             Stats[stat.Key] = new Stat(stat.Value);
         }
+
+        Type = _saveData.Key;
+        Exp = _saveData.Exp;
+        Item = InventoryManager.Instance.Inventory.FirstOrDefault(x => x.UniqueNumber == _saveData.EquipItemKey);
+        UniqueNumber = _saveData.UniqueNumber;
 
         Name = monster.Name;
         Skills = monster.Skills;
@@ -403,6 +403,9 @@ public class Monster
         while (true)
         {
             int maxExp = ExpTable.GetExpByLevel(Lv + 1);
+            if (maxExp < 0)
+                break;
+
             if (exp >= maxExp)
             {
                 LevelUp();
@@ -424,6 +427,16 @@ public class Monster
         Stats[StatType.Attack].SetLevelValue(2f * (Lv - 1));
         Stats[StatType.MaxHp].SetLevelValue(10f * (Lv - 1));
         Stats[StatType.MaxMp].SetLevelValue(10f * (Lv - 1));
+    }
+
+    void InitLevelUp()
+    {
+        for (int i = 0; i < Lv; i++)
+        {
+            Stats[StatType.Attack].SetLevelValue(2f * (Lv - 1));
+            Stats[StatType.MaxHp].SetLevelValue(10f * (Lv - 1));
+            Stats[StatType.MaxMp].SetLevelValue(10f * (Lv - 1));
+        }
     }
 
     private void Evolve(MonsterType _monsterType)
@@ -517,7 +530,6 @@ public class SaveMonsterData
     public MonsterType Key;
     public int UniqueNumber;
     public int EquipItemKey;
-    public int Level;
     public int Exp;
     public Stat CurrentHP;
     public Stat CurrentMP;
@@ -527,7 +539,6 @@ public class SaveMonsterData
         Key = _monster.Type;
         EquipItemKey = _monster.Item?.UniqueNumber ?? 0;
         UniqueNumber = _monster.UniqueNumber;
-        Level = _monster.Lv;
         Exp = _monster.Exp;
         CurrentHP = _monster.Stats[StatType.CurHp];
         CurrentMP = _monster.Stats[StatType.CurMp];

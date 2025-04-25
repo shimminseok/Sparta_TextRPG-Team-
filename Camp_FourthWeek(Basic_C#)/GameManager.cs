@@ -62,7 +62,9 @@ public class GameManager
             CollectionData = GetCurrentCollectionData()
         };
         var sJson = JsonConvert.SerializeObject(saveData, Formatting.Indented);
-        string encrypted = AESUtil.Encrypt(sJson);
+
+        // string encrypted = AESUtil.Encrypt(sJson);
+        string encrypted = sJson;
 
         File.WriteAllText(path, encrypted);
     }
@@ -83,7 +85,8 @@ public class GameManager
         try
         {
             var encrypted = File.ReadAllText(path);
-            string decrypted = AESUtil.Decrypt(encrypted);
+            // string decrypted = AESUtil.Decrypt(encrypted);
+            string decrypted = encrypted;
             var data = JsonConvert.DeserializeObject<SaveData>(decrypted);
             if (data != null)
             {
