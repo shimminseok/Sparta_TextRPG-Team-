@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Camp_FourthWeek_Basic_C__;
@@ -22,7 +23,7 @@ public class EnterQuestAction : ActionBase
 
     public override void OnExcute()
     {
-        SelectAndRunAction(SubActionMap);
+        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_Main));
     }
 }
 
@@ -39,12 +40,19 @@ public class ActiveQuestAction : ActionBase
     {
         SubActionMap.Clear();
         int index = 1;
+        int LineCount = 4;
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
         foreach (var quest in QuestManager.Instance.CurrentAcceptQuestList)
         {
             SubActionMap[index++] = new DisplayQuestInfoAction(quest, this);
+            lineDic.Add(LineCount + index - 1, $"{index - 1}. {quest.QuestName}");
+        }
+        for (int i = LineCount + index; i < 14; i++)
+        {
+            lineDic.Add(i, "");
         }
 
-        SelectAndRunAction(SubActionMap);
+        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_List_Working, null, (10, lineDic)));
     }
 }
 
@@ -61,6 +69,8 @@ public class AcceptableQuestAction : ActionBase
     {
         SubActionMap.Clear();
         int index = 1;
+        int LineCount = 4;
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
         foreach (Quest quest in QuestTable.QuestDic.Values)
         {
             bool canAccept = quest.PrerequisiteQuest.All(pre => QuestManager.Instance.ClearQuestList.Contains(pre))
@@ -69,10 +79,16 @@ public class AcceptableQuestAction : ActionBase
             if (canAccept)
             {
                 SubActionMap[index++] = new DisplayQuestInfoAction(quest, this);
+                lineDic.Add(LineCount + index - 1, $"{index-1}. {quest.QuestName}");
             }
         }
+        for(int i = LineCount+ index; i < 14; i++)
+        {
+            lineDic.Add(i,"");
+        }
 
-        SelectAndRunAction(SubActionMap);
+
+        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_List_Acceptyet, null, (10, lineDic)));
     }
 }
 
@@ -90,39 +106,57 @@ public class DisplayQuestInfoAction : ActionBase
     public override void OnExcute()
     {
         SubActionMap.Clear();
-        Console.WriteLine(requiredQuest.QuestName);
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+        lineDic.Add(4, requiredQuest.QuestName);
+        int descriptionCount = 5;
 
-        Console.WriteLine();
-        Console.WriteLine(requiredQuest.QuestDescription);
-        Console.WriteLine();
+        string[] lines = requiredQuest.QuestDescription.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        foreach (string line in lines)
+        {
+            lineDic.Add(descriptionCount++, line);
+        }
+        for (int i = descriptionCount; i < 16; i++)
+        {
+            lineDic.Add(i, "");
+        }
 
+        int conditionCount = 16;
         foreach (QuestCondition condition in requiredQuest.Conditions)
         {
             if (condition.IsCompleted)
                 Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine
-                ($"{string.Format(condition.GetDescription())} ({condition.CurrentCount}/{condition.RequiredCount})");
 
+            lineDic.Add(conditionCount++, $"{string.Format(condition.GetDescription())} ({condition.CurrentCount}/{condition.RequiredCount})");
+     
             Console.ResetColor();
         }
+        for (int i = conditionCount; i < 25; i++)
+        {
+            lineDic.Add(i, "");
+        }
+
 
         if (requiredQuest.IsCompleted())
         {
             SubActionMap[1] = new ClaimQuestRewardAction(requiredQuest, PrevAction);
+            SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_Detail_Clear, null, (10, lineDic)));
         }
         else
         {
             if (QuestManager.Instance.CurrentAcceptQuestList.Contains(requiredQuest))
             {
                 SubActionMap[1] = new AbandonQuestAction(requiredQuest, PrevAction);
+                SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_Detail_Working, null, (10, lineDic)));
+
             }
             else
             {
                 SubActionMap[1] = new AcceptQuestAction(requiredQuest, PrevAction);
+                SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_Detail_Acceptyet, null, (10, lineDic)));
             }
         }
 
-        SelectAndRunAction(SubActionMap);
+
     }
 }
 
