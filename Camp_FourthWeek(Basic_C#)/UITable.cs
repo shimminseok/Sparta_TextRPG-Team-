@@ -231,7 +231,7 @@ public static class UITable
             { 2, "원하시는 행동을 선택해 주세요" },
             { 3, ">>>" },
         })
-        },// 퀘스트 상세 진행중
+        },// 퀘스트 상세 받기전
         {
         UIName.Quest_Detail_Clear,
         (25,new Dictionary<int, string>
@@ -241,7 +241,7 @@ public static class UITable
             { 2, "원하시는 행동을 선택해 주세요" },
             { 3, ">>>" },
         })
-        },// 퀘스트 상세 진행중
+        },// 퀘스트 상세 완료
         {
         UIName.Collection,
         (5,new Dictionary<int, string>

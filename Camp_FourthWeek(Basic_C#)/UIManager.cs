@@ -98,7 +98,7 @@ namespace Camp_FourthWeek_Basic_C__
             return (A.Item1+ B.Value.Item1, A.Item2);
         }
 
-        public static string GetBar(int cur, int Max)
+        public static string GetBar(float cur, float Max)
         {
             cur = Math.Max(0, Math.Min(cur, Max));
 
