@@ -19,6 +19,8 @@
                 currentAction.Execute();
                 currentAction = (currentAction as ActionBase)?.NextAction;
             }
+
+            GameManager.Instance.SaveGame();
         }
     }
 

@@ -50,7 +50,7 @@ public abstract partial class ActionBase : IAction
                 {
                     if (PrevAction == null && this is MainMenuAction)
                     {
-                        GameManager.Instance.SaveGame();
+                        // GameManager.Instance.SaveGame();
                         NextAction = null;
                     }
                     else
