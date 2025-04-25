@@ -23,7 +23,7 @@ public abstract partial class ActionBase : IAction
 
     public abstract void OnExcute();
 
-    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap, bool _isView = true , Func<string>? inputProvider = null)
+    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap, bool _isView = true , Func<string>? inputProvider = null, bool isPass = false)
     {
         Console.WriteLine();
         if (_isView)
@@ -36,7 +36,13 @@ public abstract partial class ActionBase : IAction
             }
         }
 
-        if(inputProvider == null) // 이 if 문 내부는 추후 지워야 합니다.
+
+
+        if (isPass)
+        {
+            _actionMap[1].Execute();
+        }
+        else if(inputProvider == null) // 이 if 문 내부는 추후 지워야 합니다.
         {
             Console.WriteLine();
             Console.WriteLine($"0. {(PrevAction == null ? "종료하기" : $"{PrevAction.Name}로 되돌아가기")}");

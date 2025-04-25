@@ -18,11 +18,13 @@ public class SelectedMonsterAction : ActionBase
 
     public override void OnExcute()
     {
-        Console.WriteLine("플레이 하실 직업을 선택해주세요.");
-        Console.WriteLine();
-        foreach (var monster in startPoketmon)
-            Console.Write($"\t{MonsterTable.GetMonsterByType(monster).Name}");
-        Console.WriteLine();
-        SelectAndRunAction(SubActionMap);
+        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Intro_SetStarting, new Dictionary<int, Tuple<int, int>?>
+                  {
+                      {0, new Tuple<int, int>(0,10) },
+                      {1, new Tuple<int, int>(20,10) },
+                      {2, new Tuple<int, int>(70,10) },
+                      {3, new Tuple<int, int>(120,10) },
+
+                  }));
     }
 }
