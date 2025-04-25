@@ -293,13 +293,14 @@ public class Monster
         Stats[StatType.CurMp] = _saveData.CurrentMP;
     }
 
-    public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill)
+    public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill, MonsterType? evolveType = null)
     {
         Type = _type;
         Name = _name;
         Stats = _stat;
         Skills = _skill;
         Exp = 0;
+        EvolveType = evolveType;
     }
 
     public Monster(MonsterType _type)
@@ -337,13 +338,14 @@ public class Monster
         Exp = _monster.Exp;
     }
 
-    public MonsterType Type { get; }
-    public string Name { get; }
-    public Dictionary<StatType, Stat> Stats { get; }
+    public MonsterType Type { get; private set; }
+    public string Name { get; private set; }
+    public Dictionary<StatType, Stat> Stats { get; private set; }
     public int UniqueNumber { get; private set; }
-    public List<int> Skills { get; }
+    public List<int> Skills { get; private set; }
     public Item Item { get; private set; }
     public int Lv { get; private set; }
+    public MonsterType? EvolveType { get; private set; }
     private int exp;
 
     public int Exp
@@ -404,7 +406,19 @@ public class Monster
     private void LevelUp()
     {
         Lv++;
-        //Todo : 진화
+        if(Lv%10==0 && EvolveType != null)
+        {
+            Evolve(EvolveType.Value);
+        }
+    }
+    private void Evolve(MonsterType _monsterType)
+    {
+        var monster = MonsterTable.GetMonsterByType(_monsterType).Copy();
+        Name = monster.Name;
+        Stats = monster.Stats;
+        Skills = monster.Skills;
+        EvolveType = monster.EvolveType;
+
     }
 
     public void SetUniqueNumber()
