@@ -66,7 +66,8 @@ namespace Camp_FourthWeek_Basic_C__
         /// <returns></returns>
         public static Monster GetEquippedMonster(Item _targetItem)
         {
-            return InventoryManager.Instance.MonsterBox.Find(monster => monster.Item == _targetItem);
+            return InventoryManager.Instance.MonsterBox.Find(monster =>
+                monster.Item.UniqueNumber == _targetItem.UniqueNumber);
         }
     }
 }
