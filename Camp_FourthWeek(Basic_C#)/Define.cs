@@ -312,7 +312,7 @@ public class Monster
     }
 
     public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill,
-        MonsterType? evolveType = null)
+        MonsterType? evolveType = MonsterType.None)
     {
         Type = _type;
         Name = _name;
@@ -353,7 +353,7 @@ public class Monster
     public int Exp
     {
         get => exp;
-        set => AddExp(value);
+        set => AddExp(value - exp);
     }
 
 
