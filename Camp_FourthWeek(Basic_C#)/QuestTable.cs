@@ -8,29 +8,26 @@ public static class QuestTable
     public static readonly Dictionary<int, Quest> QuestDic = new Dictionary<int, Quest>()
     {
         {
-            1, new Quest(1, "장비 구매 퀘스트", QuestType.Main,
-                "장비 구매 퀘스트 입니다.",
-                "장비 구매를 완료했구나 축하",
+            1, new Quest(1, "도구 구매 퀘스트", QuestType.Main,
+                "도구 구매 퀘스트 입니다.",
+                "도구 구매를 완료했구나 축하",
                 new List<int>(),
                 new List<QuestCondition>()
                 {
                     new QuestCondition(QuestTargetType.Item, QuestConditionType.Buy, 1, 0, 1),
                     new QuestCondition(QuestTargetType.Item, QuestConditionType.Buy, 4, 0, 1),
-                    new QuestCondition(QuestTargetType.Item, QuestConditionType.Buy, 7, 0, 1)
                 },
                 new List<int>() { 10, 13 },
                 1500)
         },
         {
-            2, new Quest(2, "장비 장착 퀘스트", QuestType.Main,
-                "장비 장착 퀘스트 입니다.",
-                "장비 장착을 완료했구나 축하",
+            2, new Quest(2, "도구 장착 퀘스트", QuestType.Main,
+                "도구 장착 퀘스트 입니다.",
+                "도구 장착을 완료했구나 축하",
                 new List<int>() { 1 },
                 new List<QuestCondition>()
                 {
                     new QuestCondition(QuestTargetType.Item, QuestConditionType.Equip, 1, 0, 1),
-                    new QuestCondition(QuestTargetType.Item, QuestConditionType.Equip, 3, 0, 1),
-                    new QuestCondition(QuestTargetType.Item, QuestConditionType.Equip, 5, 0, 1)
                 },
                 new List<int>() { 7, 9 },
                 1500)
