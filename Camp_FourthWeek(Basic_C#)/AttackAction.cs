@@ -15,6 +15,7 @@ namespace Camp_FourthWeek_Basic_C__
             monsters = _monsters;
             skill = _skill;
         }
+
         public AttackAction(Monster monster, Skill? _skill, IAction _prevAction)
             : this(new List<Monster> { monster }, _skill, _prevAction)
         {
@@ -39,11 +40,16 @@ namespace Camp_FourthWeek_Basic_C__
                 float originHp = target.Stats[StatType.CurHp].FinalValue;
                 if (isCritical)
                     damage *= player.Stats[StatType.CriticlaDamage].FinalValue;
-                damage = (int)Math.Round(damage,0);
+                damage = (int)Math.Round(damage, 0);
                 if (!isEvade)
                     target.Stats[StatType.CurHp].ModifyAllValue(damage);
                 if (target.Stats[StatType.CurHp].FinalValue <= 0)
+                {
                     EnterBattleAction.MonsterStateDic[target] = MonsterState.Dead;
+                    QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Monster, QuestConditionType.Kill),
+                        (int)target.Type);
+                }
+
                 bool isDead = EnterBattleAction.MonsterStateDic[target] == MonsterState.Dead;
                 Console.WriteLine($"{player.Name}의 공격!");
 
@@ -60,12 +66,13 @@ namespace Camp_FourthWeek_Basic_C__
 
                     Console.WriteLine($"Lv.{target.Lv} {target.Name}을(를) 맞췄습니다. [데미지 : {damage}]\n");
                     Console.WriteLine($"Lv.{target.Lv} {target.Name}");
-
-
                 }
-                Console.WriteLine($"HP {originHp} -> {(isDead ? "Dead" : target.Stats[StatType.CurHp].FinalValue.ToString())}");
+
+                Console.WriteLine(
+                    $"HP {originHp} -> {(isDead ? "Dead" : target.Stats[StatType.CurHp].FinalValue.ToString())}");
                 Console.WriteLine("\n");
             }
+
             InputNumber();
 
             Console.Clear();
@@ -106,6 +113,7 @@ namespace Camp_FourthWeek_Basic_C__
                     Console.WriteLine("잘못된 입력입니다.");
             }
         }
+
         public void UseMp()
         {
             float playerMp = PlayerInfo.Monster.Stats[StatType.CurMp].FinalValue;
@@ -115,8 +123,10 @@ namespace Camp_FourthWeek_Basic_C__
                 PrevAction?.SetFeedBackMessage("Mp가 부족합니다");
                 PrevAction?.Execute();
             }
+
             PlayerInfo.Monster.Stats[StatType.CurMp].ModifyAllValue(skillMp);
         }
+
         public static float GetCalculatedDamage(float _originDamage)
         {
             float minDamage = _originDamage * 0.9f; //공격력의 최소값
@@ -134,7 +144,5 @@ namespace Camp_FourthWeek_Basic_C__
             bool isCritical = random.NextDouble() < _origin.Stats[StatType.CriticalChance].FinalValue * 0.01f;
             return (isEvade, isCritical);
         }
-
-        
     }
 }
