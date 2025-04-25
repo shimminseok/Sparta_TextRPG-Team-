@@ -26,12 +26,7 @@ namespace Camp_FourthWeek_Basic_C__
         {
             PrevAction = _prevAction;
             currentStage = _currentStage;
-            SubActionMap = new Dictionary<int, IAction>
-            {
-                { 1, new AttackSelectAction(this) },
-                { 3, new SkillSelectAction(this) },
-                { 4, new CatchSelectAction(this) }
-            };
+
 
             monstersAllList = currentStage.SpawnedMonsters
                 .Select(_type => MonsterTable.MonsterDataDic[_type])
@@ -49,9 +44,12 @@ namespace Camp_FourthWeek_Basic_C__
             BattlePlayerInfo(); //플레이어 정보 출력
             DisplayMonsterList();
 
-         
- 
-
+            SubActionMap = new Dictionary<int, IAction>
+            {
+                { 1, new AttackSelectAction(this,null,lineDic,pivotDict,monsterUIList) },
+                { 2, new SkillSelectAction(this,monsterUIList,lineDic) },
+                { 3, new CatchSelectAction(this,lineDic,pivotDict,monsterUIList) }
+            };
 
             SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Battle, pivotDict, (18, lineDic), monsterUIList));
         }
@@ -105,8 +103,16 @@ namespace Camp_FourthWeek_Basic_C__
                     int index = Array.IndexOf(Enum.GetValues(typeof(MonsterType)), monster.Type) + addMonsterId;
                     monsterUIList.Add(index);
                     pivotDict.Add(monsterCount,pivotArr[monsterCount - 2]);
+                    lineDic.Add(uiCount++, $"Lv. {monster.Lv}");
+                    lineDic.Add(uiCount++, monster.Name);
+                    lineDic.Add(uiCount++, $"HP {curHP}/{maxHP}");
+                    lineDic.Add(uiCount++,StringUtil.GetBar(curHP,maxHP));
                 }
                 monsterCount++;
+            }
+            for (int i = uiCount; i < 18; i++)
+            {
+                lineDic.Add(i, "");
             }
         }
         public static List<Monster> GetAliveMonsters()

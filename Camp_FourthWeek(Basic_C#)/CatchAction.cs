@@ -4,18 +4,28 @@ namespace Camp_FourthWeek_Basic_C__
 {
     public class CatchAction : ActionBase
     {
+        static Dictionary<int, string> lineDic;
+        static Dictionary<int, Tuple<int, int>?> pivotDict;
+        static List<int> monsterUIList;
+        static Tuple<int, int>[] pivotArr = new Tuple<int, int>[] { new Tuple<int, int>(5, 6), new Tuple<int, int>(60, 6), new Tuple<int, int>(115, 6) };
         private Monster monster;
 
-        public CatchAction(Monster _monster, IAction _prevAction)
+        public CatchAction(Monster _monster, IAction _prevAction, Dictionary<int, string>? _lineDic = null
+            , Dictionary<int, Tuple<int, int>?> _pivotDict = null, List<int> _monsterList = null)
         {
             PrevAction = _prevAction;
             monster = _monster;
+            lineDic = _lineDic;
+            pivotDict = _pivotDict;
+            monsterUIList = _monsterList;
         }
 
         public override string Name => $"Lv.{monster.Lv} {monster.Name} 포획";
 
         public override void OnExcute()
         {
+
+
             float basicCatchChance = 0.3f;
             float maximumCatchChance = 0.9f;
             Random rand = new Random(DateTime.Now.Millisecond);
@@ -36,7 +46,7 @@ namespace Camp_FourthWeek_Basic_C__
             }
             InputNumber();
             CheckBattleEnd();
-            new EnemyAttackAction(PrevAction).Execute();
+            new EnemyAttackAction(PrevAction,monsterUIList,lineDic).Execute();
         }
         private void CheckBattleEnd()
         {
@@ -50,8 +60,7 @@ namespace Camp_FourthWeek_Basic_C__
         }
         public void InputNumber()
         {
-            Console.WriteLine("1. 다음");
-            Console.Write(">> ");
+
             while (true)
             {
                 string input = Console.ReadLine();
