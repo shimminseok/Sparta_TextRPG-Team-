@@ -11,6 +11,10 @@ public class EnterStageAction : ActionBase
 
     public override void OnExcute()
     {
+        if (PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue <= 0)
+        {
+            PrevAction?.Execute();
+        }
         SubActionMap.Clear();
         for (var i = 0; i <= StageManager.Instance.ClearStage; i++)
         {
