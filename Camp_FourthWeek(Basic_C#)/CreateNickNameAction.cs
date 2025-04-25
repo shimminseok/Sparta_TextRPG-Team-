@@ -29,10 +29,5 @@ public class CreateNickNameAction : ActionBase
                 { 2, new Tuple<int, int>(70, 10) },
                 { 3, new Tuple<int, int>(120, 10) },
             }));
-        // SubActionMap = new Dictionary<int, IAction>
-        // {
-        //     { 1, new SelectedMonsterAction(nickName) }
-        // };
-        // SelectAndRunAction(SubActionMap, true, null, true);
     }
 }
