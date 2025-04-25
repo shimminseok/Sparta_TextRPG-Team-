@@ -15,14 +15,14 @@ public enum MonsterType
     Pidgey, //구구
     Dratini, //미뇽
 
-    Raichu, //라이츄
+    Raichu = 11, //라이츄
     Charmeleon, //리자드
     Wartortle, //어니부기
     Ivysaur, //이상해풀
     Pidgeotto, //피죤
     Dragonair, //신뇽
 
-    Charizard, //리자몽
+    Charizard = 31, //리자몽
     Blastoise, //거북왕
     Venusaur, //이상해꽃
     Pidgeot, //피죤투
@@ -293,6 +293,9 @@ public class Monster
     public Monster(SaveMonsterData _saveData)
     {
         var monster = MonsterTable.GetMonsterByType(_saveData.Key);
+        Name = monster.Name;
+        Skills = monster.Skills;
+        EvolveType = monster.EvolveType;
         Stats = new Dictionary<StatType, Stat>();
         foreach (var stat in monster.Stats)
         {
@@ -304,8 +307,6 @@ public class Monster
         Item = InventoryManager.Instance.Inventory.FirstOrDefault(x => x.UniqueNumber == _saveData.EquipItemKey);
         UniqueNumber = _saveData.UniqueNumber;
 
-        Name = monster.Name;
-        Skills = monster.Skills;
         Stats[StatType.CurHp] = new Stat(_saveData.CurrentHP);
         Stats[StatType.CurMp] = new Stat(_saveData.CurrentMP);
     }
@@ -339,23 +340,6 @@ public class Monster
         Exp = monster.Exp;
     }
 
-    public Monster(Monster _monster)
-    {
-        Type = _monster.Type;
-        Name = _monster.Name;
-
-        Stats = new Dictionary<StatType, Stat>();
-        foreach (var stat in _monster.Stats)
-        {
-            Stats[stat.Key] = new Stat(stat.Value);
-        }
-
-        Skills = new List<int>(_monster.Skills);
-        Item = _monster.Item.Copy();
-        Lv = _monster.Lv;
-        Exp = _monster.Exp;
-    }
-
     public MonsterType Type { get; private set; }
     public string Name { get; private set; }
     public Dictionary<StatType, Stat> Stats { get; private set; }
@@ -363,7 +347,7 @@ public class Monster
     public List<int> Skills { get; private set; }
     public Item Item { get; private set; }
     public int Lv { get; private set; }
-    public MonsterType? EvolveType { get; private set; }
+    public MonsterType? EvolveType { get; private set; } = MonsterType.None;
     private int exp;
 
     public int Exp
@@ -400,7 +384,7 @@ public class Monster
         //List 복제
         List<int> newSkill = new List<int>(Skills);
 
-        Monster monster = new Monster(Type, Name, newStat, newSkill);
+        Monster monster = new Monster(Type, Name, newStat, newSkill, EvolveType);
 
         return monster;
     }
@@ -428,7 +412,7 @@ public class Monster
     {
         Lv++;
 
-        if (Lv % 10 == 0 && EvolveType != null)
+        if (Lv == ((int)Type / 10 + 1) * 10 && EvolveType != MonsterType.None)
         {
             Evolve(EvolveType.Value);
         }
@@ -436,22 +420,17 @@ public class Monster
         Stats[StatType.Attack].SetLevelValue(2f * (Lv - 1));
         Stats[StatType.MaxHp].SetLevelValue(10f * (Lv - 1));
         Stats[StatType.MaxMp].SetLevelValue(10f * (Lv - 1));
-    }
 
-    void InitLevelUp()
-    {
-        for (int i = 0; i < Lv; i++)
-        {
-            Stats[StatType.Attack].SetLevelValue(2f * (Lv - 1));
-            Stats[StatType.MaxHp].SetLevelValue(10f * (Lv - 1));
-            Stats[StatType.MaxMp].SetLevelValue(10f * (Lv - 1));
-        }
+        Stats[StatType.CurHp].ModifyBaseValue(Stats[StatType.MaxHp].FinalValue, 0, Stats[StatType.MaxHp].FinalValue);
+        Stats[StatType.CurMp].ModifyBaseValue(Stats[StatType.MaxMp].FinalValue, 0, Stats[StatType.MaxMp].FinalValue);
     }
 
     private void Evolve(MonsterType _monsterType)
     {
         var monster = MonsterTable.GetMonsterByType(_monsterType).Copy();
+
         Name = monster.Name;
+        Type = monster.Type;
         Stats = monster.Stats;
         Skills = monster.Skills;
         EvolveType = monster.EvolveType;
