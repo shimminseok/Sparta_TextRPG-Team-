@@ -17,7 +17,7 @@ public static class QuestTable
                     new QuestCondition(QuestTargetType.Item, QuestConditionType.Buy, 1, 0, 1),
                     new QuestCondition(QuestTargetType.Item, QuestConditionType.Buy, 4, 0, 1),
                 },
-                new List<int>() { 10, 13 },
+                new List<int>() { 10, 13 }, new List<MonsterType>(),
                 1500)
         },
         {
@@ -29,7 +29,7 @@ public static class QuestTable
                 {
                     new QuestCondition(QuestTargetType.Item, QuestConditionType.Equip, 1, 0, 1),
                 },
-                new List<int>() { 7, 9 },
+                new List<int>() { 7, 9 }, new List<MonsterType>(),
                 1500)
         },
         {
@@ -42,7 +42,7 @@ public static class QuestTable
                     new QuestCondition(QuestTargetType.Monster, QuestConditionType.Catch, (int)MonsterType.Pidgey, 0,
                         1),
                 },
-                new List<int>() { 7, 9 },
+                new List<int>() { 7, 9 }, new List<MonsterType>() { MonsterType.Pikachu },
                 1500)
         },
         {
@@ -55,7 +55,7 @@ public static class QuestTable
                     new QuestCondition(QuestTargetType.Monster, QuestConditionType.Kill, (int)MonsterType.Pidgey, 0,
                         5),
                 },
-                new List<int>() { 7, 9 },
+                new List<int>(), new List<MonsterType>() { MonsterType.Dratini },
                 1500)
         },
         {
@@ -70,7 +70,7 @@ public static class QuestTable
                     new QuestCondition(QuestTargetType.Monster, QuestConditionType.Catch, (int)MonsterType.Pikachu, 0,
                         1),
                 },
-                new List<int>() { 7, 9 },
+                new List<int>(), new List<MonsterType>() { MonsterType.Raichu },
                 1500)
         },
     };

@@ -53,7 +53,13 @@ public class QuestManager
         for (int i = 0; i < _quest.RewardItemsList.Count; i++)
         {
             var item = ItemTable.GetItemById(_quest.RewardItemsList[i]);
-            InventoryManager.Instance.AddItem(item);
+            InventoryManager.Instance.AddItem(item.Copy());
+        }
+
+        for (int i = 0; i < _quest.RewardMonsters.Count; i++)
+        {
+            var monster = MonsterTable.GetMonsterByType(_quest.RewardMonsters[i]);
+            InventoryManager.Instance.AddMonsterToBox(monster.Copy());
         }
 
         if (_quest.QuestRewardGold > 0)

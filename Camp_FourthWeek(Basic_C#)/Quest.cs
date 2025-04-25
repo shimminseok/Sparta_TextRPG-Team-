@@ -49,6 +49,7 @@ public class Quest
 
 
     public List<int> RewardItemsList { get; private set; }
+    public List<MonsterType> RewardMonsters { get; private set; }
     public int QuestRewardGold { get; private set; }
 
     /// <summary>
@@ -65,7 +66,7 @@ public class Quest
     public Quest(int _key, string _questName, QuestType _questType, string _questDescription,
         string _questCompleteDescription
         , List<int> _prerequisQuest, List<QuestCondition> _conditions,
-        List<int> _rewardItemsList, int _questRewardGold)
+        List<int> _rewardItemsList, List<MonsterType> _rewardMonsters, int _questRewardGold)
     {
         Key = _key;
         QuestName = _questName;
@@ -75,6 +76,7 @@ public class Quest
         PrerequisiteQuest = _prerequisQuest;
         Conditions = _conditions;
         RewardItemsList = _rewardItemsList;
+        RewardMonsters = _rewardMonsters;
         QuestRewardGold = _questRewardGold;
     }
 
@@ -96,7 +98,7 @@ public class Quest
                 new QuestCondition(cond.TargetType, cond.ConditionType, cond.TargetID, cond.CurrentCount,
                     cond.RequiredCount)
             ).ToList(),
-            new List<int>(RewardItemsList), QuestRewardGold);
+            new List<int>(RewardItemsList), new List<MonsterType>(RewardMonsters), QuestRewardGold);
     }
 }
 
