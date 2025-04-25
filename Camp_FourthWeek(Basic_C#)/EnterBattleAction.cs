@@ -1,4 +1,6 @@
-﻿namespace Camp_FourthWeek_Basic_C__
+﻿using System.Diagnostics;
+
+namespace Camp_FourthWeek_Basic_C__
 {
     public enum MonsterState
     {
@@ -6,12 +8,19 @@
     }
     public class EnterBattleAction : ActionBase
     {
+        static  int addId = 199;
+        static  int addMonsterId = 99;
         public override string Name => "전투 시작";
         public static Stage CurrentStage { get; private set; }
         public static List<Monster> MonsterSelectList = new List<Monster>(); //랜덤으로 선택된 몬스터를 넣을 공간
         public static Dictionary<Monster,MonsterState> MonsterStateDic = new Dictionary<Monster, MonsterState>(); //랜덤으로 선택된 몬스터를 넣을 공간
-
+        static  Dictionary<int, string> lineDic = new Dictionary<int, string>(); // UI 추가를 위한 딕셔너리
+        static Dictionary<int, Tuple<int, int>?> pivotDict;
+        static  List<int> monsterUIList= new List<int>();
         private List<Monster> monstersAllList = new();
+
+        static Tuple<int, int>[] pivotArr = new Tuple<int, int>[] { new Tuple<int, int>(5, 6) , new Tuple<int, int>(60, 6), new Tuple<int, int>(115, 6) };
+
 
         public EnterBattleAction(Stage _currentStage, IAction _prevAction)
         {
@@ -35,13 +44,16 @@
 
         public override void OnExcute()
         {
+            ClearDic();
             bool isValidInput = false; //while문을 돌리기 위해
-
+            BattlePlayerInfo(); //플레이어 정보 출력
             DisplayMonsterList();
 
-            BattlePlayerInfo(); //플레이어 정보 출력
+         
+ 
 
-            SelectAndRunAction(SubActionMap);
+
+            SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Battle, pivotDict, (18, lineDic), monsterUIList));
         }
 
         public void RandomMonster()
@@ -67,6 +79,8 @@
 
         public static void DisplayMonsterList() // 몬스터 hp <= 0이면 dead 표시, 색 변경
         {
+            int monsterCount = 2;
+            int uiCount = 6;
             foreach (Monster monster in MonsterSelectList) //-> 최종적으로 화면에 출력하기 위해
             {
                 float maxHP = monster.Stats[StatType.MaxHp].FinalValue; //maxHP를 가져옴
@@ -86,8 +100,13 @@
                 }
                 else
                 {
+                    // 여기가 살아있는 포켓몬
                     Console.WriteLine($"Lv. {monster.Lv} {monster.Name} HP {curHP}/{maxHP}");
+                    int index = Array.IndexOf(Enum.GetValues(typeof(MonsterType)), monster.Type) + addMonsterId;
+                    monsterUIList.Add(index);
+                    pivotDict.Add(monsterCount,pivotArr[monsterCount - 2]);
                 }
+                monsterCount++;
             }
         }
         public static List<Monster> GetAliveMonsters()
@@ -117,6 +136,31 @@
             Console.WriteLine($"Lv.{level}  {name}");
             Console.WriteLine($"HP {curHP}/{maxHP}");
             Console.WriteLine($"MP {curMP}/{maxMP}");
+
+            int index = Array.IndexOf(Enum.GetValues(typeof(MonsterType)), PlayerInfo.Monster.Type) + addId;
+             monsterUIList.Add(index);
+
+            lineDic = new Dictionary<int, string>
+                  {   
+                      // 플레이어 정보
+                      {0, $"{level}"},
+                      {1, $"{name}"},
+                      {2, $"HP : {curHP}/{maxHP}"},
+                      {3, StringUtil.GetBar(curHP,maxHP)},
+                      {4, $"PP : {curMP}/{maxMP}"},
+                      {5, StringUtil.GetBar(curMP,maxMP) },
+                  };
+        }
+        public void ClearDic()
+        {
+            lineDic = new Dictionary<int, string>();
+            pivotDict = new Dictionary<int, Tuple<int, int>?>
+                  {
+                      {0, new Tuple<int, int>(0,0) }, // 배경
+                      {1, new Tuple<int, int>(7,28)}, // 내 포켓몬
+                  };
+            monsterUIList = new List<int>();
+
         }
     }
 }
