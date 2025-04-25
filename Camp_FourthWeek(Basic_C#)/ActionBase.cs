@@ -73,6 +73,10 @@ public abstract partial class ActionBase : IAction
                     miniGame.StartGame();
                     break;
                 }
+                else if (id == 99) //진화를 보여주기 위한 치트
+                {
+                    PlayerInfo.Monster.Exp += 100;
+                }
             }
         }
 
