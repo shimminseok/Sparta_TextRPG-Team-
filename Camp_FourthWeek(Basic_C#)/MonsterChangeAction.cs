@@ -56,7 +56,7 @@ public class MonsterChangeAction : PagedListActionBase
     public override void OnExcute()
     {
         base.OnExcute();
-        int LineCount = 6;
+        int LineCount = 7;
         var lines = GetPageContent();
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
         for (int i = 0; i < lines.Count; i++)
@@ -67,7 +67,7 @@ public class MonsterChangeAction : PagedListActionBase
             lineDic.Add(8, "-1. 이전 페이지");
         if (Page < MaxPage - 1)
             lineDic.Add(9, "-2. 다음 페이지");
-        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.SetPokectmon_Change, null, (5, lineDic)));
+        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.SetPokectmon, null, (5, lineDic)));
 
     }
     protected override PagedListActionBase CreateNew(int newPage)

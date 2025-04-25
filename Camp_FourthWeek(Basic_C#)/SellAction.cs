@@ -17,7 +17,7 @@ public class SellAction : ActionBase
         PlayerInfo.Gold += (int)(item.Cost * 0.85);
         InventoryManager.Instance.RemoveItem(item);
 
-        PrevAction!.SetFeedBackMessage($"{item.Name}을 판매했습니다. (보유골드 : {PlayerInfo.Gold})");
+        //PrevAction!.SetFeedBackMessage($"{item.Name}을 판매했습니다. (보유골드 : {PlayerInfo.Gold})");
         PrevAction.Execute();
     }
 }

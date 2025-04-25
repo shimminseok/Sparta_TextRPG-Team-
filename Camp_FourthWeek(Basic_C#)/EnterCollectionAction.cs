@@ -51,11 +51,11 @@ public class EnterCollectionAction : PagedListActionBase
         return output;
     }
     public override void OnExcute()
-    {
+    {        var lines = GetPageContent();
         base.OnExcute();
 
         int LineCount = 5;
-        var lines = GetPageContent();
+
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
         for (int i = 0; i < lines.Count; i++)
         {

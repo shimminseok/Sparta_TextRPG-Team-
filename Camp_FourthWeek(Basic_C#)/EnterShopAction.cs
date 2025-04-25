@@ -27,10 +27,6 @@ public class EnterShopAction : PagedListActionBase
         MaxPage = (int)Math.Ceiling(SaleItems.Count / (float)VIEW_COUNT);
         int pageStart = Page * VIEW_COUNT;
         int pageEnd = Math.Min(pageStart + VIEW_COUNT, SaleItems.Count);
-        output.Add("필요한 아이템을 얻을 수 있는 상점입니다.");
-        output.Add("[보유 골드]");
-        output.Add($"{PlayerInfo.Gold}G");
-        output.Add("[아이템 목록]");
         for (var i = pageStart; i < pageEnd; i++)
         {
             var item = SaleItems[i];
@@ -39,11 +35,11 @@ public class EnterShopAction : PagedListActionBase
             if (InventoryManager.Instance.Inventory.Exists(x => x.Name == item.Name))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                sb.Append($"{PadRightWithKorean("구매완료", 10)}");
+                sb.Append($"{PadRightWithKorean("구매완료", 8)}");
             }
             else
             {
-                sb.Append($"{PadRightWithKorean($"{item.Cost}G", 10)}");
+                sb.Append($"{PadRightWithKorean($"{item.Cost}G", 6)}");
             }
 
             sb.Append(" | ");
@@ -58,22 +54,22 @@ public class EnterShopAction : PagedListActionBase
     {
         var lines = GetPageContent();
         base.OnExcute();
-        foreach (var line in lines)
+
+        int LineCount = 10;
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+        lineDic.Add(9, $"{PlayerInfo.Gold} G");
+
+        for (int i = 0; i < lines.Count; i++)
         {
-            Console.WriteLine(line);
+            lineDic.Add(LineCount + i, lines[i]);
         }
-
-        Console.WriteLine();
-        Console.WriteLine($"[{Page + 1}/{MaxPage}] 페이지");
-        Console.WriteLine();
-
         if (Page > 0)
-            Console.WriteLine("-1. 이전 페이지");
+            lineDic.Add(13, "-1. 이전 페이지");
         if (Page < MaxPage - 1)
-            Console.WriteLine("-2. 다음 페이지");
+            lineDic.Add(14, "-2. 다음 페이지");
 
+        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Shop_Main, null, (8, lineDic)));
 
-        SelectAndRunAction(SubActionMap, isViewSubMap);
     }
 
     protected override PagedListActionBase CreateNew(int newPage)

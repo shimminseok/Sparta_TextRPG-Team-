@@ -20,8 +20,8 @@ public class EquipItemManagementAction : PagedListActionBase
         MaxPage = (int)Math.Ceiling(InventoryManager.Instance.Inventory.Count / (float)VIEW_COUNT);
         var output = new List<string>();
 
-        output.Add("보유 중인 도구를 장착시킬 수 있습니다.");
-        output.Add("[장착 중인 도구]");
+        //output.Add("보유 중인 도구를 장착시킬 수 있습니다.");
+      //  output.Add("[장착 중인 도구]");
 
         var inventory = InventoryManager.Instance.Inventory;
         var currentMonster = PlayerInfo.Monster;
@@ -41,7 +41,7 @@ public class EquipItemManagementAction : PagedListActionBase
                 sb.Append("[E]");
             }
 
-            sb.Append($"{PadRightWithKorean($"{item.Name}", 18)}");
+            sb.Append($"{PadRightWithKorean($"{item.Name}", 10)}");
             for (var j = 0; j < item.Stats.Count; j++)
             {
                 sb.Append(
@@ -55,10 +55,10 @@ public class EquipItemManagementAction : PagedListActionBase
             if (item.IsEquipment)
             {
                 if (monster != null)
-                    sb.Append($"{PadRightWithKorean($"장착 중인 포켓몬: {monster.Name}", 50)}");
+                    sb.Append($"{PadRightWithKorean($"장착 중인 포켓몬: {monster.Name}", 25)} | ");
             }
 
-            sb.Append($"{PadRightWithKorean($"{item.Description}{equippedMonsterName}", 50)}");
+            sb.Append($"{PadRightWithKorean($"{item.Description}{equippedMonsterName}", 20)}");
 
             output.Add(sb.ToString());
 
@@ -75,27 +75,18 @@ public class EquipItemManagementAction : PagedListActionBase
         base.OnExcute();
         SubActionMap.Clear();
         var lines = GetPageContent();
-        foreach (var line in lines)
+        int LineCount = 6;
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+        for (int i = 0; i < lines.Count; i++)
         {
-            Console.WriteLine(line);
+            lineDic.Add(LineCount + i, lines[i]);
         }
-
-        Console.WriteLine();
-        Console.WriteLine($"[{Page + 1}/{MaxPage}] 페이지");
-        Console.WriteLine();
-
         if (Page > 0)
-            Console.WriteLine("-1. 이전 페이지");
+            lineDic.Add(9, "-1. 이전 페이지");
         if (Page < MaxPage - 1)
-            Console.WriteLine("-2. 다음 페이지");
-        if (isView)
-        {
-            SelectAndRunAction(SubActionMap, isViewSubMap);
-        }
-        else if (!isView)
-        {
-            SelectAndRunAction(SubActionMap, false);
-        }
+            lineDic.Add(10, "-2. 다음 페이지");
+
+        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Equipment, null, (5, lineDic)));
 
     }
 
