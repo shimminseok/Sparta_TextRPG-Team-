@@ -54,8 +54,7 @@ public class EnterCollectionAction : PagedListActionBase
     {
         base.OnExcute();
 
-   
-      int LineCount = 5;
+        int LineCount = 5;
         var lines = GetPageContent();
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
         for (int i = 0; i < lines.Count; i++)

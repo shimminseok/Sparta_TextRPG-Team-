@@ -6,9 +6,9 @@ public class EnterInventoryAction : ActionBase
     {
         PrevAction = _prevAction;
         SubActionMap = new Dictionary<int, IAction>
-        {
-            { 1, new EquipItemManagementAction(this) },
-            { 2, new MonsterBoxAction(this) },
+        {            
+            { 1, new MonsterBoxAction(this) },
+            { 2, new EquipItemManagementAction(this) },
             { 3, new UseItemAction(this) },
         };
     }
@@ -17,8 +17,6 @@ public class EnterInventoryAction : ActionBase
 
     public override void OnExcute()
     {
-        Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
-
-        SelectAndRunAction(SubActionMap);
+        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Inventory));
     }
 }
