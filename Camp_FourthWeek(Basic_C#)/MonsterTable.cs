@@ -16,7 +16,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Raichu)
         },
         {
             MonsterType.Charmander, new Monster(MonsterType.Charmander, "파이리", new Dictionary<StatType, Stat>()
@@ -30,7 +30,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Charmeleon)
         },
         {
             MonsterType.Squirtle, new Monster(MonsterType.Squirtle, "꼬부기", new Dictionary<StatType, Stat>()
@@ -44,7 +44,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Wartortle)
         },
         {
             MonsterType.Bulbasaur, new Monster(MonsterType.Bulbasaur, "이상해씨", new Dictionary<StatType, Stat>()
@@ -58,7 +58,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Ivysaur)
         },
         {
             MonsterType.Pidgey, new Monster(MonsterType.Pidgey, "구구", new Dictionary<StatType, Stat>()
@@ -72,7 +72,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Pidgeotto)
         },
         {
             MonsterType.Dratini, new Monster(MonsterType.Dratini, "미뇽", new Dictionary<StatType, Stat>()
@@ -86,7 +86,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Dragonair)
         },
         {
             MonsterType.Raichu, new Monster(MonsterType.Raichu, "라이츄", new Dictionary<StatType, Stat>()
@@ -114,7 +114,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Charizard)
         },
         {
             MonsterType.Wartortle, new Monster(MonsterType.Wartortle, "어니부기", new Dictionary<StatType, Stat>()
@@ -128,7 +128,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Blastoise)
         },
         {
             MonsterType.Ivysaur, new Monster(MonsterType.Ivysaur, "이상해풀", new Dictionary<StatType, Stat>()
@@ -142,7 +142,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Venusaur)
         },
         {
             MonsterType.Pidgeotto, new Monster(MonsterType.Pidgeotto, "피죤", new Dictionary<StatType, Stat>()
@@ -156,7 +156,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Pidgeot)
         },
         {
             MonsterType.Dragonair, new Monster(MonsterType.Dragonair, "신룡", new Dictionary<StatType, Stat>()
@@ -170,7 +170,7 @@ public static class MonsterTable
                 { StatType.CriticalChance, new Stat(StatType.CriticalChance, 50) },
                 { StatType.CriticlaDamage, new Stat(StatType.CriticlaDamage, 1.5f) },
                 { StatType.EvadeChance, new Stat(StatType.EvadeChance, 40) }
-            }, [1, 2])
+            }, [1, 2],MonsterType.Dragonite)
         },
         {
             MonsterType.Charizard, new Monster(MonsterType.Charizard, "리자몽", new Dictionary<StatType, Stat>()
