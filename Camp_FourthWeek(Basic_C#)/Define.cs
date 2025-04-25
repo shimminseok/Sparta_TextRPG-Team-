@@ -167,7 +167,7 @@ public class Stat
     public float BuffValue { get; private set; } = 0;
     public float LevelValue { get; private set; } = 0;
     public float EquipmentValue { get; private set; }
-    public StatType Type { get; private set; }
+    public StatType Type { get; }
 
     public Stat()
     {
@@ -180,6 +180,15 @@ public class Stat
         BuffValue = stat.BuffValue;
         LevelValue = stat.LevelValue;
         EquipmentValue = stat.EquipmentValue;
+    }
+
+    public Stat(SaveStat _saveStat)
+    {
+        Type = _saveStat.Type;
+        BaseValue = _saveStat.BaseValue;
+        BuffValue = _saveStat.BuffValue;
+        LevelValue = _saveStat.LevelValue;
+        EquipmentValue = _saveStat.EquipmentValue;
     }
 
     public Stat(StatType _type, float _value)
@@ -297,8 +306,8 @@ public class Monster
 
         Name = monster.Name;
         Skills = monster.Skills;
-        Stats[StatType.CurHp] = _saveData.CurrentHP;
-        Stats[StatType.CurMp] = _saveData.CurrentMP;
+        Stats[StatType.CurHp] = new Stat(_saveData.CurrentHP);
+        Stats[StatType.CurMp] = new Stat(_saveData.CurrentMP);
     }
 
     public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill,
@@ -531,8 +540,8 @@ public class SaveMonsterData
     public int UniqueNumber;
     public int EquipItemKey;
     public int Exp;
-    public Stat CurrentHP;
-    public Stat CurrentMP;
+    public SaveStat CurrentHP;
+    public SaveStat CurrentMP;
 
     public SaveMonsterData(Monster _monster)
     {
@@ -540,8 +549,8 @@ public class SaveMonsterData
         EquipItemKey = _monster.Item?.UniqueNumber ?? 0;
         UniqueNumber = _monster.UniqueNumber;
         Exp = _monster.Exp;
-        CurrentHP = _monster.Stats[StatType.CurHp];
-        CurrentMP = _monster.Stats[StatType.CurMp];
+        CurrentHP = new SaveStat(_monster.Stats[StatType.CurHp]);
+        CurrentMP = new SaveStat(_monster.Stats[StatType.CurHp]);
     }
 
     public SaveMonsterData()
@@ -561,6 +570,28 @@ public class SaveItem
     }
 
     public SaveItem()
+    {
+    }
+}
+
+public class SaveStat
+{
+    public StatType Type;
+    public float BaseValue;
+    public float BuffValue;
+    public float LevelValue;
+    public float EquipmentValue;
+
+    public SaveStat(Stat _stat)
+    {
+        Type = _stat.Type;
+        BaseValue = _stat.BaseValue;
+        BuffValue = _stat.BuffValue;
+        LevelValue = _stat.LevelValue;
+        EquipmentValue = _stat.EquipmentValue;
+    }
+
+    public SaveStat()
     {
     }
 }
