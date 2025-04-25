@@ -31,17 +31,18 @@ namespace Camp_FourthWeek_Basic_C__
         {
             return (_c >= 0xAC00 && _c <= 0xD7A3);
         }
+
         public static int GetCharWidth(char c)
         {
             return IsKorean(c) ? 2 : 1;
         }
 
 
-        public static string FormatText(string template, Dictionary<int, string>? dict, int maxFormat=0)
+        public static string FormatText(string template, Dictionary<int, string>? dict, int maxFormat = 0)
         {
-            for(int i = 0; i < maxFormat; i++)
+            for (int i = 0; i < maxFormat; i++)
             {
-                if(dict.ContainsKey(i) == false)
+                if (dict.ContainsKey(i) == false)
                 {
                     string placeholder = "{" + i + "}";
                     template = template.Replace(placeholder, new string(' ', placeholder.Length));
@@ -89,13 +90,15 @@ namespace Camp_FourthWeek_Basic_C__
             return template;
         }
 
-        public static (int,Dictionary<int, string>) MergeFormatDic((int, Dictionary<int, string>) A, (int, Dictionary<int, string>)? B)
+        public static (int, Dictionary<int, string>) MergeFormatDic((int, Dictionary<int, string>) A,
+            (int, Dictionary<int, string>)? B)
         {
             foreach (var value in B.Value.Item2)
             {
                 A.Item2[value.Key] = value.Value;
             }
-            return (A.Item1+ B.Value.Item1, A.Item2);
+
+            return (A.Item1 + B.Value.Item1, A.Item2);
         }
 
         public static string GetBar(float cur, float Max)
@@ -111,14 +114,16 @@ namespace Camp_FourthWeek_Basic_C__
             const char filledChar = '@';
             const char emptyChar = '_';
 
-            return $"(( {new string(filledChar, filled)}{new string(emptyChar, 10 - filled)} ))"; ;
+            return $"(( {new string(filledChar, filled)}{new string(emptyChar, 10 - filled)} ))";
+            ;
         }
     }
-    
 
 
     internal static class UiManager
     {
+        public static bool isLoop = true;
+
         private static int width = 172;
         private static int height = 59;
         private static int monStartNum = 100;
@@ -126,7 +131,8 @@ namespace Camp_FourthWeek_Basic_C__
 
         private static char[,] uiPanel = new char[height, width];
         private static Dictionary<int, List<int>> uiDic = new Dictionary<int, List<int>>();
-        private static Tuple<int, int>? cusorPosition = new Tuple<int, int>(0,0);
+        private static Tuple<int, int>? cusorPosition = new Tuple<int, int>(0, 0);
+
         public static void TextShowUI()
         {
             /*
@@ -137,7 +143,7 @@ namespace Camp_FourthWeek_Basic_C__
                   UIUpdater(UIName.Intro_TextBox);
                  //스타팅 포켓몬
                       UIUpdater(UIName.Intro_SetStarting, new Dictionary<int, Tuple<int, int>?>
-                  {                
+                  {
                       {0, new Tuple<int, int>(0,10) },
                       {1, new Tuple<int, int>(20,10) },
                       {2, new Tuple<int, int>(70,10) },
@@ -166,7 +172,7 @@ namespace Camp_FourthWeek_Basic_C__
               }
 
              //전투
-             
+
 
 
              UIUpdater(UIName.Inventory);
@@ -185,30 +191,30 @@ namespace Camp_FourthWeek_Basic_C__
 
 
             UIUpdater(UIName.Battle, new Dictionary<int, Tuple<int, int>?>
-                  {
-                      {0, new Tuple<int, int>(0,0) }, // 배경
-                      {1, new Tuple<int, int>(7,28)}, // 내 포켓몬
-                      {2, new Tuple<int, int>(5,6) }, // 적 1
-
-                  },
-                  (18, new Dictionary<int, string>
-                  {   
-                      // 플레이어 정보
-                      {0, 5.ToString()},
-                      {1, MonsterTable.MonsterDataDic[MonsterType.Charizard].Name},
-                      {2, $"{100.ToString()} / {200.ToString()}"},
-                      {3, GetBar(100,200)},
-                      {4, $"{200.ToString()} / {300.ToString()}"},
-                      {5, GetBar(200,300)},
-                      // 적 정보 1
-                      {6, $"L   V  : {10.ToString()}" },
-                      {7, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Squirtle].Name}" },
-                      {8, $"H   P  : {70.ToString()} / {50.ToString()}" },
-                      {9, $"    {GetBar(50,100)}" },
-                  }),
-                  new List<int>() { 222, 122 } // 
-                  );
+                {
+                    { 0, new Tuple<int, int>(0, 0) }, // 배경
+                    { 1, new Tuple<int, int>(7, 28) }, // 내 포켓몬
+                    { 2, new Tuple<int, int>(5, 6) }, // 적 1
+                },
+                (18, new Dictionary<int, string>
+                {
+                    // 플레이어 정보
+                    { 0, 5.ToString() },
+                    { 1, MonsterTable.MonsterDataDic[MonsterType.Charizard].Name },
+                    { 2, $"{100.ToString()} / {200.ToString()}" },
+                    { 3, GetBar(100, 200) },
+                    { 4, $"{200.ToString()} / {300.ToString()}" },
+                    { 5, GetBar(200, 300) },
+                    // 적 정보 1
+                    { 6, $"L   V  : {10.ToString()}" },
+                    { 7, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Squirtle].Name}" },
+                    { 8, $"H   P  : {70.ToString()} / {50.ToString()}" },
+                    { 9, $"    {GetBar(50, 100)}" },
+                }),
+                new List<int>() { 222, 122 } // 
+            );
         }
+
         public static void PrintPanel()
         {
             Console.Clear(); // 추가!
@@ -218,15 +224,17 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 for (int x = 0; x < width; x++)
                 {
-                     sb.Append(uiPanel[y, x]);
+                    sb.Append(uiPanel[y, x]);
                 }
+
                 sb.AppendLine(); // 줄 바꿈
             }
 
             Console.Write(sb.ToString());
         }
 
-        public static string UIUpdater(UIName name, Dictionary<int, Tuple<int, int>?>? fixPivotDic = null, (int, Dictionary<int, string>)? addFormat = null, List<int>? addUIList =null)
+        public static string UIUpdater(UIName name, Dictionary<int, Tuple<int, int>?>? fixPivotDic = null,
+            (int, Dictionary<int, string>)? addFormat = null, List<int>? addUIList = null)
         {
             Console.Clear();
             ResetUIPanel();
@@ -235,16 +243,16 @@ namespace Camp_FourthWeek_Basic_C__
             List<int> printUI = new List<int>(UITable.UITableDic[name]);
             if (addUIList != null)
             {
-                foreach(var value in addUIList)
+                foreach (var value in addUIList)
                 {
                     printUI.Add(value);
                 }
             }
 
-            
+
             int dicCount = 0;
-                
-            if(fixPivotDic != null)
+
+            if (fixPivotDic != null)
             {
                 foreach (int value in printUI)
                 {
@@ -267,10 +275,14 @@ namespace Camp_FourthWeek_Basic_C__
                     ChangeUiPanel(name, UITable.UIDic[value], null, addFormat);
                 }
             }
+
             // 출력
             PrintPanel();
 
             // 커서 위치 변경
+            if (name <= UIName.Intro_GameStart_4)
+                return String.Empty;
+
             if (cusorPosition != null)
             {
                 return ReadLineAt(cusorPosition.Item1, cusorPosition.Item2);
@@ -279,32 +291,34 @@ namespace Camp_FourthWeek_Basic_C__
             {
                 return "잘못된 입력입니다.";
             }
-
         }
-  
-        public static void ChangeUiPanel(UIName name, UI ui, Tuple<int,int>? fixedPivot = null, (int, Dictionary<int, string>)? addFormat = null)
+
+        public static void ChangeUiPanel(UIName name, UI ui, Tuple<int, int>? fixedPivot = null,
+            (int, Dictionary<int, string>)? addFormat = null)
         {
             int pivotX = 0;
             int pivotY = 0;
             if (fixedPivot != null)
             {
-               ( pivotX,  pivotY) = fixedPivot;
+                (pivotX, pivotY) = fixedPivot;
                 pivotY -= 1;
             }
             else
             {
-                ( pivotX,  pivotY) = ui.Pivot;
+                (pivotX, pivotY) = ui.Pivot;
                 pivotY -= 1;
             }
-            if(ui.CusorPivot.Item1 != 0 && ui.CusorPivot.Item2 != 0)
+
+            if (ui.CusorPivot.Item1 != 0 && ui.CusorPivot.Item2 != 0)
             {
                 cusorPosition = ui.CusorPivot;
             }
+
             string inputString = ui.UiString;
             string changeString;
             if (UITable.textDic.ContainsKey(name))
             {
-                if(addFormat == null)
+                if (addFormat == null)
                 {
                     changeString = FormatText(inputString, UITable.textDic[name].Item2, UITable.textDic[name].Item1);
                 }
@@ -313,14 +327,12 @@ namespace Camp_FourthWeek_Basic_C__
                     (int, Dictionary<int, string>) mergeDic = MergeFormatDic(UITable.textDic[name], addFormat);
                     changeString = FormatText(inputString, mergeDic.Item2, mergeDic.Item1);
                 }
-
-             
             }
             else
             {
                 changeString = inputString;
-
             }
+
             string[] splitStrings = changeString.Split('\n');
 
             for (int y = 1; y < splitStrings.Length; y++)
@@ -337,7 +349,8 @@ namespace Camp_FourthWeek_Basic_C__
                     {
                         continue;
                     }
-                    if(line[x] == '$')
+
+                    if (line[x] == '$')
                     {
                         continue;
                     }
@@ -346,6 +359,7 @@ namespace Camp_FourthWeek_Basic_C__
                 }
             }
         }
+
         public static string ReadLineAt(int left, int top)
         {
             string inputBuffer = "";
@@ -359,7 +373,7 @@ namespace Camp_FourthWeek_Basic_C__
                 {
                     return inputBuffer;
                 }
-               
+
 
                 if (keyInfo.Key == ConsoleKey.Backspace)
                 {
@@ -395,34 +409,52 @@ namespace Camp_FourthWeek_Basic_C__
                 Console.SetCursorPosition(left + displayWidth, height - top);
             }
         }
+
         public static string IntroRoop()
         {
             while (true)
             {
+                if (!isLoop)
+                    break;
+
                 UIUpdater(UIName.Intro_GameStart_1);
                 Thread.Sleep(animSpeed);
-                var result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
+                // var result = CheckIntroInput();
+                // if (result.HasValue) return result.Value.ToString();
 
+                if (!isLoop)
+                    break;
                 UIUpdater(UIName.Intro_GameStart_2);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
-
+                // result = CheckIntroInput();
+                // if (result.HasValue) return result.Value.ToString();
+                if (!isLoop)
+                    break;
                 UIUpdater(UIName.Intro_GameStart_3);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
-
+                // result = CheckIntroInput();
+                // if (result.HasValue) return result.Value.ToString();
+                if (!isLoop)
+                    break;
                 UIUpdater(UIName.Intro_GameStart_2);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
-
+                // result = CheckIntroInput();
+                // if (result.HasValue) return result.Value.ToString();
+                if (!isLoop)
+                    break;
                 UIUpdater(UIName.Intro_GameStart_1);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
-
+                // result = CheckIntroInput();
+                // if (result.HasValue) return result.Value.ToString();
+                if (!isLoop)
+                    break;
                 UIUpdater(UIName.Intro_GameStart_4);
                 Thread.Sleep(animSpeed);
-                result = CheckIntroInput(); if (result.HasValue) return result.Value.ToString();
+                // result = CheckIntroInput();
+                // if (result.HasValue) return result.Value.ToString();
             }
+
+            return string.Empty;
         }
 
         public static int? CheckIntroInput()
@@ -437,6 +469,7 @@ namespace Camp_FourthWeek_Basic_C__
 
             return null;
         }
+
         public static void ResetUIPanel()
         {
             uiPanel = new char[height, width];

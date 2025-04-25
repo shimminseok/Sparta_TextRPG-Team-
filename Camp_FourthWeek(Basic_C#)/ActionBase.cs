@@ -8,6 +8,8 @@ public abstract partial class ActionBase : IAction
     protected PlayerInfo PlayerInfo { get; } = GameManager.Instance.PlayerInfo;
     public abstract string Name { get; }
 
+    public IAction? NextAction { get; protected set; } = null;
+
     public void Execute()
     {
         // 추후 아래의 콘솔은 지워주어야 합니다.
@@ -23,7 +25,8 @@ public abstract partial class ActionBase : IAction
 
     public abstract void OnExcute();
 
-    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap, bool _isView = true , Func<string>? inputProvider = null, bool isPass = false)
+    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap, bool _isView = true,
+        Func<string>? inputProvider = null)
     {
         Console.WriteLine();
         if (_isView)
@@ -36,90 +39,42 @@ public abstract partial class ActionBase : IAction
             }
         }
 
-
-
-        if (isPass)
+        while (true)
         {
-            _actionMap[1].Execute();
+            if (int.TryParse(inputProvider?.Invoke() ?? Console.ReadLine(), out var id))
+            {
+                if (UiManager.isLoop)
+                    UiManager.isLoop = false;
+
+                if (id == 0)
+                {
+                    if (PrevAction == null && this is MainMenuAction)
+                    {
+                        GameManager.Instance.SaveGame();
+                        NextAction = null;
+                    }
+                    else
+                    {
+                        NextAction = PrevAction;
+                    }
+
+                    break;
+                }
+
+                if (_actionMap.ContainsKey(id))
+                {
+                    NextAction = _actionMap[id];
+                    break;
+                }
+                //개발자의 이스터에그
+                else if (id == 527)
+                {
+                    var miniGame = new MiniGame();
+                    miniGame.StartGame();
+                    break;
+                }
+            }
         }
-        else if(inputProvider == null) // 이 if 문 내부는 추후 지워야 합니다.
-        {
-            Console.WriteLine();
-            Console.WriteLine($"0. {(PrevAction == null ? "종료하기" : $"{PrevAction.Name}로 되돌아가기")}");
-            Console.WriteLine();
-            Console.WriteLine(feedBackMessage);
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-            while (true)
-                if (int.TryParse(Console.ReadLine(), out var id))
-                {
-           
-                    if (id == 0)
-                    {
-                        if (PrevAction == null && this is MainMenuAction)
-                            GameManager.Instance.SaveGame();
-                        else
-                            PrevAction?.Execute();
-                        break;
-                    }
-
-                    if (_actionMap.ContainsKey(id))
-                    {
-                        _actionMap[id].Execute();
-                        break;
-                    }
-                    //개발자의 이스터에그
-                    else if (id == 527)
-                    {
-                        var miniGame = new MiniGame();
-                        miniGame.StartGame();
-                        break;
-                    }
-
-                    // Console.WriteLine("잘못된 입력입니다.");
-                }
-                else
-                {
-                    // Console.WriteLine("잘못된 입력입니다.");
-                }
-        }
-        else
-        {
-            while (true)
-                if (int.TryParse(inputProvider(), out var id))
-                {
-                    if (id == 0)
-                    {
-                        if (PrevAction == null && this is MainMenuAction)
-                            GameManager.Instance.SaveGame();
-                        else
-                            PrevAction?.Execute();
-                        break;
-                    }
-
-                    if (_actionMap.ContainsKey(id))
-                    {
-                        _actionMap[id].Execute();
-                        break;
-                    }
-                    //개발자의 이스터에그
-                    else if (id == 527)
-                    {
-                        var miniGame = new MiniGame();
-                        miniGame.StartGame();
-                        break;
-                    }
-
-                    // Console.WriteLine("잘못된 입력입니다.");
-                }
-                else
-                {
-                    // Console.WriteLine("잘못된 입력입니다.");
-                }
-        }
-
-
-
-
 
 
         feedBackMessage = string.Empty;
