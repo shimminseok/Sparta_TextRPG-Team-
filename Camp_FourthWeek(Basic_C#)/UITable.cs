@@ -31,6 +31,7 @@ public enum UIName
     Quest_List_Acceptyet,
     Quest_Detail_Working,
     Quest_Detail_Acceptyet,
+    Quest_Detail_Clear,
     Collection,
     Location,
     Center,
@@ -222,6 +223,26 @@ public static class UITable
         })
         },// 퀘스트 상세 진행중
         {
+        UIName.Quest_Detail_Acceptyet,
+        (25,new Dictionary<int, string>
+        {
+            { 0, "0. 나가기" },
+            { 1, "1. 수락하기"},
+            { 2, "원하시는 행동을 선택해 주세요" },
+            { 3, ">>>" },
+        })
+        },// 퀘스트 상세 받기전
+        {
+        UIName.Quest_Detail_Clear,
+        (25,new Dictionary<int, string>
+        {
+            { 0, "0. 나가기" },
+            { 1, "1. 보상받기"},
+            { 2, "원하시는 행동을 선택해 주세요" },
+            { 3, ">>>" },
+        })
+        },// 퀘스트 상세 완료
+        {
         UIName.Collection,
         (5,new Dictionary<int, string>
         {
@@ -356,6 +377,9 @@ public static class UITable
         },// 퀘스트  상세 수락
         {
             UIName.Quest_Detail_Acceptyet, new List<int>{17}
+        },// 퀘스트 상세 미수락
+        {
+            UIName.Quest_Detail_Clear, new List<int>{17}
         },// 퀘스트 상세 미수락
         {
             UIName.Collection, new List<int>{18}
