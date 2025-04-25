@@ -26,7 +26,7 @@ public class RecoverAction : ActionBase
                 PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue);
             PlayerInfo.Gold -= recoverGold;
             Console.WriteLine("회복중..");
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
             message = $"체력이 회복되었습니다 HP {before} -> {curHP.FinalValue}";
         }
 
