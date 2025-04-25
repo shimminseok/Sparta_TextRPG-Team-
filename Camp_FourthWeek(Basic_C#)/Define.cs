@@ -114,16 +114,19 @@ public class PlayerInfo
 
 public class Item
 {
-    public int Key { get; set; }
-    public int Cost;
-    public string Description;
-    public ItemType ItemType;
-    public string Name;
-    public List<Stat> Stats;
-    public int UniqueNumber;
+    public int Key { get; }
+    public int Cost { get; }
+    public string Description { get; }
+    public ItemType ItemType { get; }
+    public string Name { get; }
+    public List<Stat> Stats { get; }
+    public int UniqueNumber { get; private set; }
 
-    public bool IsEquippedBy(Monster m) => m.Item == this;
-    public bool IsEquipment => EquipmentManager.IsEquipped(this);
+    //현재 몬스터가 장착한 아이템인지
+    public bool IsEquippedBy(Monster m) => m.Item.UniqueNumber == UniqueNumber;
+
+    //몬스터 박스에 있는 몬스터들이 장착한 아이템인지
+    public bool IsEquipment => EquipmentManager.IsEquipped(UniqueNumber);
 
     public Item(int _key, string _name, ItemType _type, List<Stat> _stats, string _description, int _cost)
     {
@@ -145,14 +148,25 @@ public class Item
             Description,
             Cost);
     }
+
+    public void SetUniqueNumber()
+    {
+        Random random = new Random();
+        UniqueNumber = random.Next(0, int.MaxValue);
+    }
+
+    public void SetUniqueNumber(int _uniqueNumber)
+    {
+        UniqueNumber = _uniqueNumber;
+    }
 }
 
 public class Stat
 {
-    public float BaseValue;
-    public float BuffValue = 0;
-    public float EquipmentValue;
-    public StatType Type;
+    public float BaseValue { get; private set; }
+    public float BuffValue { get; private set; } = 0;
+    public float EquipmentValue { get; private set; }
+    public StatType Type { get; private set; }
 
     public Stat()
     {
@@ -259,6 +273,26 @@ public class Monster
     {
     }
 
+    public Monster(SaveMonsterData _saveData)
+    {
+        Type = _saveData.Key;
+        Lv = _saveData.Level;
+        Exp = _saveData.Exp;
+        Item = InventoryManager.Instance.Inventory.FirstOrDefault(x => x.UniqueNumber == _saveData.EquipItemKey);
+        UniqueNumber = _saveData.UniqueNumber;
+        var monster = MonsterTable.GetMonsterByType(Type);
+        Stats = new Dictionary<StatType, Stat>();
+        foreach (var stat in monster.Stats)
+        {
+            Stats[stat.Key] = new Stat(stat.Value);
+        }
+
+        Name = monster.Name;
+        Skills = monster.Skills;
+        Stats[StatType.CurHp] = _saveData.CurrentHP;
+        Stats[StatType.CurMp] = _saveData.CurrentMP;
+    }
+
     public Monster(MonsterType _type, string _name, Dictionary<StatType, Stat> _stat, List<int> _skill)
     {
         Type = _type;
@@ -303,21 +337,19 @@ public class Monster
         Exp = _monster.Exp;
     }
 
-    public MonsterType Type { get; set; }
-    public string Name { get; set; }
-    public Dictionary<StatType, Stat> Stats { get; set; }
-
-    public List<int> Skills { get; set; }
-
-    // public int ItemId { get; set; }
-    public Item Item { get; set; }
-    public int Lv { get; set; }
-    private int exp; 
+    public MonsterType Type { get; }
+    public string Name { get; }
+    public Dictionary<StatType, Stat> Stats { get; }
+    public int UniqueNumber { get; private set; }
+    public List<int> Skills { get; }
+    public Item Item { get; private set; }
+    public int Lv { get; private set; }
+    private int exp;
 
     public int Exp
     {
-        get => exp;         
-        set => AddExp(value); 
+        get => exp;
+        set => AddExp(value);
     }
 
 
@@ -334,12 +366,12 @@ public class Monster
             Stat
                 original = copyDict
                     .Value; //CopyDict는 foreach문으로 딕셔너리를 순회하는 변수이므로, copyDict.value(StatType의 정보)를 original에 저장하는 결과가 된다.
-            Stat copyStat = new Stat(); //Stat 객체 생성
+            Stat copyStat = new Stat(original); //Stat 객체 생성
 
-            copyStat.Type = original.Type; //복제!
-            copyStat.BaseValue = original.BaseValue;
-            copyStat.BuffValue = original.BuffValue;
-            copyStat.EquipmentValue = original.EquipmentValue;
+            // copyStat.Type = original.Type; //복제!
+            // copyStat.BaseValue = original.BaseValue;
+            // copyStat.BuffValue = original.BuffValue;
+            // copyStat.EquipmentValue = original.EquipmentValue;
             newStat[copyDict.Key] =
                 copyStat; //newStat : Dictionary<StatType, Stat> 타입의 딕셔너리의 copyDict.Key라는 키에 copyStat 값을 주겠다.
             //즉 newStat의 key = copyDict.Key, newStat의 value = copyStat
@@ -356,8 +388,8 @@ public class Monster
     private void AddExp(int amount)
     {
         exp += amount;
-        
-        while(true)
+
+        while (true)
         {
             int maxExp = ExpTable.GetExpByLevel(Lv + 1);
             if (exp >= maxExp)
@@ -373,6 +405,24 @@ public class Monster
     {
         Lv++;
         //Todo : 진화
+    }
+
+    public void SetUniqueNumber()
+    {
+        Random random = new Random();
+        UniqueNumber = random.Next(0, int.MaxValue);
+    }
+
+    public void SetUniqueNumber(int _uniqueNumber) => UniqueNumber = _uniqueNumber;
+
+    public void EquipItem(Item _item)
+    {
+        Item = _item;
+    }
+
+    public void UnEquipItem()
+    {
+        Item = null;
     }
 }
 
@@ -436,7 +486,9 @@ public class SaveData
 public class SaveMonsterData
 {
     public MonsterType Key;
+    public int UniqueNumber;
     public int EquipItemKey;
+    public int Level;
     public int Exp;
     public Stat CurrentHP;
     public Stat CurrentMP;
@@ -445,6 +497,8 @@ public class SaveMonsterData
     {
         Key = _monster.Type;
         EquipItemKey = _monster.Item?.UniqueNumber ?? 0;
+        UniqueNumber = _monster.UniqueNumber;
+        Level = _monster.Lv;
         Exp = _monster.Exp;
         CurrentHP = _monster.Stats[StatType.CurHp];
         CurrentMP = _monster.Stats[StatType.CurMp];

@@ -25,7 +25,7 @@ public class InventoryManager()
     public void AddItem(Item _item)
     {
         Random random = new Random();
-        _item.UniqueNumber = random.Next(0, int.MaxValue);
+        _item.SetUniqueNumber();
         Inventory.Add(_item);
 
         //퀘스트 확인한번하기 ㅎ
@@ -43,6 +43,7 @@ public class InventoryManager()
 
     public void AddMonsterToBox(Monster _monster)
     {
+        _monster.SetUniqueNumber();
         MonsterBox.Add(_monster);
     }
 
