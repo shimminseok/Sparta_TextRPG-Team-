@@ -39,7 +39,7 @@ namespace Camp_FourthWeek_Basic_C__
                 float originHp = target.Stats[StatType.CurHp].FinalValue;
                 if (isCritical)
                     damage *= player.Stats[StatType.CriticlaDamage].FinalValue;
-
+                damage = (int)Math.Round(damage,0);
                 if (!isEvade)
                     target.Stats[StatType.CurHp].ModifyAllValue(damage);
                 if (target.Stats[StatType.CurHp].FinalValue <= 0)
@@ -64,6 +64,7 @@ namespace Camp_FourthWeek_Basic_C__
 
                 }
                 Console.WriteLine($"HP {originHp} -> {(isDead ? "Dead" : target.Stats[StatType.CurHp].FinalValue.ToString())}");
+                Console.WriteLine("\n");
             }
             InputNumber();
 

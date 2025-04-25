@@ -108,11 +108,11 @@
             Console.WriteLine("\n[내정보]");
             string name = PlayerInfo.Monster.Name;
             int level = PlayerInfo.Monster.Lv;
-            float maxHP = PlayerInfo.Monster.Stats[StatType.MaxHp].BaseValue;
-            float curHP = PlayerInfo.Monster.Stats[StatType.CurHp].BaseValue;
+            float maxHP = PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue;
+            float curHP = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
 
-            float maxMP = PlayerInfo.Monster.Stats[StatType.MaxMp].BaseValue;
-            float curMP = PlayerInfo.Monster.Stats[StatType.CurMp].BaseValue;
+            float maxMP = PlayerInfo.Monster.Stats[StatType.MaxMp].FinalValue;
+            float curMP = PlayerInfo.Monster.Stats[StatType.CurMp].FinalValue;
 
             Console.WriteLine($"Lv.{level}  {name}");
             Console.WriteLine($"HP {curHP}/{maxHP}");

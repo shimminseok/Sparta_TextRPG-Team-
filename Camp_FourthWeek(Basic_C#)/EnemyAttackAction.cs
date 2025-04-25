@@ -30,7 +30,7 @@ namespace Camp_FourthWeek_Basic_C__
                 float damage = AttackAction.GetCalculatedDamage(monster.Stats[StatType.Attack].FinalValue);
                 if (isCritical)
                     damage *= monster.Stats[StatType.CriticlaDamage].FinalValue;
-
+                damage = (int)Math.Round(damage, 0);
                 if (!isEvade)
                     player.Stats[StatType.CurHp].ModifyAllValue(damage);
 
@@ -54,6 +54,7 @@ namespace Camp_FourthWeek_Basic_C__
                 }
                 if (isPlayerDead)
                     break;
+                Console.WriteLine("\n");
             }
             AttackAction.InputNumber();
             CheckBattleEnd(isPlayerDead);
