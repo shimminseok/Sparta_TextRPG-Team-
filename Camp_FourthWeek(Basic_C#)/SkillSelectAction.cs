@@ -33,7 +33,8 @@
 
             int skillInfoLine = 24;
 
-            AttackActionBase.battleLogDic[18] = "[ 스킬 목록 ]";
+            AttackActionBase.battleLogDic[18] = "";
+            int playerActionLog = AttackActionBase.battleLogDic.Last().Key + 1;
 
             foreach (var skill in skills)
             {
@@ -51,6 +52,11 @@
             {
                 if (!SubActionMap.ContainsKey(i + 1))
                     SubActionMap.Add(i + 1, new AttackSelectAction(PrevAction, skills[i]));
+            }
+
+            for (int i = playerActionLog; i < 22; i++)
+            {
+                AttackActionBase.battleLogDic.Add(i, "");
             }
 
             AttackActionBase.monsterIconList.Add(28); // 하단 커서 추가

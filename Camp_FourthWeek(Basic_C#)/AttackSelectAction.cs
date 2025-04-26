@@ -67,7 +67,6 @@ namespace Camp_FourthWeek_Basic_C__
             }
             else
             {
-                AttackActionBase.battleLogDic[18] = "[ 공격 대상 선택 ]";
                 for (int i = 0; i < aliveMonsterList.Count; i++)
                 {
                     AttackActionBase.uiPivotDic.Add(pivotCount++, AttackActionBase.pivotArr[i]);
