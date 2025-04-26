@@ -176,14 +176,12 @@ public class AcceptQuestAction : ActionBase
     {
         PrevAction = _preAction;
         requiredQuest = _requiredQuest;
+        NextAction = _preAction;
     }
 
     public override void OnExcute()
     {
         QuestManager.Instance.AcceptQuest(requiredQuest);
-
-        PrevAction?.SetFeedBackMessage($"{requiredQuest.QuestName} 퀘스트를 수락하셨습니다.");
-        PrevAction?.Execute();
     }
 }
 
@@ -196,14 +194,12 @@ public class ClaimQuestRewardAction : ActionBase
     {
         PrevAction = _preAction;
         requiredQuest = _requiredQuest;
+        NextAction = _preAction;
     }
 
     public override void OnExcute()
     {
         QuestManager.Instance.QuestClear(requiredQuest);
-        Console.WriteLine(requiredQuest.QuestCompleteDescription);
-
-        SelectAndRunAction(SubActionMap);
     }
 }
 
@@ -216,13 +212,11 @@ public class AbandonQuestAction : ActionBase
     {
         PrevAction = _preAction;
         requiredQuest = _requiredQuest;
+        NextAction = _preAction;
     }
 
     public override void OnExcute()
     {
         QuestManager.Instance.AbandonQuest(requiredQuest);
-
-        PrevAction?.SetFeedBackMessage($"{requiredQuest.QuestName} 퀘스트를 포기하셨습니다.");
-        PrevAction?.Execute();
     }
 }
