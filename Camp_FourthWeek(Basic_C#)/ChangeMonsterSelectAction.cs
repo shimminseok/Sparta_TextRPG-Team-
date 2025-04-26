@@ -1,13 +1,13 @@
 namespace Camp_FourthWeek_Basic_C__;
 
-public class ChangeMonsterSelectAction :ActionBase
+public class ChangeMonsterSelectAction : ActionBase
 {
-
     private Monster monster;
+
     public ChangeMonsterSelectAction(Monster _monster, IAction _prevAction)
     {
         monster = _monster;
-        PrevAction = _prevAction;
+        NextAction = _prevAction;
     }
 
     public override string Name => string.Empty;
@@ -15,6 +15,5 @@ public class ChangeMonsterSelectAction :ActionBase
     public override void OnExcute()
     {
         GameManager.Instance.PlayerInfo.ChangeMonsterStat(monster);
-        PrevAction?.Execute();
     }
 }

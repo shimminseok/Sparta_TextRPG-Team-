@@ -7,19 +7,12 @@ public class MonsterChangeAction : PagedListActionBase
     public MonsterChangeAction(IAction _prevAction, int _page = 0) : base(_prevAction, _page)
     {
         PrevAction = _prevAction;
-        SubActionMap = new Dictionary<int, IAction>()
-        {
-            //테스트용 포켓몬 추가
-            { 99, new TestMonsterModify(this) },
-        };
         isViewSubMap = false;
     }
 
     protected override List<string> GetPageContent()
     {
         var output = new List<string>();
-        //output.Add("이곳에서 포켓몬을 교체 할 수 있습니다.");
-        //output.Add("");
         var monsters = InventoryManager.Instance.MonsterBox;
         var totalMonster = monsters.Count;
         int pageStart = Page * VIEW_COUNT;
@@ -47,12 +40,9 @@ public class MonsterChangeAction : PagedListActionBase
             index++;
         }
 
-      //  output.Add("99. [테스트용 랜덤 포켓몬 추가]");
-      //  output.Add("");
-
-
         return output;
     }
+
     public override void OnExcute()
     {
         base.OnExcute();
@@ -63,13 +53,15 @@ public class MonsterChangeAction : PagedListActionBase
         {
             lineDic.Add(LineCount + i, lines[i]);
         }
+
         if (Page > 0)
             lineDic.Add(8, "-1. 이전 페이지");
         if (Page < MaxPage - 1)
             lineDic.Add(9, "-2. 다음 페이지");
-        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.SetPokectmon, null, (5, lineDic)));
-
+        SelectAndRunAction(SubActionMap, isViewSubMap,
+            () => UiManager.UIUpdater(UIName.SetPokectmon, null, (5, lineDic)));
     }
+
     protected override PagedListActionBase CreateNew(int newPage)
     {
         return new MonsterChangeAction(PrevAction, newPage);

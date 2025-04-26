@@ -1,5 +1,6 @@
 namespace Camp_FourthWeek_Basic_C__;
 
+using static Camp_FourthWeek_Basic_C__.StringUtil;
 
 public interface IUIBase
 {
@@ -7,8 +8,6 @@ public interface IUIBase
     Tuple<int, int> CusorPivot { get; }
     string UiString { get; }
 }
-
-
 
 public enum UIName
 {
@@ -41,413 +40,415 @@ public enum UIName
     Shop_Main,
     Shop_Buy,
     Shop_Sell,
-
 }
 
 public static class UITable
 {
     // UI 위치 피벗
-    private static Tuple<int, int> originPivot = new Tuple<int, int>(0, 0); 
-    private static Tuple<int, int> animTextPivot = new Tuple<int, int>(0, 56); 
+    private static Tuple<int, int> originPivot = new Tuple<int, int>(0, 0);
+    private static Tuple<int, int> animTextPivot = new Tuple<int, int>(0, 56);
     private static Tuple<int, int> introTextPivot = new Tuple<int, int>(0, 45);
-    private static Tuple<int, int> doctorPivot = new Tuple<int, int>(0,3);
+    private static Tuple<int, int> doctorPivot = new Tuple<int, int>(0, 3);
 
     // 커서 위치 피벗
     private static Tuple<int, int> mainCusorPivot = new Tuple<int, int>(10, 4);
     private static Tuple<int, int> baseCusorPivot = new Tuple<int, int>(9, 3);
 
-    public static Dictionary<UIName, (int,Dictionary<int, string>)> textDic = new Dictionary<UIName, (int, Dictionary<int, string>)>
-    {
+    public static Dictionary<UIName, (int, Dictionary<int, string>)> textDic =
+        new Dictionary<UIName, (int, Dictionary<int, string>)>
         {
-        UIName.Intro_TextBox,
-        (7,new Dictionary<int, string>
-        {
-            { 0, "반갑구나! 내 이름은 한 박사. 르탄몬 세계에 온 것을 환영한다!" },
-            { 1, "먼저 네 이름을 알려주겠니?" },
-            { 6, ">>>" },
-        })
-        },// 인트로 텍스트 박스
-        {
-        UIName.Intro_SetStarting,
-       (7, new Dictionary<int, string>
-        {
-            { 0, "멋진 이름이구나! 그럼 모험을 시작하기 전에 르탄몬을 하나 선물 해야 겠구나." },
-            { 1, "어떤 르탄몬과 같이 가겠니?" },
-            { 2, "1. 파이리  2. 꼬부기  3. 이상해씨" },
-            { 6, ">>>" },
-        })
-        },// 스타팅 선택
-        {
-        UIName.Main,
-        (8,new Dictionary<int, string>
-        {
-            { 0, "1. 상태보기" },
-            { 1, "2. 나영웅의 PC" },
-            { 2, "3. 프랜들리 숍" },
-            { 3, "4. 지역 선택" },
-            { 4, "5. 퀘스트" },
-            { 5, "6. 도감" },
-            { 6, "7. 르탄몬 센터" },
-            { 7, "8. 리셋(추후 삭제)"},
-            { 8, "원하시는 행동을 선택해 주세요" },
-            { 9, ">>>" },
-        })
-        },// 메인
-        {
-        UIName.Status,
-        (13,new Dictionary<int, string>
-        {
-            { 0, "[ 플레이어 정보 ]" },
-            { 1, "이     름 :" },
-            { 2, "소지 골드 :" },
-            { 3, "[ 사용중인 르탄몬 ]" },
-            { 4, "이  름 :"},
-            { 5, "레  벨 :"},
-            { 6, "공격력 :" },
-            { 7, "방어력 :" },
-            { 8, "체  력 :" },
-            { 9, "마  력 :" },
-            { 10,"0. 나가기" },
-            { 11,"원하시는 행동을 선택해 주세요 " },
-            { 12,">>> " },
-        })
-        },// 스테이터스
-        {
-        UIName.Battle,
-        (0,new Dictionary<int, string>
-        {
-            { 18, "0. 도망가기" },
-            { 19, "1. 공격하기" },
-            { 20, "2. 스킬사용" },
-            { 21, "3. 포획하기" },
-            { 22,"원하시는 행동을 선택해 주세요 " },
-            { 23,">>> " },
-        })
-        },// 전투
-        {
-        UIName.Battle_AttackSelect,
-        (0,new Dictionary<int, string>
-        {
-            { 18, "[ 공격 대상 지정]" },
-            { 22,"원하시는 행동을 선택해 주세요 " },
-            { 23,">>> " },
-        })
-        },// 전투
-        {
-        UIName.Battle_AttackEnemy,
-        (0,new Dictionary<int, string>
-        {
-            { 22,"원하시는 행동을 선택해 주세요 " },
-            { 23,">>> " },
-        })
-        },// 전투
-        {
-        UIName.Battle_Result,
-        (0,new Dictionary<int, string>
-        {
-            { 0,"원하시는 행동을 선택해 주세요 " },
-            { 1,">>> " },
-        })
-        },// 전투
-        {
-        UIName.Inventory,
-        (10,new Dictionary<int, string>
-        {
-            { 0, "[ 나영웅의 PC ]" },
-            { 1, "동행 르탄몬을 지정하고, 도구를 장착 할 수 있습니다." },
-            { 2, "또한, 나무 열매를 통해 르탄몬을 회복 시킬 수 있습니다." },
-            { 3, "[ 행동 목록 ]" },
-            { 4, "0. 나가기"},
-            { 5, "1. 르탄몬 박스 - 동행 관리"},
-            { 6, "2. 도구 관리 - 아이템 관리" },
-            { 7, "3. 나무 열매 - 회복" },
-            { 8, "원하시는 행동을 선택해 주세요" },
-            { 9, ">>>" },
-        })
-        },// 인벤토리
-        {
-        UIName.SetPokectmon,
-        (10,new Dictionary<int, string>
-        {
-            { 0, "[ 르탄몬 박스 - 동행 관리 ]" },
-            { 1, "동행 르탄몬을 관리 할 수 있습니다." },
-            { 2, "[ 보유 르탄몬 목록 ]" },
-            { 3, "0. 나가기"},
-            { 4, "1. 동행 르탄몬 변경"},
-            { 5, "원하시는 행동을 선택해 주세요" },
-            { 6, ">>>" },
-        })
-        },// 포켓몬박스
-        {
-        UIName.SetPokectmon_Change,
-        (10,new Dictionary<int, string>
-        {
-            { 0, "[ 르탄몬 박스 - 동행 변경 ]" },
-            { 1, "동행 르탄몬을 변경할 수 있습니다." },
-            { 2, "[ 보유 르탄몬 목록 ]" },
-            { 3, "0. 나가기"},
-            { 4, "원하시는 행동을 선택해 주세요" },
-            { 5, ">>>" },
-        })
-        },// 포켓몬박스 - 변경
-        {
-        UIName.Equipment,
-        (12,new Dictionary<int, string>
-        {
-            { 0, "[ 도구 관리 - 아이템 관리 ]" },
-            { 1, "원하는 도구를 장착합니다." },
-            { 2, "[ 보유 도구 ]"},
-            { 3, "0. 나가기"},
-            { 4, "원하시는 행동을 선택해 주세요" },
-            { 5, ">>>" },
-        })
-        },// 도구함
-        {
-        UIName.Fruit,
-        (8,new Dictionary<int, string>
-        {
-            { 0, "[ 나무 열매 - 회복 ]" },
-            { 1, "0. 나가기"},
-            { 2, "1. 열매 사용"},
-            { 3, "원하시는 행동을 선택해 주세요" },
-            { 4, ">>>" },
-        })
-        },// 나무열매
-        {
-        UIName.Quest_Main,
-        (8,new Dictionary<int, string>
-        {
-            { 0, "[ 퀘스트 ]" },
-            { 1, "진행중인 퀘스트와 수락 가능한 퀘스트를 확인 할 수 있습니다." },
-            { 2, "0. 나가기"},
-            { 3, "1. 진행중인 퀘스트 목록"},
-            { 4, "2. 수락 가능한 퀘스트 목록" },
-            { 5, "원하시는 행동을 선택해 주세요" },
-            { 6, ">>>" },
-        })
-        },// 퀘스트 메인
-        {
-        UIName.Quest_List_Working,
-        (14,new Dictionary<int, string>
-        {
-            { 0, "[ 진행중인 퀘스트 ]" },
-            { 1, "0. 나가기"},
-            { 2, "원하시는 행동을 선택해 주세요" },
-            { 3, ">>>" },
-        })
-        },// 퀘스트 목록 진행중
-        {
-        UIName.Quest_List_Acceptyet,
-        (14,new Dictionary<int, string>
-        {
-            { 0, "[ 수락 가능한 퀘스트 ]" },
-            { 1, "0. 나가기"},
-            { 2, "원하시는 행동을 선택해 주세요" },
-            { 3, ">>>" },
-        })
-        },// 퀘스트 목록 미수락
-        { 
-        UIName.Quest_Detail_Working,
-        (25,new Dictionary<int, string>
-        {
-            { 0, "0. 나가기" },
-            { 1, "1. 포기하기"},
-            { 2, "원하시는 행동을 선택해 주세요" },
-            { 3, ">>>" },
-        })
-        },// 퀘스트 상세 진행중
-        {
-        UIName.Quest_Detail_Acceptyet,
-        (25,new Dictionary<int, string>
-        {
-            { 0, "0. 나가기" },
-            { 1, "1. 수락하기"},
-            { 2, "원하시는 행동을 선택해 주세요" },
-            { 3, ">>>" },
-        })
-        },// 퀘스트 상세 받기전
-        {
-        UIName.Quest_Detail_Clear,
-        (25,new Dictionary<int, string>
-        {
-            { 0, "0. 나가기" },
-            { 1, "1. 보상받기"},
-            { 2, "원하시는 행동을 선택해 주세요" },
-            { 3, ">>>" },
-        })
-        },// 퀘스트 상세 완료
-        {
-        UIName.Collection,
-        (5,new Dictionary<int, string>
-        {
-            { 0, "[ 포켓몬 도감 ]" },
-            { 1, "지금까지 수집한 포켓몬 목록을 확인 할 수 있습니다."},
-            { 2, "0. 나가기" },
-            { 3, "원하시는 행동을 선택해 주세요" },
-            { 4, ">>>" },
-        })
-        },// 도감
-        {
-        UIName.Location,
-        (17,new Dictionary<int, string>
-        {
-            { 0, "[ 지역 이동 - 전투 스테이지 선택 ]" },
-            { 1, "원하는 지역으로 떠나 야생 르탄몬을 만날 수 있습니다."},
-            { 2, "[ 지역 목록 ]"},
-            { 3, "0. 나가기" },
-            { 4, "원하시는 행동을 선택해 주세요" },
-            { 5, ">>>" },
-        })
-        },// 지역 이동
-        {
-        UIName.Center,
-        (7,new Dictionary<int, string>
-        {
-            { 0, "[ 르탄몬 센터 - 회복소 ]" },
-            { 1, "상처입은 르탄몬을 회복할 수 있습니다."},
-            { 2, "0. 나가기"},
-            { 3, "1. 회복하기" },
-            { 4, "원하시는 행동을 선택해 주세요" },
-            { 5, ">>>" },
-        })
-        },// 포켓몬 센터
-        {
-        UIName.Shop_Main,
-        (9,new Dictionary<int, string>
-        {
-            { 0, "[ 프렌들리 숍 ]" },
-            { 1, "필요한 아이템을 얻을 수 있는 상점입니다."},
-            { 2, "[ 보유 골드 ]"},
-            { 3, "[ 아이템 목록 ]"},
-            { 4, "0. 나가기" },
-            { 5, "1. 아이템 구매" },
-            { 6, "2. 아이템 판매" },
-            { 7, "원하시는 행동을 선택해 주세요" },
-            { 8, ">>>" },
-        })
-        },// 상점 메인
-        {
-        UIName.Shop_Buy,
-        (7,new Dictionary<int, string>
-        {
-            { 0, "[ 프렌들리 숍 - 구매 ]" },
-            { 1, "필요한 아이템을 얻을 수 있는 상점입니다."},
-            { 2, "[ 보유 골드 ]"},
-            { 3, "[ 아이템 목록 ]"},
-            { 4, "0. 나가기" },
-            { 5, "원하시는 행동을 선택해 주세요" },
-            { 6, ">>>" },
-        })
-        },// 상점 구매
-        {
-        UIName.Shop_Sell,
-        (7,new Dictionary<int, string>
-        {
-            { 0, "[ 프렌들리 숍 - 판매 ]" },
-            { 1, "필요한 아이템을 얻을 수 있는 상점입니다."},
-            { 2, "[ 아이템 목록 ]"},
-            { 3, "0. 나가기" },
-            { 4, "원하시는 행동을 선택해 주세요" },
-            { 5, ">>>" },
-        })
-        },// 상점 판매
-    };     
+            {
+                UIName.Intro_TextBox,
+                (7, new Dictionary<int, string>
+                {
+                    { 0, "반갑구나! 내 이름은 한 박사. 르탄몬 세계에 온 것을 환영한다!" },
+                    { 1, "먼저 네 이름을 알려주겠니?" },
+                    { 6, ">>>" },
+                })
+            }, // 인트로 텍스트 박스
+            {
+                UIName.Intro_SetStarting,
+                (7, new Dictionary<int, string>
+                {
+                    { 0, "멋진 이름이구나! 그럼 모험을 시작하기 전에 르탄몬을 하나 선물 해야 겠구나." },
+                    { 1, "어떤 르탄몬과 같이 가겠니?" },
+                    { 2, "1. 파이리  2. 꼬부기  3. 이상해씨" },
+                    { 6, ">>>" },
+                })
+            }, // 스타팅 선택
+            {
+                UIName.Main,
+                (8, new Dictionary<int, string>
+                {
+                    { 0, "1. 상태보기" },
+                    { 1, "2. 나영웅의 PC" },
+                    { 2, "3. 프랜들리 숍" },
+                    { 3, "4. 지역 선택" },
+                    { 4, "5. 퀘스트" },
+                    { 5, "6. 도감" },
+                    { 6, "7. 르탄몬 센터" },
+                    { 7, "8. 리셋(추후 삭제)" },
+                    { 8, "원하시는 행동을 선택해 주세요" },
+                    { 9, ">>>" },
+                })
+            }, // 메인
+            {
+                UIName.Status,
+                (13, new Dictionary<int, string>
+                {
+                    { 0, "[ 플레이어 정보 ]" },
+                    { 1, $"{PadRightWithKorean("이름", 15)}:" },
+                    { 2, $"{PadRightWithKorean("소지 골드", 15)}:" },
+                    { 3, "[ 사용중인 르탄몬 ]" },
+                    { 4, $"{PadRightWithKorean("이름", 15)}: " },
+                    { 5, $"{PadRightWithKorean("레벨", 15)}: " },
+                    { 6, $"{PadRightWithKorean("공격력", 15)}: " },
+                    { 7, $"{PadRightWithKorean("방어력", 15)}: " },
+                    { 8, $"{PadRightWithKorean("체력", 15)}: " },
+                    { 9, $"{PadRightWithKorean("마력", 15)}: " },
+                    { 10, $"{PadRightWithKorean("치명타 확률", 15)}: " },
+                    { 11, $"{PadRightWithKorean("치명타 대미지", 15)}: " },
+                    { 12, $"{PadRightWithKorean("회피", 15)}: " },
+                    { 13, "0. 나가기" },
+                    { 14, "원하시는 행동을 선택해 주세요 " },
+                    { 15, ">>> " },
+                })
+            }, // 스테이터스
+            {
+                UIName.Battle,
+                (0, new Dictionary<int, string>
+                {
+                    { 18, "0. 도망가기" },
+                    { 19, "1. 공격하기" },
+                    { 20, "2. 스킬사용" },
+                    { 21, "3. 포획하기" },
+                    { 22, "원하시는 행동을 선택해 주세요 " },
+                    { 23, ">>> " },
+                })
+            }, // 전투
+            {
+                UIName.Battle_AttackSelect,
+                (0, new Dictionary<int, string>
+                {
+                    { 18, "[ 공격 대상 지정]" },
+                    { 22, "원하시는 행동을 선택해 주세요 " },
+                    { 23, ">>> " },
+                })
+            }, // 전투
+            {
+                UIName.Battle_AttackEnemy,
+                (0, new Dictionary<int, string>
+                {
+                    { 22, "원하시는 행동을 선택해 주세요 " },
+                    { 23, ">>> " },
+                })
+            }, // 전투
+            {
+                UIName.Battle_Result,
+                (0, new Dictionary<int, string>
+                {
+                    { 0, "원하시는 행동을 선택해 주세요 " },
+                    { 1, ">>> " },
+                })
+            }, // 전투
+            {
+                UIName.Inventory,
+                (10, new Dictionary<int, string>
+                {
+                    { 0, "[ 나영웅의 PC ]" },
+                    { 1, "동행 르탄몬을 지정하고, 도구를 장착 할 수 있습니다." },
+                    { 2, "또한, 나무 열매를 통해 르탄몬을 회복 시킬 수 있습니다." },
+                    { 3, "[ 행동 목록 ]" },
+                    { 4, "0. 나가기" },
+                    { 5, "1. 르탄몬 박스 - 동행 관리" },
+                    { 6, "2. 도구 관리 - 아이템 관리" },
+                    { 7, "3. 나무 열매 - 회복" },
+                    { 8, "원하시는 행동을 선택해 주세요" },
+                    { 9, ">>>" },
+                })
+            }, // 인벤토리
+            {
+                UIName.SetPokectmon,
+                (10, new Dictionary<int, string>
+                {
+                    { 0, "[ 르탄몬 박스 - 동행 관리 ]" },
+                    { 1, "동행 르탄몬을 관리 할 수 있습니다." },
+                    { 2, "[ 보유 르탄몬 목록 ]" },
+                    { 3, "0. 나가기" },
+                    { 4, "1. 동행 르탄몬 변경" },
+                    { 5, "원하시는 행동을 선택해 주세요" },
+                    { 6, ">>>" },
+                })
+            }, // 포켓몬박스
+            {
+                UIName.SetPokectmon_Change,
+                (10, new Dictionary<int, string>
+                {
+                    { 0, "[ 르탄몬 박스 - 동행 변경 ]" },
+                    { 1, "동행 르탄몬을 변경할 수 있습니다." },
+                    { 2, "[ 보유 르탄몬 목록 ]" },
+                    { 3, "0. 나가기" },
+                    { 4, "원하시는 행동을 선택해 주세요" },
+                    { 5, ">>>" },
+                })
+            }, // 포켓몬박스 - 변경
+            {
+                UIName.Equipment,
+                (12, new Dictionary<int, string>
+                {
+                    { 0, "[ 도구 관리 - 아이템 관리 ]" },
+                    { 1, "원하는 도구를 장착합니다." },
+                    { 2, "[ 보유 도구 ]" },
+                    { 3, "0. 나가기" },
+                    { 4, "원하시는 행동을 선택해 주세요" },
+                    { 5, ">>>" },
+                })
+            }, // 도구함
+            {
+                UIName.Fruit,
+                (8, new Dictionary<int, string>
+                {
+                    { 0, "[ 나무 열매 - 회복 ]" },
+                    { 1, "0. 나가기" },
+                    { 2, "1. 열매 사용" },
+                    { 3, "원하시는 행동을 선택해 주세요" },
+                    { 4, ">>>" },
+                })
+            }, // 나무열매
+            {
+                UIName.Quest_Main,
+                (8, new Dictionary<int, string>
+                {
+                    { 0, "[ 퀘스트 ]" },
+                    { 1, "진행중인 퀘스트와 수락 가능한 퀘스트를 확인 할 수 있습니다." },
+                    { 2, "0. 나가기" },
+                    { 3, "1. 진행중인 퀘스트 목록" },
+                    { 4, "2. 수락 가능한 퀘스트 목록" },
+                    { 5, "원하시는 행동을 선택해 주세요" },
+                    { 6, ">>>" },
+                })
+            }, // 퀘스트 메인
+            {
+                UIName.Quest_List_Working,
+                (14, new Dictionary<int, string>
+                {
+                    { 0, "[ 진행중인 퀘스트 ]" },
+                    { 1, "0. 나가기" },
+                    { 2, "원하시는 행동을 선택해 주세요" },
+                    { 3, ">>>" },
+                })
+            }, // 퀘스트 목록 진행중
+            {
+                UIName.Quest_List_Acceptyet,
+                (14, new Dictionary<int, string>
+                {
+                    { 0, "[ 수락 가능한 퀘스트 ]" },
+                    { 1, "0. 나가기" },
+                    { 2, "원하시는 행동을 선택해 주세요" },
+                    { 3, ">>>" },
+                })
+            }, // 퀘스트 목록 미수락
+            {
+                UIName.Quest_Detail_Working,
+                (25, new Dictionary<int, string>
+                {
+                    { 0, "0. 나가기" },
+                    { 1, "1. 포기하기" },
+                    { 2, "원하시는 행동을 선택해 주세요" },
+                    { 3, ">>>" },
+                })
+            }, // 퀘스트 상세 진행중
+            {
+                UIName.Quest_Detail_Acceptyet,
+                (25, new Dictionary<int, string>
+                {
+                    { 0, "0. 나가기" },
+                    { 1, "1. 수락하기" },
+                    { 2, "원하시는 행동을 선택해 주세요" },
+                    { 3, ">>>" },
+                })
+            }, // 퀘스트 상세 받기전
+            {
+                UIName.Quest_Detail_Clear,
+                (25, new Dictionary<int, string>
+                {
+                    { 0, "0. 나가기" },
+                    { 1, "1. 보상받기" },
+                    { 2, "원하시는 행동을 선택해 주세요" },
+                    { 3, ">>>" },
+                })
+            }, // 퀘스트 상세 완료
+            {
+                UIName.Collection,
+                (5, new Dictionary<int, string>
+                {
+                    { 0, "[ 포켓몬 도감 ]" },
+                    { 1, "지금까지 수집한 포켓몬 목록을 확인 할 수 있습니다." },
+                    { 2, "0. 나가기" },
+                    { 3, "원하시는 행동을 선택해 주세요" },
+                    { 4, ">>>" },
+                })
+            }, // 도감
+            {
+                UIName.Location,
+                (17, new Dictionary<int, string>
+                {
+                    { 0, "[ 지역 이동 - 전투 스테이지 선택 ]" },
+                    { 1, "원하는 지역으로 떠나 야생 르탄몬을 만날 수 있습니다." },
+                    { 2, "[ 지역 목록 ]" },
+                    { 3, "0. 나가기" },
+                    { 4, "원하시는 행동을 선택해 주세요" },
+                    { 5, ">>>" },
+                })
+            }, // 지역 이동
+            {
+                UIName.Center,
+                (7, new Dictionary<int, string>
+                {
+                    { 0, "[ 르탄몬 센터 - 회복소 ]" },
+                    { 1, "상처입은 르탄몬을 회복할 수 있습니다." },
+                    { 2, "0. 나가기" },
+                    { 3, "1. 회복하기" },
+                    { 4, "원하시는 행동을 선택해 주세요" },
+                    { 5, ">>>" },
+                })
+            }, // 포켓몬 센터
+            {
+                UIName.Shop_Main,
+                (9, new Dictionary<int, string>
+                {
+                    { 0, "[ 프렌들리 숍 ]" },
+                    { 1, "필요한 아이템을 얻을 수 있는 상점입니다." },
+                    { 2, "[ 보유 골드 ]" },
+                    { 3, "[ 아이템 목록 ]" },
+                    { 4, "0. 나가기" },
+                    { 5, "1. 아이템 구매" },
+                    { 6, "2. 아이템 판매" },
+                    { 7, "원하시는 행동을 선택해 주세요" },
+                    { 8, ">>>" },
+                })
+            }, // 상점 메인
+            {
+                UIName.Shop_Buy,
+                (7, new Dictionary<int, string>
+                {
+                    { 0, "[ 프렌들리 숍 - 구매 ]" },
+                    { 1, "필요한 아이템을 얻을 수 있는 상점입니다." },
+                    { 2, "[ 보유 골드 ]" },
+                    { 3, "[ 아이템 목록 ]" },
+                    { 4, "0. 나가기" },
+                    { 5, "원하시는 행동을 선택해 주세요" },
+                    { 6, ">>>" },
+                })
+            }, // 상점 구매
+            {
+                UIName.Shop_Sell,
+                (7, new Dictionary<int, string>
+                {
+                    { 0, "[ 프렌들리 숍 - 판매 ]" },
+                    { 1, "필요한 아이템을 얻을 수 있는 상점입니다." },
+                    { 2, "[ 아이템 목록 ]" },
+                    { 3, "0. 나가기" },
+                    { 4, "원하시는 행동을 선택해 주세요" },
+                    { 5, ">>>" },
+                })
+            }, // 상점 판매
+        };
 
     public static readonly Dictionary<UIName, List<int>> UITableDic = new Dictionary<UIName, List<int>>
-        {        
+    {
         {
-            UIName.Intro_GameStart_1, new List<int> {1,0}
-        },// 인트로 1
+            UIName.Intro_GameStart_1, new List<int> { 1, 0 }
+        }, // 인트로 1
         {
-            UIName.Intro_GameStart_2, new List<int> {2,0}
-        },// 인트로 2
+            UIName.Intro_GameStart_2, new List<int> { 2, 0 }
+        }, // 인트로 2
         {
-            UIName.Intro_GameStart_3, new List<int>{3,0}
-        },// 인트로 3
+            UIName.Intro_GameStart_3, new List<int> { 3, 0 }
+        }, // 인트로 3
         {
-            UIName.Intro_GameStart_4, new List<int>{4,0}
-        },// 인트로 4
+            UIName.Intro_GameStart_4, new List<int> { 4, 0 }
+        }, // 인트로 4
         {
-            UIName.Intro_TextBox, new List<int>{5,6}
-        },// 인트로 텍스트 박스
+            UIName.Intro_TextBox, new List<int> { 5, 6 }
+        }, // 인트로 텍스트 박스
         {
-            UIName.Intro_SetStarting, new List<int>{ 999,101, 102, 103, 5,7,}
-        },// 스타팅 선택1
+            UIName.Intro_SetStarting, new List<int> { 999, 101, 102, 103, 5, 7, }
+        }, // 스타팅 선택1
         {
-            UIName.Main, new List<int>{8}
-        },// 스테이터스
+            UIName.Main, new List<int> { 8 }
+        }, // 스테이터스
         {
-            UIName.Status, new List<int>{9}
-        },// 메인
+            UIName.Status, new List<int> { 9 }
+        }, // 메인
         {
-            UIName.Battle, new List<int>{10}
-        },// 전투
+            UIName.Battle, new List<int> { 10 }
+        }, // 전투
         {
-            UIName.Battle_AttackSelect, new List<int>{25}
-        },// 전투
+            UIName.Battle_AttackSelect, new List<int> { 25 }
+        }, // 전투
         {
-            UIName.Battle_AttackEnemy, new List<int>{27}
-        },// 전투
+            UIName.Battle_AttackEnemy, new List<int> { 27 }
+        }, // 전투
         {
-            UIName.Battle_Result, new List<int>{29, 30 }
-        },// 전투
+            UIName.Battle_Result, new List<int> { 29, 30 }
+        }, // 전투
         {
-            UIName.Inventory, new List<int>{11}
-        },// 인벤토리
+            UIName.Inventory, new List<int> { 11 }
+        }, // 인벤토리
         {
-            UIName.SetPokectmon_Change, new List<int>{21}
-        },// 포켓몬변경
+            UIName.SetPokectmon_Change, new List<int> { 21 }
+        }, // 포켓몬변경
         {
-            UIName.SetPokectmon, new List<int>{12}
-        },// 포켓몬박스
+            UIName.SetPokectmon, new List<int> { 12 }
+        }, // 포켓몬박스
         {
-            UIName.Equipment, new List<int>{13}
-        },// 도구함
+            UIName.Equipment, new List<int> { 13 }
+        }, // 도구함
         {
-            UIName.Fruit, new List<int>{14}
-        },// 나무열매
+            UIName.Fruit, new List<int> { 14 }
+        }, // 나무열매
         {
-            UIName.Quest_Main, new List<int>{15}
-        },// 퀘스트 메인
+            UIName.Quest_Main, new List<int> { 15 }
+        }, // 퀘스트 메인
         {
-            UIName.Quest_List_Working, new List<int>{16}
-        },// 퀘스트 목록 수락
+            UIName.Quest_List_Working, new List<int> { 16 }
+        }, // 퀘스트 목록 수락
         {
-            UIName.Quest_List_Acceptyet, new List<int>{16}
-        },// 퀘스트 목록 미수락
+            UIName.Quest_List_Acceptyet, new List<int> { 16 }
+        }, // 퀘스트 목록 미수락
         {
-            UIName.Quest_Detail_Working, new List<int>{17}
-        },// 퀘스트  상세 수락
+            UIName.Quest_Detail_Working, new List<int> { 17 }
+        }, // 퀘스트  상세 수락
         {
-            UIName.Quest_Detail_Acceptyet, new List<int>{17}
-        },// 퀘스트 상세 미수락
+            UIName.Quest_Detail_Acceptyet, new List<int> { 17 }
+        }, // 퀘스트 상세 미수락
         {
-            UIName.Quest_Detail_Clear, new List<int>{17}
-        },// 퀘스트 상세 미수락
+            UIName.Quest_Detail_Clear, new List<int> { 17 }
+        }, // 퀘스트 상세 미수락
         {
-            UIName.Collection, new List<int>{18}
-        },// 도감
+            UIName.Collection, new List<int> { 18 }
+        }, // 도감
         {
-            UIName.Location, new List<int>{19}
-        },// 지역 이동
+            UIName.Location, new List<int> { 19 }
+        }, // 지역 이동
         {
-            UIName.Center, new List<int>{20}
-        },// 포켓몬 센터
+            UIName.Center, new List<int> { 20 }
+        }, // 포켓몬 센터
         {
-            UIName.Shop_Main, new List<int>{22}
-        },// 상점- 메인
+            UIName.Shop_Main, new List<int> { 22 }
+        }, // 상점- 메인
         {
-            UIName.Shop_Buy, new List<int>{23}
-        },// 상점- 구매
+            UIName.Shop_Buy, new List<int> { 23 }
+        }, // 상점- 구매
         {
-            UIName.Shop_Sell, new List<int>{24}
-        },// 상점- 구매
+            UIName.Shop_Sell, new List<int> { 24 }
+        }, // 상점- 구매
     };
 
     public static readonly Dictionary<int, UI> UIDic = new Dictionary<int, UI>
     {
         {
-
             0,
             new UI(
                 animTextPivot, originPivot,
@@ -456,9 +457,10 @@ public static class UITable
 =                                                               0. 게임 종료                 1. 게임 시작                                                                = 
 ========================================================================================================================================================================== "
             )
-        },// 인트로 텍스트 박스
-        {// 인트로 씬 1
-            
+        }, // 인트로 텍스트 박스
+        {
+            // 인트로 씬 1
+
             1,
             new UI(
                 originPivot, originPivot,
@@ -520,9 +522,8 @@ public static class UITable
  ...........................    ..................... =.  + =%#:+*=*+ :###%: %*##+%: #%#%* =%###  %+##+#. #++*-  *+*#=.*-+*=+. *+**:.*##%= -%**#: :#-  =##%@.=%##% :#+%#*%. 
  ...........................    ..................... =.  + =%#:+*=*+ :###%: %*##+%: #%#%* =%###  %+##+#. #++*-  *+*#=.*-+*=+. *+**:.*##%= -%**#: :#-  =##%@.=%##% :#+%#*%. "
             )
-        },// 인트로 씬 1
+        }, // 인트로 씬 1
         {
-
             2,
             new UI(
                 originPivot, originPivot,
@@ -584,9 +585,8 @@ public static class UITable
  ...........................    ..................... =.  + =%#:+*=*+ :###%: %*##+%: #%#%* =%###  %+##+#. #++*-  *+*#=.*-+*=+. *+**:.*##%= -%**#: :#-  =##%@.=%##% :#+%#*%. 
  ...........................    ..................... =.  + =%#:+*=*+ :###%: %*##+%: #%#%* =%###  %+##+#. #++*-  *+*#=.*-+*=+. *+**:.*##%= -%**#: :#-  =##%@.=%##% :#+%#*%. "
             )
-        },// 인트로 씬 2
+        }, // 인트로 씬 2
         {
-
             3,
             new UI(
                 originPivot, originPivot,
@@ -648,12 +648,11 @@ public static class UITable
  ...........................    ..................... =.  + =%#:+*=*+ :###%: %*##+%: #%#%* =%###  %+##+#. #++*-  *+*#=.*-+*=+. *+**:.*##%= -%**#: :#-  =##%@.=%##% :#+%#*%. 
  ...........................    ..................... =.  + =%#:+*=*+ :###%: %*##+%: #%#%* =%###  %+##+#. #++*-  *+*#=.*-+*=+. *+**:.*##%= -%**#: :#-  =##%@.=%##% :#+%#*%. "
             )
-        },// 인트로 씬 3
+        }, // 인트로 씬 3
         {
-
             4,
             new UI(
-               originPivot, originPivot,
+                originPivot, originPivot,
                 @"
  =====:=@#@=  -+-      :-=========-.          ..   .:::=====:        :------------==========-        :#@@@@@# ===-=@@ :  +@@@@: =:-@@@   :+* @@.-========================== 
  =====:@@@@@@@= .+*@@@+  ::   .--. .@@@%%%%%%%=.%=#@+%=:====*@@@@@@@@@@@@@@@@@@@@#- .-====== @@@@@***+      @  ==:.@= @@@@@@@@@@@  @@@ @@@@@ @@ -========================== 
@@ -712,9 +711,8 @@ public static class UITable
  ...........................    ..................... =.  + =%#:+*=*+ :###%: %*##+%: #%#%* =%###  %+##+#. #++*-  *+*#=.*-+*=+. *+**:.*##%= -%**#: :#-  =##%@.=%##% :#+%#*%. 
  ...........................    ..................... =.  + =%#:+*=*+ :###%: %*##+%: #%#%* =%###  %+##+#. #++*-  *+*#=.*-+*=+. *+**:.*##%= -%**#: :#-  =##%@.=%##% :#+%#*%. "
             )
-        },// 인트로 씬 4
+        }, // 인트로 씬 4
         {
-
             5,
             new UI(
                 introTextPivot, mainCusorPivot,
@@ -735,12 +733,11 @@ public static class UITable
  @@@                                                                                                                                                                   @@@   
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      "
             )
-        },// 인트로 텍스트 박스
+        }, // 인트로 텍스트 박스
         {
-
-           6,
+            6,
             new UI(
-           doctorPivot, originPivot,
+                doctorPivot, originPivot,
                 @"
                                                                           @@@@@@@@@@@@=                                                                                      /
                                                                         .  @        . :@@@@                                                                                  /
@@ -776,12 +773,11 @@ public static class UITable
                                                                         *@@ .=*%@@@  @@    %@@                                                                               /
                                                                           +@@%+=      :#@@#*                                                                                 /"
             )
-        },// 인트로 오박사
+        }, // 인트로 오박사
         {
-
-           7,
+            7,
             new UI(
-           doctorPivot, originPivot,
+                doctorPivot, originPivot,
                 @"
                                                                                                                                                                             
                                                                                                                                                                             
@@ -789,12 +785,11 @@ public static class UITable
                                                                                                                                                                             
                           [1. 파이리]                                         [2.꼬부기]                                         [3. 이상해씨]                             "
             )
-        },// 인트로 스타팅
+        }, // 인트로 스타팅
         {
-
-           8,
+            8,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
  @=:@@@@@% @                  : @ #@:  @ #@ *% @    @ @ *@@+%   * =@ %@:%   == @ %@@%@   @ #% =@@=   @@                                                                     
   @      = @ +% @ :@ #% @+=@* % # @# .@ @@@@@@#@@@@  @@@@@@@@@@@ @@@@@@*@@@@ @@@@@@@%@@@% @@@@@@*@@@@ *    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
@@ -856,20 +851,19 @@ public static class UITable
 @= @                                                                                                 @@= @@@@@......................................................-@@@    
 @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      "
             )
-        },// 메인씬 UI
+        }, // 메인씬 UI
         {
-
-           9,
+            9,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @   @ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@ 
  @@                                            @   @ @                                                                                                                  @ @ 
  @@                  @@@@@@=                 @ @   @ @                                                                                                                  @ @ 
  @@              @@@@@      @@@@@            @ @   @ @      {0}                                                                                                         @ @ 
  @@             @@@@        @   @@           @ @   @ @                                                                                                                  @ @ 
- @@            @: @@  @@@@@      @@          @ @   @ @      {1}            {13}                                                                                         @ @ 
- @@            @@@@@@@    @@@@@ @@           @ @   @ @      {2}            {14}                                                                                         @ @ 
+ @@            @: @@  @@@@@      @@          @ @   @ @      {1}            {16}                                                                                         @ @ 
+ @@            @@@@@@@    @@@@@ @@           @ @   @ @      {2}            {17}                                                                                         @ @ 
  @@            @@@@@@@@          @           @ @   @ @                                                                                                                  @ @ 
  @@        +@@@     @ @@@@@@@@@@@@@          @ @   @ @                                                                                                                  @ @ 
  @@           @@@@@   .       @              @ @   @ @                                                                                                                  @ @ 
@@ -889,15 +883,15 @@ public static class UITable
   @ @                                                  @ @ @@ @                                                                                                            @
   @ @                                                  @ @ @@ @       {3}                                                                                                  @
   @ @                                                  @ @ @@ @                                                                                                            @
-  @ @                                                  @ @ @@ @       {4}       {15}                                                                                       @
-  @ @                                                  @ @ @@ @       {5}       {16}                                                                                       @
-  @ @                                                  @ @ @@ @       {6}       {17}                                                                                       @
-  @ @                                                  @ @ @@ @       {7}       {18}                                                                                       @
-  @ @                                                  @ @ @@ @       {8}       {19}                                                                                       @
-  @ @                                                  @ @ @@ @       {9}       {20}                                                                                       @
-  @ @                                                  @ @ @@ @                                                                                                            @
-  @ @                                                  @ @ @@ @                                                                                                            @
-  @ @                                                  @ @ @@ @                                                                                                            @
+  @ @                                                  @ @ @@ @       {4}       {18}                                                                                       @
+  @ @                                                  @ @ @@ @       {5}       {19}                                                                                       @
+  @ @                                                  @ @ @@ @       {6}       {20}                                                                                       @
+  @ @                                                  @ @ @@ @       {7}       {21}                                                                                       @
+  @ @                                                  @ @ @@ @       {8}       {22}                                                                                       @
+  @ @                                                  @ @ @@ @       {9}       {23}                                                                                       @
+  @ @                                                  @ @ @@ @       {10}      {24}                                                                                       @
+  @ @                                                  @ @ @@ @       {11}      {25}                                                                                       @
+  @ @                                                  @ @ @@ @       {12}      {26}                                                                                       @
   @ @                                                  @ @ @@ @                                                                                                            @
   @ @                                                  @ @ @@ @                                                                                                            @
   @ @                                                  @ @ @@ @                                                                                                            @
@@ -913,22 +907,21 @@ public static class UITable
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.  
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+                                                                     
 @#.@                                                                                                 @@                                                                     
-@#.@     {10}                                                                                        @@                                                                     
-@#.@     {11}                                                                                        @@                                                                     
+@#.@     {13}                                                                                        @@                                                                     
+@#.@     {14}                                                                                        @@                                                                     
 @#.@                                                                                                 @@                                                                     
 @#.@                                                                                                 @@                                                                     
 @#.@                                                                                                 @@                                                                     
-@#.@     {12}                                                                                        @@                                                                     
+@#.@     {15}                                                                                        @@                                                                     
 @= @                                                                                                 @@                                                                     
 @= @                                                                                                 @@                                                                     
 @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+                                                                      "
             )
-        },// 스탯창 UI
+        }, // 스탯창 UI
         {
-
-           10,
+            10,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                                                                                                                                             
                 {6}                                                        {10}                                                      {14}                                   
@@ -990,12 +983,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @  
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@ "
             )
-        },// 배틀 UI
+        }, // 배틀 UI
         {
-
-           11,
+            11,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
              #@*::                            @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@   
@@ -1057,12 +1049,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 인벤토리 메인
+        }, // 인벤토리 메인
         {
-
-           12,
+            12,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
                @@@@@@@@@@@@                   @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@   
@@ -1081,9 +1072,9 @@ public static class UITable
   @@@++@@@+:-@@@@@@@@@@. *@%=:-@@@@@@@-=+@@:  @ @         {7}                                                                                                        :@ @   
  @@=#@@#=@@@@+     @:-*@@@+*@@@@     @%=+=@@  @ @         {8}                                                                                                        :@ @   
  @**%@@@@@@@@@     @==%@@@@@@@@@     @@@#%@@  @ @         {9}                                                                                                        :@ @   
- @@@@@       @@@+@@@@@@@       @@@@@@@ @@@@@  @ @                                                                                                                    :@ @   
- =             @@                .@.          @ @                                                                                                                    :@ @   
-  @::#*             @-.+@                 #%  @ @                                                                                                                    :@ @   
+ @@@@@       @@@+@@@@@@@       @@@@@@@ @@@@@  @ @         {10}                                                                                                       :@ @   
+ =             @@                .@.          @ @         {11}                                                                                                       :@ @   
+  @::#*             @-.+@                 #%  @ @         {12}                                                                                                       :@ @   
   -@=:#@:            @  =@#              @*   @ @                                                                                                                    :@ @   
     @@+-#@@         *@@@*-*@@=         @@     @ @                                                                                                                    :@ @   
       @@@@@@@@@@@@@@@   @@@@%@@@@@@@@@@       @ @         {3}                                                                                                        :@ @   
@@ -1124,12 +1115,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 인벤토리 포켓몬
+        }, // 인벤토리 포켓몬
         {
-
-           13,
+            13,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
              @@@@############@@@@             @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@   
@@ -1191,12 +1181,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 인벤토리 도구
+        }, // 인벤토리 도구
         {
-
-           14,
+            14,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
           @@@@                                @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@            
@@ -1258,12 +1247,12 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 인벤토리 열매
+        }, // 인벤토리 열매
         {
             // 퀘스트
-           15,
+            15,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
                                               @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@
@@ -1325,12 +1314,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 퀘스트_메인
+        }, // 퀘스트_메인
         {
-
-           16,
+            16,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
                                               @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@
@@ -1392,12 +1380,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 퀘스트 목록 
+        }, // 퀘스트 목록 
         {
-
-           17,
+            17,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
                                               @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@
@@ -1459,12 +1446,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 퀘스트 상세
+        }, // 퀘스트 상세
         {
-
-           18,
+            18,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                    *=:.                          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
            -#++-: .--=+***#+*                  @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@
@@ -1526,12 +1512,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 포켓몬 도감
+        }, // 포켓몬 도감
         {
-
-           19,
+            19,
             new UI(
-           originPivot, new Tuple<int, int>(8,3),
+                originPivot, new Tuple<int, int>(8, 3),
                 @"
                                                                                                              =-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=     
   .-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@* -@                                                               @ @@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
@@ -1593,12 +1578,11 @@ public static class UITable
 @= @                                                                                                 @@= @@@@@......................................................-@@@   
 @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   "
             )
-        },// 지역 이동
+        }, // 지역 이동
         {
-
-           20,
+            20,
             new UI(
-           originPivot, new Tuple<int, int>(8,3),
+                originPivot, new Tuple<int, int>(8, 3),
                 @"
  @@@*    =-    :-        :.  . :*   -@@@@%. :@**@+=%:    :.  -##@#-#%+=+++=-----------=++++++++++++++++++++++++++++++++++++++++=%@@        -*#+++++++++++++++++++++++++++++ 
  +    #@@@@#@@@@@@@@@@@@@@@@@@#@@@@*    =@@+-%+#@*      -  :+.-+@#=#@#%%#*+#**--.-+**#+*#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#*@@@        *@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -1660,12 +1644,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 포켓몬 센터
+        }, // 포켓몬 센터
         {
-
-           21,
+            21,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
                @@@@@@@@@@@@                   @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@   
@@ -1727,12 +1710,11 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-        },// 인벤토리 포켓몬변경
+        }, // 인벤토리 포켓몬변경
         {
-
-           22,
+            22,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                       =@@@@@@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
                      @@+*:    @@+             @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@   
@@ -1794,13 +1776,13 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-{
-            } },// 상점_ 메인
+            {
+            }
+        }, // 상점_ 메인
         {
-
-           23,
+            23,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                       =@@@@@@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
                      @@+*:    @@+             @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@   
@@ -1862,13 +1844,13 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-{
-            } },// 상점_ 구매
+            {
+            }
+        }, // 상점_ 구매
         {
-
-           24,
+            24,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                       =@@@@@@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
                      @@+*:    @@+             @  %#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%  @@   
@@ -1930,13 +1912,13 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @ 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@"
             )
-{
-            } },// 상점_ 판매
+            {
+            }
+        }, // 상점_ 판매
         {
-
-           25,
+            25,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                                                                                                                                             
                 {6}                                                        {10}                                                      {14}                                   
@@ -1998,13 +1980,12 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @  
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@ "
             )
-        },// 배틀 UI
+        }, // 배틀 UI
         {
-
-           26,
+            26,
             new UI(
-           originPivot, baseCusorPivot,
-            @" 
+                originPivot, baseCusorPivot,
+                @" 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@  
                                                                                                                                                                                              
                            {24}                                                                                                                                                              
@@ -2016,13 +1997,12 @@ public static class UITable
                                                                                                                                                                                           
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@ "
             )
-        },// 배틀 UI _ 상단 텍스트
+        }, // 배틀 UI _ 상단 텍스트
         {
-
-           28,
+            28,
             new UI(
-           originPivot, baseCusorPivot,
-            @" 
+                originPivot, baseCusorPivot,
+                @" 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@  
                                                                                                                                                                             
                            {24}                                                                                                                                                              
@@ -2044,12 +2024,11 @@ public static class UITable
                                                                                                                                                                             
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@ "
             )
-        },// 배틀 UI _ 상단 텍스트
+        }, // 배틀 UI _ 상단 텍스트
         {
-
-           29,
+            29,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                                                                                                                                             
                                                 
@@ -2111,13 +2090,12 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @  
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@ "
             )
-        },// 배틀 UI
+        }, // 배틀 UI
         {
-
-           30,
+            30,
             new UI(
-           originPivot, baseCusorPivot,
-            @" 
+                originPivot, baseCusorPivot,
+                @" 
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@  
                                                                                                                                                                             
                            {2}                                                                                                                                                              
@@ -2139,12 +2117,11 @@ public static class UITable
                                                                                                                                                                             
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@ "
             )
-        },// 배틀 UI _ 상단 텍스트
+        }, // 배틀 UI _ 상단 텍스트
         {
-
-           27,
+            27,
             new UI(
-           originPivot, baseCusorPivot,
+                originPivot, baseCusorPivot,
                 @"
                                                                                                                                                                             
                 {6}                                                        {10}                                                      {14}                                   
@@ -2206,13 +2183,13 @@ public static class UITable
  @*-@                                                                                                                                                                 @# @  
  @@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ %@ "
             )
-        },// 배틀 UI
+        }, // 배틀 UI
 
         // 아래는 포켓몬 일러스트입니다.
         {
             100,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
 @@+@                                     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  @  -@                       @@@@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2236,11 +2213,11 @@ public static class UITable
        @@          @*.                   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 100 피카츄
+        }, // 100 피카츄
         {
             101,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @"
           @@@@@@                         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         #@++:-+*@@                       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2263,12 +2240,12 @@ public static class UITable
        @%*+:*@@@@@+@@@@#+-@@+=           $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      :@@@@@@@-        @*==-              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      #@@.             @@@@@@@            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 101 파이리
+            )
+        }, // 101 파이리
         {
             102,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
              @@@@@@                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
            %@*-**+#@@*                   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2292,11 +2269,11 @@ public static class UITable
     +@@*@@@@:      :+ . :=@#@@@@@@@@:    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        @@:          @@@@@%@              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 102 꼬부기
+        }, // 102 꼬부기
         {
             103,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                                          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                @  *      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2320,11 +2297,11 @@ public static class UITable
        @@@@@@-          #@%  @@@**@@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        + :*       @@@@@@@     +@@@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 103 이상해씨
+        }, // 103 이상해씨
         {
             104,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
         - @@@@@@                         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
       @@#.--#@@                          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2347,11 +2324,11 @@ public static class UITable
       -.*# :@@@#  =@@         .          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     @#@@@@@@@#-@@@@#@@@@@                $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 104 구구    
+        }, // 104 구구    
         {
             105,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                                 @        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                 @        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2376,11 +2353,11 @@ public static class UITable
                       *@@@@@@@@@@@@@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 105 미뇽
+        }, // 105 미뇽
         {
             106,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                       @@@-               $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                    @@@@%                 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2404,11 +2381,11 @@ public static class UITable
             +@@@@@@@       ##=#@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                           +@@@@+         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 106 라이츄
+        }, // 106 라이츄
         {
             107,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                 @@@@                     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          @@@@@@. =@                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2432,11 +2409,11 @@ public static class UITable
   @@@@ @@@#+   -@  * -@                  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               @@+@ @ @                   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 107 리자드
+        }, // 107 리자드
         {
             108,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
          #              =- --            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      +@ -#            :#-  @             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2460,11 +2437,11 @@ public static class UITable
        @@@@@@@           @@@@%*#@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          @@*@            =@@@@@@@@       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 108 어니부기
+        }, // 108 어니부기
         {
             109,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                  @:                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
              :@@.%=#%@       @@          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2488,11 +2465,11 @@ public static class UITable
          @@@@@@      @  +@@@    @@@@@@   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                       @@@  @             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 109 이상해풀
+        }, // 109 이상해풀
         {
             110,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
       *@                          -@@:@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      = .#                     :@@@  .. :$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2516,11 +2493,11 @@ public static class UITable
                 @*  #@-   @             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                  @@#@#@@%#              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 110 피죤
+        }, // 110 피죤
         {
             111,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
              =#         -*             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               @%#       .+@            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2544,11 +2521,11 @@ public static class UITable
              *                  .+%@@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               @@@#==:    *@@@@@@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 111 신룡
+        }, // 111 신룡
         {
             112,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
            .@@@@@@     *@ @@@@:         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        @@@@@@  @@@.      @@    @@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2572,11 +2549,11 @@ public static class UITable
            @ @@+@+@@@@@@@@@@@@@  @@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         @@@ @@:%@@%       =- @. @       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 112 리자몽
+        }, // 112 리자몽
         {
             113,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
        *@         -@                     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     @  @@@@@@@@@@@ @@                    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2600,11 +2577,11 @@ public static class UITable
                          @@@@@@@@@ -@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                            @ @@   @@@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 113 거북왕
+        }, // 113 거북왕
         {
             114,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
           -@@ :@@=@@@@@@@@@@@@          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         @@@@@@ @  @@@@ @@# @  @@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2627,11 +2604,11 @@ public static class UITable
    @  @                   #@@@= @@@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                               -@@       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 114 이상해꽃
+        }, // 114 이상해꽃
         {
             115,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
 @@@@@.                       @@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  %    @@@@@@                @@=         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2655,11 +2632,11 @@ public static class UITable
         :@@@@@@%  %:@@                  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         -@@@@@@@@@@@@@                  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 115 피툔투
+        }, // 115 피툔투
         {
             116,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
   -@:            +*. -@@:               $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   @-  -@%  @@@@@@                       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2683,11 +2660,11 @@ public static class UITable
                      @=   *@            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      @@@@@@@            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 116 망나뇽
+        }, // 116 망나뇽
         {
             117,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
               @@@        @@              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
              @@@@@@@@@@@@@@@.            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2711,11 +2688,11 @@ public static class UITable
     @     @@@@@@@@@@@@@@@@@@@@@  @       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     :@*@%@                @@@@@@@@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 117 잠만보
+        }, // 117 잠만보
         {
             118,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                           @@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                          @@@@       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2739,11 +2716,11 @@ public static class UITable
       @@@@@+-*@@@@@                 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      @@#    @* #                    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 118 파치리스
+        }, // 118 파치리스
         {
             119,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
   @@@                     @@@@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  @@@*@                 @@@%@* @=     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2767,11 +2744,11 @@ public static class UITable
          @@@@ -                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          @@   @-                     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 119 프리져
+        }, // 119 프리져
         {
             120,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
  @@@@.  @@@                               $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  @.  @@@@@ @@@          @@@               $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2795,11 +2772,11 @@ public static class UITable
   @@@#                     @@ =@ @@@   @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                              @@@    @@@@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 120 썬더
+        }, // 120 썬더
         {
             121,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                         .   =@@@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        +:@@@@ @%=@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2821,11 +2798,11 @@ public static class UITable
        . @@     @@@@=                    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                 @ @                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             )
-            }, // 121 파이어
+        }, // 121 파이어
         {
             122,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                 :@@@@@@@@@                $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
             #@@@@@+%@ @@@@@@@=            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2848,21 +2825,15 @@ public static class UITable
 @@.               @@@@     :%@@       @@@%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 @@@@@@@          :@@@    @@@@@        @@@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   @@@@@            @@@   @@@@@@      @@@@@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-           )
-            }, // 122 차곡차곡
-
-
-
-
-
-
+            )
+        }, // 122 차곡차곡
 
 
         //플레이어가 사용할때의 모습
         {
             200,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                                    @@@@              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                    @@@@@@            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2880,12 +2851,12 @@ public static class UITable
        @@@@        +  @   %@-@@@@@@@@@@@        @@   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
    @@@@            =  @   @@      =@#            @@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   #@            @@    @   @                   +@@ +@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 200 피카츄
+            )
+        }, // 200 피카츄
         {
             201,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
           + *@+:-                   @@@@@+            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          @ #=   @                =@@     @@@          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2903,12 +2874,12 @@ public static class UITable
        @=  @          @#- :==---::.      +@           $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
       ## . @         %- .::::::.    @@.:::=@@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
       @+:- @        @@=          #@@@.@:    *@:       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 201 파이리
+            )
+        }, // 201 파이리
         {
             202,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                                 @@@@@@@@@@@           $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                              #@@       =   +@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2926,12 +2897,12 @@ public static class UITable
                     ::@::=:@@ @ %    @+%@ @@@@@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                     @ @@      @  +@@@#= @  *@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                     @@   @@@@   @       @   @         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 202 꼬북이
+            )
+        }, // 202 꼬북이
         {
             203,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                      @@@      @@@@         .@@@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                 -@@@@  *@@@ @@=   @@@@@@@@@#.  @@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2949,12 +2920,12 @@ public static class UITable
              @@@@  ## :=* :   #%@@@@@%       @@@  @   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                @@@@@*@@.-.@@@@@@@@     %@@#:   @@ @   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                     @@@@@@@@      .:=**- .+@@%-@@@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 203 이상해씨
+            )
+        }, // 203 이상해씨
         {
             204,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                          @@@@                       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        ..@@@@    .#                 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2972,12 +2943,12 @@ public static class UITable
                  @@=#%%#####***#######+#@    @@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               @@@..+#%#####+=*=+#%#####@@    @@%    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                @@=@%%%%%%#=:@@@@%@%@%#*: @@% @@@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 204 구구
+            )
+        }, // 204 구구
         {
             205,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                                @%.                  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                 = *#@@@@@@@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -2995,12 +2966,12 @@ public static class UITable
                                     @-:.- :@.#      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                   *@@@@@@@@%        @*-::: ==       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               +@@@%+===+==*@@@@@@@@*@*==--:++ @     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 205 미뇽
+            )
+        }, // 205 미뇽
         {
             206,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                         @@@@@@                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        @@@@@@@@.  @@                $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3018,12 +2989,12 @@ public static class UITable
                       @@%.*##########%@@@@@@@@@@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      @@@@  -*##########%@@@@%   @*  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      @@@@@@    -*###########@@  @+  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 206 라이츄
+            )
+        }, // 206 라이츄
         {
             207,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                               @@                   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                              +@@@@@@               $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3041,12 +3012,12 @@ public static class UITable
          @ +@@          %.-*#+*%#@@@@@@* @+:++@@   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          @ *@@         @@%**+#@%#@  @@@@@@-@@@@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          @   -@       @          - .  = .  *       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 207 리자드
+            )
+        }, // 207 리자드
         {
             208,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                    #             %@                $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                    @  @@        @- @               $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3064,12 +3035,12 @@ public static class UITable
         #@@@    @@:#  @@  =@@@@  @@ :@@@@@@@@@  @  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        @@   @@@.@  :. @@     .@@+  @@           @  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        @        @:::  @ @=#:*++@@@ @* -**@*  :@@@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 208 어니부기
+            )
+        }, // 208 어니부기
         {
             209,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                      % @@@@@                       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      @@@@@@@%@@                    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3087,12 +3058,12 @@ public static class UITable
            @@      @@  @@@-:@@@@-   .@#@@@*@       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
             @@@ @+ @@@@@@:  :@@ :+    @@   #@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               @ +@@:  @@@= .  :@=@@@  @@    @@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 209 이상해풀
+            )
+        }, // 209 이상해풀
         {
             210,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
         @                                          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
       @@  @@@                                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3110,12 +3081,12 @@ public static class UITable
                 @@    -@@#########@@.   @@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               @@@  @@@@@######@@@@@    @@          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
            @@@   ..                                $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 210  피죤
+            )
+        }, // 210  피죤
         {
             211,
             new UI(
-            originPivot, originPivot,
+                originPivot, originPivot,
                 @" 
                       @+@    @+:                   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                       @@@@   @@#                   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3133,13 +3104,13 @@ public static class UITable
              @@@@%:+@@@      @+:@@ @    @ #@       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
            @@    @@@@. +@@@@@@=*%@ @  @@ -@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
            @@@@:    *@@@@       . @ @@ -@@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 211  신룡
+            )
+        }, // 211  신룡
         {
             212,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
                                      @@@@@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                    @@  =: @@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                              @@  @@@@#@@@@ @@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3156,13 +3127,13 @@ public static class UITable
                     .@.  @@##- @+  -@@.@@@@@      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                    @@  +@@*.: @@ - %@ + *@.@%     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                   @:  @@=  =@@    :@@ @**#+ @     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 212  리자몽
+            )
+        }, // 212  리자몽
         {
             213,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
                              @@@=                 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                          @@@@+=:@@@@              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                     @@ @@          =@@@@@@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3179,13 +3150,13 @@ public static class UITable
         @@@       @@@@-   @%  @.    %@@@   .@@ @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
       @@ @    ::    @   :*=:   @@@@@@  @ =@@   @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      @%  @ @@@@%+.- @@ :% .-.@=     @+ -@   @@ @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 213  거북왕
+            )
+        }, // 213  거북왕
         {
             214,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
             +@@@@:@@@@ @ @@ @@@  @@@              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
           #@@  @@@@@ @ @@@@@@ @@@@@@@@@           $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         @@@-@@    @@@       %@@@%     @@@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3202,13 +3173,13 @@ public static class UITable
     @+:=#@@@@@@@@@+=*=******+===#      @*.=%@@.@@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     @@-=@       .:=+*+===++-:*@=#@@    @@ *@+=@@@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     @@:==@@-*..+****+=:@%-. @+-=+#@+   @@%-@-+@@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 214  이상해꽃 
+            )
+        }, // 214  이상해꽃 
         {
             215,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
                    .  . @@@@@@@@@@@@@            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                    @@@ @ @@       @@@@@@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                  @@     @   @@@@@:  @  @         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3225,13 +3196,13 @@ public static class UITable
            @@@  @@ @@@       @@@+@    @@ @       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                @  @             @%    %@*@       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
            @@  @@=  #@@@@@%      @     .@@       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 215  피죤투 
+            )
+        }, // 215  피죤투 
         {
             216,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
                @@@                       @@@@   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                 @ @@  @@@@@          .     @@ @ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                   @@@@@  @:@ @+@  @@@@@=@*   %@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3248,13 +3219,13 @@ public static class UITable
           @@:@  @@ ==========% *      @- % .@   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          @@ =##  @ :=========@  @    @% @*=-@@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          @ -=+@  @@-  :-=====*#  @@@@   @*== @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 216  망나뇽 
+            )
+        }, // 216  망나뇽 
         {
             217,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
                     @@@@           @@@@@         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                    @@  *@@@@@@@=@@@:  =@@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                    @@@@*       @@   @@#@-        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3271,13 +3242,13 @@ public static class UITable
       @@@ -@@@%#########################*+:+@@   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      @@++@@@%##############################+-@@@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      @:-##########################****######*-.@@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 217  잠만보 
+            )
+        }, // 217  잠만보 
         {
             218,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
                 @-                              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                @%@                              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                @.#@                             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3294,13 +3265,13 @@ public static class UITable
            @@+.   *@@   ..  @ @@=.  ...  -@@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               @.       ...  @  =@@*     @@@     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                @   ........ #-   @+@  @@=       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 218  파치리스 
+            )
+        }, // 218  파치리스 
         {
             219,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
               @@@@@@%                          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                 @@* :-@@ @@@                   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
              @@@= @@#%%* @@:%@                 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3317,13 +3288,13 @@ public static class UITable
              .@@   *-----:%@@    @@            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
             @@    *+--:..  : @@@@@-            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
           @@     %#-   -+   =@@@   @@@@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 219  프리져 
+            )
+        }, // 219  프리져 
         {
             220,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
               +@@                                $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
               =@ @@                              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        @@@@@@      @                   @@        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3340,13 +3311,13 @@ public static class UITable
         @@+: @:   @   @ @@#@  @@       .     @@@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
             @@    @  @  @ .@@@            @@@@   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
            @@      @:@ @@ @@           @@@@@@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 220  썬더 
+            )
+        }, // 220  썬더 
         {
             221,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
           @@@@       @@@@                        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
           @@@@@@@@@@ @@@@@@@                     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
           @@@@@@@@@@@@@@@@@@@@@@                 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3363,13 +3334,13 @@ public static class UITable
                @@@- .@@      @         @@@@@@@   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
              -@@@@ @@=      @ @@@@@              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
            +@@@   @@      @@@@    @@@@           $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 221  파이어 
+            )
+        }, // 221  파이어 
         {
             222,
             new UI(
-            originPivot, originPivot,
-                      @" 
+                originPivot, originPivot,
+                @" 
         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         @@=     . .:*=:.@*-+:: @#.@%@-@@@@@@@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         @@@@---=%  .  #.     *@-: @% -@##@ @@    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3386,15 +3357,14 @@ public static class UITable
       @=-@@::: @.=:.:  =@ :-  @=   -@ :-  @  @@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      @@+=#=    %       *      @ -- +#  @  -  @@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      @@@@@*@@@%@@@%@@#%@*@%%%=@@@+-@@@##@@@@#@@  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                 )
-            }, // 222  차곡차곡
+            )
+        }, // 222  차곡차곡
 
 
         {
-
             999,
             new UI(
-           originPivot, originPivot,
+                originPivot, originPivot,
                 @"
                                                                                                                                                                             
                                                                                                                                                                             
@@ -3422,7 +3392,6 @@ public static class UITable
     };
 }
 
-
 public class UI : IUIBase
 {
     public Tuple<int, int> Pivot { get; }
@@ -3437,4 +3406,3 @@ public class UI : IUIBase
         UiString = uiString;
     }
 }
-

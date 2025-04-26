@@ -9,7 +9,7 @@ public class MonsterBoxAction : PagedListActionBase
         PrevAction = _prevAction;
         SubActionMap = new Dictionary<int, IAction>
         {
-            { 1, new MonsterChangeAction(this) }
+            { 101, new TestMonsterModify(this) }
         };
     }
 
@@ -23,7 +23,7 @@ public class MonsterBoxAction : PagedListActionBase
         MaxPage = (int)Math.Ceiling(totalMonster / (float)VIEW_COUNT);
         int pageStart = Page * VIEW_COUNT;
         int pageEnd = Math.Min(pageStart + VIEW_COUNT, totalMonster);
-
+        int index = 1;
         for (int i = pageStart; i < pageEnd; i++)
         {
             var m = monsters[i];
@@ -35,28 +35,32 @@ public class MonsterBoxAction : PagedListActionBase
             var itemName = m.Item == null ? "없음" : m.Item.Name;
 
             output.Add($"{isEquipped}{name,-10} | LV {level} | HP {hp} / MP {mp} | 장착 중인 도구: {itemName} |");
+            SubActionMap[index++] = new ChangeMonsterSelectAction(m, this);
         }
 
         return output;
     }
+
     public override void OnExcute()
     {
-        base.OnExcute();
-
-        int LineCount = 7;
         var lines = GetPageContent();
+        base.OnExcute();
+        int LineCount = 7;
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
         for (int i = 0; i < lines.Count; i++)
         {
-            lineDic.Add(LineCount + i, lines[i]);
+            lineDic.Add(LineCount++, lines[i]);
         }
-        if (Page > 0)
-            lineDic.Add(8, "-1. 이전 페이지");
-        if (Page < MaxPage - 1)
-            lineDic.Add(9, "-2. 다음 페이지");
-        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.SetPokectmon, null, (5, lineDic)));
 
+        lineDic[10] = "";
+        // if (Page > 0)
+        lineDic[11] = Page > 0 ? "-1. 이전 페이지" : "";
+        // if (Page < MaxPage - 1)
+        lineDic[12] = Page < MaxPage - 1 ? "-2. 다음 페이지" : "";
+        SelectAndRunAction(SubActionMap, isViewSubMap,
+            () => UiManager.UIUpdater(UIName.SetPokectmon, null, (5, lineDic)));
     }
+
     protected override PagedListActionBase CreateNew(int newPage)
     {
         return new MonsterBoxAction(PrevAction, newPage);

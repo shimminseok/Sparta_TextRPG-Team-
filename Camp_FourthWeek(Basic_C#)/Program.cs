@@ -20,6 +20,7 @@
                 currentAction = (currentAction as ActionBase)?.NextAction;
             }
 
+            Console.ReadKey();
             GameManager.Instance.SaveGame();
         }
     }

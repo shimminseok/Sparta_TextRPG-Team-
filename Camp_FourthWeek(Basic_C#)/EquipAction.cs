@@ -8,6 +8,7 @@ public class EquipAction : ActionBase
     {
         item = _item;
         PrevAction = _prevAction;
+        NextAction = _prevAction;
     }
 
     public override string Name => $"{item.Name} 아이템 {(item.IsEquipment ? "해제" : "장착")}";
@@ -16,8 +17,6 @@ public class EquipAction : ActionBase
     {
         var player = PlayerInfo;
         var currentMonster = player.Monster;
-        var message = string.Empty;
-
         if (currentMonster.Item == item)
         {
             EquipmentManager.UnequipItem(currentMonster);
@@ -26,8 +25,5 @@ public class EquipAction : ActionBase
         {
             EquipmentManager.EquipmentItem(item);
         }
-
-        Console.WriteLine(message);
-        PrevAction?.Execute();
     }
 }

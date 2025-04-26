@@ -30,7 +30,10 @@ public abstract partial class ActionBase : IAction
     {
         Console.WriteLine();
         if (_actionMap.Count == 0)
+        {
             return;
+        }
+
         if (_isView)
         {
             foreach (var action in _actionMap)
