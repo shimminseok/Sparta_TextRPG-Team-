@@ -20,8 +20,6 @@ public class EquipItemManagementAction : PagedListActionBase
         MaxPage = (int)Math.Ceiling(InventoryManager.Instance.Inventory.Count / (float)VIEW_COUNT);
         var output = new List<string>();
 
-        //output.Add("보유 중인 도구를 장착시킬 수 있습니다.");
-      //  output.Add("[장착 중인 도구]");
 
         var inventory = InventoryManager.Instance.Inventory;
         var currentMonster = PlayerInfo.Monster;
@@ -72,22 +70,25 @@ public class EquipItemManagementAction : PagedListActionBase
 
     public override void OnExcute()
     {
-        base.OnExcute();
         SubActionMap.Clear();
         var lines = GetPageContent();
+        base.OnExcute();
         int LineCount = 6;
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
         for (int i = 0; i < lines.Count; i++)
         {
-            lineDic.Add(LineCount + i, lines[i]);
+            lineDic.Add(LineCount++, lines[i]);
         }
-        if (Page > 0)
-            lineDic.Add(9, "-1. 이전 페이지");
-        if (Page < MaxPage - 1)
-            lineDic.Add(10, "-2. 다음 페이지");
+
+        for (int i = LineCount; i < 9; i++)
+        {
+            lineDic.Add(LineCount++, "");
+        }
+
+        lineDic[9] = Page > 0 ? "-1. 이전 페이지" : "";
+        lineDic[10] = Page < MaxPage - 1 ? "-2. 다음 페이지" : "";
 
         SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Equipment, null, (5, lineDic)));
-
     }
 
     protected override PagedListActionBase CreateNew(int newPage)

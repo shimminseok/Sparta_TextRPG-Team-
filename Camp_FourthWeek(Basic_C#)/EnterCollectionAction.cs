@@ -50,8 +50,10 @@ public class EnterCollectionAction : PagedListActionBase
 
         return output;
     }
+
     public override void OnExcute()
-    {        var lines = GetPageContent();
+    {
+        var lines = GetPageContent();
         base.OnExcute();
 
         int LineCount = 5;
@@ -59,14 +61,19 @@ public class EnterCollectionAction : PagedListActionBase
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
         for (int i = 0; i < lines.Count; i++)
         {
-            lineDic.Add(LineCount + i, lines[i]);
+            lineDic.Add(LineCount++, lines[i]);
         }
-        if (Page > 0)
-            lineDic.Add(8, "-1. 이전 페이지");
-        if (Page < MaxPage - 1)
-            lineDic.Add(9, "-2. 다음 페이지");
-        SelectAndRunAction(SubActionMap, isViewSubMap, () => UiManager.UIUpdater(UIName.Collection, null, (5, lineDic)));
 
+        for (int i = LineCount; i < 8; i++)
+        {
+            lineDic.Add(LineCount++, "");
+        }
+
+        lineDic[8] = Page > 0 ? "-1. 이전 페이지" : "";
+        lineDic[9] = Page < MaxPage - 1 ? "-2. 다음 페이지" : "";
+
+        SelectAndRunAction(SubActionMap, isViewSubMap,
+            () => UiManager.UIUpdater(UIName.Collection, null, (5, lineDic)));
     }
 
     /*public override void OnExcute()
