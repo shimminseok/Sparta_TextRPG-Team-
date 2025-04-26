@@ -70,6 +70,6 @@ public class SelectMonsterAction : ActionBase
     public override void OnExcute()
     {
         GameManager.Instance.Init(Monster, CharacterName);
-        NextAction = new MainMenuAction();
+        NextAction = new ActionMainMenu();
     }
 }

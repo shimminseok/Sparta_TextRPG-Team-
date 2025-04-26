@@ -78,7 +78,7 @@ public class GameManager
             {
                 loadData = new SaveData(data);
                 Init(new Monster(loadData.EquipMonster.Key), loadData.Name);
-                var mainAction = new MainMenuAction();
+                var mainAction = new ActionMainMenu();
                 return mainAction;
             }
         }

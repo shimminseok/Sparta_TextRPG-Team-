@@ -281,7 +281,7 @@ public class AttackSelectAction : ActionBase
                 num = 20;
                 monsterIconList = new List<int>();
 
-                NextAction = new ResultAction(true, new MainMenuAction());
+                NextAction = new ResultAction(true, new ActionMainMenu());
                 return;
             }
 
@@ -397,7 +397,7 @@ public class EnemyAttackAction : AttackActionBase
             uiPivotDic.Clear();
             monsterIconList.Clear();
             battleMonsters.Clear();
-            NextAction = new ResultAction(false, new MainMenuAction());
+            NextAction = new ResultAction(false, new ActionMainMenu());
             return;
         }
 
@@ -458,7 +458,7 @@ public class ResultAction : ActionBase
             AttackActionBase.battleLogDic[i] = "";
         }
 
-        SubActionMap[1] = new MainMenuAction();
+        SubActionMap[1] = new ActionMainMenu();
 
         SelectAndRunAction(SubActionMap, false,
             () => UiManager.UIUpdater(UIName.Battle_Result,
@@ -679,7 +679,7 @@ public class CatchAction : AttackActionBase
             uiPivotDic.Clear();
             monsterIconList.Clear();
             battleLogDic.Clear();
-            NextAction = new ResultAction(true, new MainMenuAction());
+            NextAction = new ResultAction(true, new ActionMainMenu());
         }
         else
         {

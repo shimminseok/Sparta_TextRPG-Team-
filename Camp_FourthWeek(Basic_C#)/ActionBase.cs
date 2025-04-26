@@ -54,7 +54,7 @@ public abstract partial class ActionBase : IAction
 
                 if (id == 0)
                 {
-                    if (PrevAction == null && this is MainMenuAction)
+                    if (PrevAction == null && this is ActionMainMenu)
                     {
                         NextAction = null;
                     }
