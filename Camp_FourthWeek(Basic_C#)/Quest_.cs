@@ -47,12 +47,14 @@ public class ActiveQuestAction : ActionBase
             SubActionMap[index++] = new DisplayQuestInfoAction(quest, this);
             lineDic.Add(LineCount + index - 1, $"{index - 1}. {quest.QuestName}");
         }
+
         for (int i = LineCount + index; i < 14; i++)
         {
             lineDic.Add(i, "");
         }
 
-        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_List_Working, null, (10, lineDic)));
+        SelectAndRunAction(SubActionMap, false,
+            () => UiManager.UIUpdater(UIName.Quest_List_Working, null, (10, lineDic)));
     }
 }
 
@@ -79,16 +81,18 @@ public class AcceptableQuestAction : ActionBase
             if (canAccept)
             {
                 SubActionMap[index++] = new DisplayQuestInfoAction(quest, this);
-                lineDic.Add(LineCount + index - 1, $"{index-1}. {quest.QuestName}");
+                lineDic.Add(LineCount + index - 1, $"{index - 1}. {quest.QuestName}");
             }
         }
-        for(int i = LineCount+ index; i < 14; i++)
+
+        for (int i = LineCount + index; i < 14; i++)
         {
-            lineDic.Add(i,"");
+            lineDic.Add(i, "");
         }
 
 
-        SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_List_Acceptyet, null, (10, lineDic)));
+        SelectAndRunAction(SubActionMap, false,
+            () => UiManager.UIUpdater(UIName.Quest_List_Acceptyet, null, (10, lineDic)));
     }
 }
 
@@ -115,6 +119,7 @@ public class DisplayQuestInfoAction : ActionBase
         {
             lineDic.Add(descriptionCount++, line);
         }
+
         for (int i = descriptionCount; i < 16; i++)
         {
             lineDic.Add(i, "");
@@ -126,10 +131,12 @@ public class DisplayQuestInfoAction : ActionBase
             if (condition.IsCompleted)
                 Console.ForegroundColor = ConsoleColor.Green;
 
-            lineDic.Add(conditionCount++, $"{string.Format(condition.GetDescription())} ({condition.CurrentCount}/{condition.RequiredCount})");
-     
+            lineDic.Add(conditionCount++,
+                $"{string.Format(condition.GetDescription())} ({condition.CurrentCount}/{condition.RequiredCount})");
+
             Console.ResetColor();
         }
+
         for (int i = conditionCount; i < 25; i++)
         {
             lineDic.Add(i, "");
@@ -139,24 +146,24 @@ public class DisplayQuestInfoAction : ActionBase
         if (requiredQuest.IsCompleted())
         {
             SubActionMap[1] = new ClaimQuestRewardAction(requiredQuest, PrevAction);
-            SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_Detail_Clear, null, (10, lineDic)));
+            SelectAndRunAction(SubActionMap, false,
+                () => UiManager.UIUpdater(UIName.Quest_Detail_Clear, null, (10, lineDic)));
         }
         else
         {
             if (QuestManager.Instance.CurrentAcceptQuestList.Contains(requiredQuest))
             {
                 SubActionMap[1] = new AbandonQuestAction(requiredQuest, PrevAction);
-                SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_Detail_Working, null, (10, lineDic)));
-
+                SelectAndRunAction(SubActionMap, false,
+                    () => UiManager.UIUpdater(UIName.Quest_Detail_Working, null, (10, lineDic)));
             }
             else
             {
                 SubActionMap[1] = new AcceptQuestAction(requiredQuest, PrevAction);
-                SelectAndRunAction(SubActionMap, false, () => UiManager.UIUpdater(UIName.Quest_Detail_Acceptyet, null, (10, lineDic)));
+                SelectAndRunAction(SubActionMap, false,
+                    () => UiManager.UIUpdater(UIName.Quest_Detail_Acceptyet, null, (10, lineDic)));
             }
         }
-
-
     }
 }
 

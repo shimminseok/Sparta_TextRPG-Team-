@@ -75,43 +75,4 @@ public class EnterCollectionAction : PagedListActionBase
         SelectAndRunAction(SubActionMap, isViewSubMap,
             () => UiManager.UIUpdater(UIName.Collection, null, (5, lineDic)));
     }
-
-    /*public override void OnExcute()
-    {
-         Console.WriteLine("테스트로 해당 번호 입력시 조우, 한번 더 입력하면 포획입니다.");
-         var keys = MonsterTable.MonsterDataDic.Keys.ToList();
-         int start = (page * MONSTER_VIEW_COUNT);
-         int end = Math.Min(start + MONSTER_VIEW_COUNT, keys.Count);
-
-         var pagedMonsters = keys.Skip(start).Take(MONSTER_VIEW_COUNT).ToList();
-         int viewIndex = start + 1;
-         foreach (MonsterType monster in pagedMonsters)
-         {
-             bool isDiscovered = CollectionManager.Instnace.IsDiscovered(monster);
-             bool isCaptured = CollectionManager.Instnace.IsCaptured(monster);
-             string monsterName = (isCaptured || isDiscovered)
-                 ? MonsterTable.MonsterDataDic[monster].Name
-                 : "???";
-
-             StringBuilder sb = new StringBuilder(monsterName);
-
-             if (isCaptured)
-             {
-                 sb.Append("\t [포획 완료]");
-                 Console.ForegroundColor = ConsoleColor.Green;
-             }
-
-             Console.WriteLine($"{viewIndex++}. {sb.ToString()}");
-             Console.ResetColor();
-         }
-
-         if (page > 0)
-             SubActionMap[1] = new CollectionPrevPageAction(PrevAction, page - 1);
-         if (end < keys.Count)
-             SubActionMap[2] = new CollectionNextPageAction(PrevAction, page + 1);
-        IAction action = new EnterCollectionAction(null, page);
-        action.Execute();
-        SelectAndRunAction(SubActionMap);
-        // SelectAndRunAction(SubActionMap);
-    }*/
 }
