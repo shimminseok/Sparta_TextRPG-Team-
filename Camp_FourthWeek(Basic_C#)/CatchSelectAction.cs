@@ -11,35 +11,47 @@
 
         public override void OnExcute()
         {
-            //  EnterBattleAction.DisplayMonsterList();
-            EnterBattleAction.pivotDict = new Dictionary<int, Tuple<int, int>?>
+            SubActionMap.Clear();
+            AttackActionBase.battleLogDic.Clear();
+            AttackActionBase.uiPivotDic.Clear();
+
+            AttackActionBase.uiPivotDic = new Dictionary<int, Tuple<int, int>?>
             {
                 { 0, new Tuple<int, int>(0, 0) }, // 배경
                 { 1, new Tuple<int, int>(7, 28) }, // 내 포켓몬
             };
-            int pivotCount = 2;
-            int playerAction = 19;
-            EnterBattleAction.lineDic[18] = "[ 포획 대상 지정 ]";
-            List<Monster> aliveMonsterList = EnterBattleAction.GetAliveMonsters();
+
+            // 플레이어 정보 출력
+            AttackActionBase.BattlePlayerInfo();
+
+            var aliveMonsterList = AttackActionBase.battleMonsters
+                .Where(mon => AttackActionBase.monsterStates[mon] == MonsterState.Normal)
+                .ToList();
+
+            int pivotCount = AttackActionBase.uiPivotDic.Count;
+            int playerActionLine = 19;
+
+            AttackActionBase.battleLogDic[18] = "[ 포획 대상 지정 ]";
 
             for (int i = 0; i < aliveMonsterList.Count; i++)
             {
-                EnterBattleAction.pivotDict.Add(pivotCount++, EnterBattleAction.pivotArr[i]);
-                EnterBattleAction.lineDic.Add(playerAction++, $"- {i + 1} : {aliveMonsterList[i].Name}");
+                AttackActionBase.uiPivotDic.Add(pivotCount++, AttackActionBase.pivotArr[i]);
+                AttackActionBase.battleLogDic[playerActionLine++] = $"- {i + 1} : {aliveMonsterList[i].Name}";
+
                 if (!SubActionMap.ContainsKey(i + 1))
                     SubActionMap.Add(i + 1, new CatchAction(aliveMonsterList[i], PrevAction));
             }
 
-
-            for (int i = playerAction; i < 22; i++)
+            for (int i = playerActionLine; i < 22; i++)
             {
-                EnterBattleAction.lineDic.Add(i, "");
+                AttackActionBase.battleLogDic[i] = "";
             }
 
-
             SelectAndRunAction(SubActionMap, false,
-                () => UiManager.UIUpdater(UIName.Battle_AttackSelect, EnterBattleAction.pivotDict,
-                    (18, EnterBattleAction.lineDic), EnterBattleAction.monsterUIList));
+                () => UiManager.UIUpdater(UIName.Battle_AttackSelect,
+                    AttackActionBase.uiPivotDic,
+                    (18, AttackActionBase.battleLogDic),
+                    AttackActionBase.monsterIconList));
         }
     }
 }

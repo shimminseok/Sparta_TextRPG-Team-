@@ -7,7 +7,7 @@ public class BuyAction : ActionBase
     public BuyAction(Item _item, IAction _prevAction)
     {
         item = _item;
-        PrevAction = _prevAction;
+        NextAction = _prevAction;
     }
 
     public override string Name => $"";
@@ -29,12 +29,5 @@ public class BuyAction : ActionBase
                 message = $"{item.Name}을(를) 구매했습니다!";
             }
         }
-
-        NextAction = PrevAction;
-        // if (PrevAction != null)
-        // {
-        //     PrevAction.SetFeedBackMessage(message);
-        //     PrevAction.Execute();
-        // }
     }
 }

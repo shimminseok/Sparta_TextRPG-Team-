@@ -20,41 +20,52 @@ namespace Camp_FourthWeek_Basic_C__
 
         public override void OnExcute()
         {
-            int LineCount = 2;
+            SubActionMap.Clear();
+            AttackActionBase.battleLogDic.Clear();
+            AttackActionBase.uiPivotDic.Clear();
+            AttackActionBase.monsterIconList.Clear();
 
-            Dictionary<int, string> lineDic = new Dictionary<int, string>();
-
+            int line = 2;
             if (isWin)
             {
-                int getExp = EnterBattleAction.MonsterSelectList.Count * 10;
-                int curExp = PlayerInfo.Monster.Exp;
-                int curLv = PlayerInfo.Monster.Lv;
-                string curName = PlayerInfo.Monster.Name;
-                PlayerInfo.Monster.Exp += getExp;
-                lineDic.Add(LineCount++, "[ Victory ] ");
-                lineDic.Add(LineCount++, $"풀숲에서 포켓몬을 {EnterBattleAction.MonsterSelectList.Count}마리 잡았다.");
-                lineDic.Add(LineCount++, "[캐릭터 정보]");
-                lineDic.Add(LineCount++,
-                    $"Lv.{curLv}  {curName} {(curLv == PlayerInfo.Monster.Lv ? "" : $"-> Lv.{PlayerInfo.Monster.Lv} {PlayerInfo.Monster.Name}")}");
-                lineDic.Add(LineCount++, $"HP {PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue}");
-                lineDic.Add(LineCount++, $"exp {curExp} -> {PlayerInfo.Monster.Exp}");
+                int getExp = AttackActionBase.battleMonsters.Count * 10;
+                int beforeExp = GameManager.Instance.PlayerInfo.Monster.Exp;
+                int beforeLv = GameManager.Instance.PlayerInfo.Monster.Lv;
+                string beforeName = GameManager.Instance.PlayerInfo.Monster.Name;
+
+                GameManager.Instance.PlayerInfo.Monster.Exp += getExp;
+
+                AttackActionBase.battleLogDic[line++] = "[ Victory ]";
+                AttackActionBase.battleLogDic[line++] = $"풀숲에서 포켓몬을 {AttackActionBase.battleMonsters.Count}마리 잡았다.";
+                AttackActionBase.battleLogDic[line++] = "[ 캐릭터 정보 ]";
+                AttackActionBase.battleLogDic[line++] =
+                    $"Lv.{beforeLv} {beforeName}" +
+                    $"{(beforeLv == GameManager.Instance.PlayerInfo.Monster.Lv ? "" : $" -> Lv.{GameManager.Instance.PlayerInfo.Monster.Lv} {GameManager.Instance.PlayerInfo.Monster.Name}")}";
+                AttackActionBase.battleLogDic[line++] =
+                    $"HP {GameManager.Instance.PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue}";
+                AttackActionBase.battleLogDic[line++] =
+                    $"EXP {beforeExp} -> {GameManager.Instance.PlayerInfo.Monster.Exp}";
+
                 StageManager.Instance.ClearCurrentStage();
             }
             else
             {
-                lineDic.Add(LineCount++, "[ Defeat ] ");
-                lineDic.Add(LineCount++, "눈 앞이 깜깜해 졌다!");
-                lineDic.Add(LineCount++, "서둘러서 포켓몬을 치료해야 한다.");
+                AttackActionBase.battleLogDic[line++] = "[ Defeat ]";
+                AttackActionBase.battleLogDic[line++] = "눈 앞이 깜깜해 졌다!";
+                AttackActionBase.battleLogDic[line++] = "서둘러서 포켓몬을 치료해야 한다.";
             }
 
-            for (int i = LineCount; i < 18; i++)
+            for (int i = line; i < 18; i++)
             {
-                lineDic.Add(i, "");
+                AttackActionBase.battleLogDic[i] = "";
             }
 
             SubActionMap[1] = new MainMenuAction();
+
             SelectAndRunAction(SubActionMap, false,
-                () => UiManager.UIUpdater(UIName.Battle_Result, null, (20, lineDic)));
+                () => UiManager.UIUpdater(UIName.Battle_Result,
+                    null,
+                    (20, AttackActionBase.battleLogDic)));
         }
     }
 }

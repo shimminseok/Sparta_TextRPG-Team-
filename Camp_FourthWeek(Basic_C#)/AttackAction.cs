@@ -2,119 +2,118 @@
 
 namespace Camp_FourthWeek_Basic_C__
 {
-    internal class AttackAction : ActionBase
+    internal class AttackAction : AttackActionBase
     {
+        private List<Monster> targets;
+        private Skill? skill;
+        private UIName uiname = UIName.Battle_AttackEnemy;
         private int num = 25;
 
-        private List<Monster> monsters;
-        public override string Name => $"Lv. {monsters[0].Lv} {monsters[0].Name} 공격";
-        private Skill? skill;
-        static Random random = new Random();
+        public override string Name => $"Lv. {targets[0].Lv} {targets[0].Name} 공격";
 
-        private UIName uiname = UIName.Battle_AttackEnemy;
 
         public AttackAction(List<Monster> _monsters, Skill? _skill, IAction _prevAction)
         {
-            monsters = _monsters;
-            PrevAction = _prevAction;
+            targets = _monsters;
             skill = _skill;
+            PrevAction = _prevAction;
         }
 
 
-        int attackCount = 24;
-
         public override void OnExcute()
         {
-            random = new Random(DateTime.Now.Millisecond);
+            SubActionMap.Clear();
+            Random rand = new Random(DateTime.Now.Millisecond);
+
             if (skill != null)
                 UseMp();
 
-            EnterBattleAction.lineDic.Clear();
-            var player = PlayerInfo.Monster;
-            BattlePlayerInfo();
+            battleLogDic.Clear();
+            uiPivotDic.Clear();
+            monsterIconList.Clear();
 
-            EnterBattleAction.lineDic.Add(attackCount++, $"{player.Name}의 공격!");
-            foreach (var target in monsters)
+            BattlePlayerInfo();
+            int attackLine = 24;
+
+            var player = PlayerInfo.Monster;
+
+            battleLogDic[attackLine++] = $"{GameManager.Instance.PlayerInfo.Monster.Name}의 공격!";
+            foreach (var target in targets)
             {
                 var (isEvade, isCritical) = CalculateBattleChances(player, target);
-
                 float baseDamage = player.Stats[StatType.Attack].FinalValue;
+
                 if (skill != null)
                     baseDamage *= skill.Stats[StatType.Attack].FinalValue;
 
                 float damage = GetCalculatedDamage(baseDamage);
                 float originHp = target.Stats[StatType.CurHp].FinalValue;
-                if (isCritical)
-                    damage *= player.Stats[StatType.CriticlaDamage].FinalValue;
+
 
                 if (!isEvade)
-                    target.Stats[StatType.CurHp].ModifyAllValue(damage);
-                if (target.Stats[StatType.CurHp].FinalValue <= 0)
-                    EnterBattleAction.MonsterStateDic[target] = MonsterState.Dead;
-                bool isDead = EnterBattleAction.MonsterStateDic[target] == MonsterState.Dead;
+                    ApplyDamage(target, damage, isCritical);
+
+                bool isDead = monsterStates[target] == MonsterState.Dead;
 
                 if (isEvade)
                 {
-                    EnterBattleAction.lineDic.Add(attackCount++, $"Lv.{target.Lv} {target.Name}은(는) 맞지 않았다.");
+                    battleLogDic[attackLine++] = $"Lv.{target.Lv} {target.Name}은(는) 맞지 않았다.";
                 }
                 else
                 {
                     if (isCritical)
                     {
-                        EnterBattleAction.lineDic.Add(attackCount++,
-                            $"Lv.{target.Lv} {target.Name}은(는) 급소에 맞았다! [데미지 : {damage}]");
+                        battleLogDic[attackLine++] = $"Lv.{target.Lv} {target.Name}은(는) 급소에 맞았다! [데미지 : {damage}]";
                     }
                     else
                     {
-                        EnterBattleAction.lineDic.Add(attackCount++,
-                            $"Lv.{target.Lv} {target.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
+                        battleLogDic[attackLine++] = $"Lv.{target.Lv} {target.Name}을(를) 맞췄습니다. [데미지 : {damage}]";
                     }
                 }
 
-                EnterBattleAction.lineDic.Add(attackCount++, $"");
+                battleLogDic[attackLine++] = "";
             }
 
-            for (int i = attackCount; i < 40; i++)
+            for (int i = attackLine; i < 40; i++)
             {
-                EnterBattleAction.lineDic.Add(i, "");
+                battleLogDic[i] = "";
             }
 
 
-            EnterBattleAction.pivotDict = new Dictionary<int, Tuple<int, int>?>
+            uiPivotDic = new Dictionary<int, Tuple<int, int>?>
             {
                 { 0, new Tuple<int, int>(0, 0) }, // 배경
                 { 1, new Tuple<int, int>(7, 28) }, // 내 포켓몬
             };
             int pivotCount = 2;
-            for (int i = 0; i < EnterBattleAction.monsterUIList.Count - 1 && i < EnterBattleAction.pivotArr.Length; i++)
+            for (int i = 0; i < pivotArr.Length && i < battleMonsters.Count; i++)
             {
-                EnterBattleAction.pivotDict.Add(pivotCount++, EnterBattleAction.pivotArr[i]);
+                uiPivotDic.Add(pivotCount++, pivotArr[i]);
             }
 
-            EnterBattleAction.pivotDict.Add(pivotCount, new Tuple<int, int>(0, 0));
-            EnterBattleAction.monsterUIList.Add(28);
+            monsterIconList.Add(28); // UI 하단 커서
 
-
-            attackCount = 24;
+            uiPivotDic.Add(pivotCount, new Tuple<int, int>(0, 0));
+            monsterIconList.Add(28);
             CheckBattleEnd();
 
 
             SelectAndRunAction(SubActionMap, false,
-                () => UiManager.UIUpdater(uiname, EnterBattleAction.pivotDict, (num, EnterBattleAction.lineDic),
-                    EnterBattleAction.monsterUIList));
+                () => UiManager.UIUpdater(uiname, uiPivotDic, (num, battleLogDic),
+                    monsterIconList));
         }
 
 
         private void CheckBattleEnd()
         {
-            bool isAllMonstersDead = !EnterBattleAction.GetAliveMonsters().Any();
+            bool isAllMonstersDead = !battleMonsters.Any(m => monsterStates[m] == MonsterState.Normal);
 
             if (isAllMonstersDead)
             {
                 uiname = UIName.Battle_Result;
-                EnterBattleAction.pivotDict = new Dictionary<int, Tuple<int, int>>();
+                uiPivotDic = new Dictionary<int, Tuple<int, int>>();
                 num = 20;
-                EnterBattleAction.monsterUIList = new List<int>();
+                monsterIconList = new List<int>();
 
                 NextAction = new ResultAction(true, new MainMenuAction());
                 return;
@@ -134,47 +133,6 @@ namespace Camp_FourthWeek_Basic_C__
             }
 
             PlayerInfo.Monster.Stats[StatType.CurMp].ModifyAllValue(skillMp);
-        }
-
-        public static float GetCalculatedDamage(float _originDamage)
-        {
-            float minDamage = _originDamage * 0.9f; //공격력의 최소값
-            float maxDamage = _originDamage * 1.1f; //공격력의 최대값
-
-            float randomNum = (float)random.NextDouble() * (maxDamage - minDamage); //최소값과 최대값 사이에서 랜덤 값 구하기
-            float roundedValue = (float)Math.Round(randomNum, 0); //소수점 1자리에서 반올림
-
-            return maxDamage - roundedValue; //공격력에서 10% 오차가 생긴 데미지
-        }
-
-        public static (bool isEvade, bool isCritical) CalculateBattleChances(Monster _origin, Monster _target)
-        {
-            bool isEvade = random.NextDouble() < _target.Stats[StatType.EvadeChance].FinalValue * 0.01f;
-            bool isCritical = random.NextDouble() < _origin.Stats[StatType.CriticalChance].FinalValue * 0.01f;
-            return (isEvade, isCritical);
-        }
-
-        public void BattlePlayerInfo()
-        {
-            string name = PlayerInfo.Monster.Name;
-            int level = PlayerInfo.Monster.Lv;
-            float maxHP = PlayerInfo.Monster.Stats[StatType.MaxHp].FinalValue;
-            float curHP = PlayerInfo.Monster.Stats[StatType.CurHp].FinalValue;
-
-            float maxMP = PlayerInfo.Monster.Stats[StatType.MaxMp].FinalValue;
-            float curMP = PlayerInfo.Monster.Stats[StatType.CurMp].FinalValue;
-
-
-            EnterBattleAction.lineDic = new Dictionary<int, string>
-            {
-                // 플레이어 정보
-                { 0, $"{level}" },
-                { 1, $"{name}" },
-                { 2, $"HP : {curHP}/{maxHP}" },
-                { 3, StringUtil.GetBar(curHP, maxHP) },
-                { 4, $"PP : {curMP}/{maxMP}" },
-                { 5, StringUtil.GetBar(curMP, maxMP) },
-            };
         }
     }
 }

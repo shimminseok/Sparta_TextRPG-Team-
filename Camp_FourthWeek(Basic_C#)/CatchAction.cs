@@ -2,76 +2,99 @@
 
 namespace Camp_FourthWeek_Basic_C__
 {
-    public class CatchAction : ActionBase
+    public class CatchAction : AttackActionBase
     {
-        private Monster monster;
+        private Monster targetMonster;
         private int num = 25;
-        private UIName uiname = UIName.Battle_AttackEnemy;
+        private UIName uiName = UIName.Battle_AttackEnemy;
 
-        public CatchAction(Monster _monster, IAction _prevAction)
+        public CatchAction(Monster _targetMonster, IAction _prevAction)
         {
             PrevAction = _prevAction;
-            monster = _monster;
+            targetMonster = _targetMonster;
         }
 
-        public override string Name => $"Lv.{monster.Lv} {monster.Name} 포획";
+        public override string Name => $"Lv.{targetMonster.Lv} {targetMonster.Name} 포획";
 
         public override void OnExcute()
+        {
+            SubActionMap.Clear();
+            battleLogDic.Clear();
+            uiPivotDic.Clear();
+            monsterIconList.Clear();
+
+            BattlePlayerInfo();
+
+            TryCatchMonster();
+
+            SelectAndRunAction(SubActionMap, false,
+                () => UiManager.UIUpdater(uiName, uiPivotDic, (num, battleLogDic), monsterIconList));
+        }
+
+        private void TryCatchMonster()
         {
             float basicCatchChance = 0.3f;
             float maximumCatchChance = 0.9f;
             Random rand = new Random(DateTime.Now.Millisecond);
-            float hpRatio = monster.Stats[StatType.CurHp].FinalValue / monster.Stats[StatType.MaxHp].FinalValue;
+
+            float hpRatio = targetMonster.Stats[StatType.CurHp].FinalValue /
+                            targetMonster.Stats[StatType.MaxHp].FinalValue;
             float catchChance = maximumCatchChance - (maximumCatchChance - basicCatchChance) * hpRatio;
+
+            int line = 24;
 
             if (rand.NextDouble() < catchChance)
             {
                 QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Monster, QuestConditionType.Catch),
-                    (int)monster.Type);
-                InventoryManager.Instance.AddMonsterToBox(monster);
-                EnterBattleAction.MonsterStateDic[monster] = MonsterState.Catched;
+                    (int)targetMonster.Type);
+
+                InventoryManager.Instance.AddMonsterToBox(targetMonster);
+                monsterStates[targetMonster] = MonsterState.Catched;
+
+                battleLogDic[line++] = $"Lv.{targetMonster.Lv} {targetMonster.Name}을(를) 포획했습니다!";
+            }
+            else
+            {
+                battleLogDic[line++] = $"Lv.{targetMonster.Lv} {targetMonster.Name} 포획 실패...";
             }
 
-            var nextAction = CheckBattleEnd();
-            SubActionMap[1] = nextAction;
+            for (int i = line; i < 40; i++)
+            {
+                battleLogDic[i] = "";
+            }
 
-            SelectAndRunAction(SubActionMap, false,
-                () => UiManager.UIUpdater(uiname, EnterBattleAction.pivotDict, (num, EnterBattleAction.lineDic),
-                    EnterBattleAction.monsterUIList));
+            uiPivotDic = new Dictionary<int, Tuple<int, int>?>
+            {
+                { 0, new Tuple<int, int>(0, 0) }, // 배경
+                { 1, new Tuple<int, int>(7, 28) } // 내 포켓몬
+            };
+            int pivotCount = 2;
+            for (int i = 0; i < pivotArr.Length && i < battleMonsters.Count; i++)
+            {
+                uiPivotDic.Add(pivotCount++, pivotArr[i]);
+            }
+
+            monsterIconList.Add(28);
+
+            SetNextAction();
         }
 
-        private IAction CheckBattleEnd()
+        private void SetNextAction()
         {
-            bool isAllMonstersDead = !EnterBattleAction.GetAliveMonsters().Any();
+            bool isAllEnemiesDead = !battleMonsters.Any(m => monsterStates[m] == MonsterState.Normal);
 
-            if (isAllMonstersDead)
+            if (isAllEnemiesDead)
             {
-                uiname = UIName.Battle_Result;
-                EnterBattleAction.pivotDict = null;
+                uiName = UIName.Battle_Result;
                 num = 20;
-                EnterBattleAction.monsterUIList = null;
-                EnterBattleAction.lineDic = null;
-                return new ResultAction(true, new MainMenuAction());
+                uiPivotDic.Clear();
+                monsterIconList.Clear();
+                battleLogDic.Clear();
+                NextAction = new ResultAction(true, new MainMenuAction());
             }
-
-            return new EnemyAttackAction(PrevAction);
-        }
-
-        public void InputNumber()
-        {
-            while (true)
+            else
             {
-                string input = Console.ReadLine();
-
-                if (int.TryParse(input, out int number))
-                {
-                    if (number == 1)
-                        break;
-                    else
-                        Console.WriteLine("잘못된 입력입니다.");
-                }
-                else
-                    Console.WriteLine("잘못된 입력입니다.");
+                SubActionMap[1] = new EnemyAttackAction(PrevAction);
             }
         }
     }
