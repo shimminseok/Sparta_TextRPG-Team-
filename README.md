@@ -64,3 +64,17 @@ Null 체크 (skill != null, item != null 등)와 상태 체크(monsterStates)를
 포획된 몬스터는 몬스터 박스에 자동 추가.
 
 ➡ 포트폴리오 장점: "포획 확률을 체력 비율 기반으로 계산하는 로직을 직접 설계하여 전략성을 강화했다"고 강조할 수 있어.
+
+
+사용한 주요 기술 스택
+언어: C#
+
+엔진: Unity (플레이어블 콘솔 버전 기반)
+
+구조 설계: FSM(Action Pattern), Data-Driven Design
+
+UI 관리: 텍스트 기반 UIManager 시스템
+
+페이징 처리: PagedListActionBase 패턴
+
+OOP 원칙: SOLID 원칙 준수
