@@ -71,6 +71,7 @@ public class AcceptableQuestAction : ActionBase
     public override void OnExcute()
     {
         SubActionMap.Clear();
+        SubActionMap[0] = PrevAction;
         int index = 1;
         int LineCount = 4;
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
