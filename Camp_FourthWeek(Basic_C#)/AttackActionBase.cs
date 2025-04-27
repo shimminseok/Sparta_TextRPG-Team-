@@ -47,7 +47,7 @@ public class AttackActionBase : ActionBase
         if (_isCritical)
             _damage *= _target.Stats[StatType.CriticlaDamage].FinalValue;
 
-        _target.Stats[StatType.CurHp].ModifyAllValue(_damage);
+        _target.Stats[StatType.CurHp].ModifyAllValue(MathF.Round(_damage));
 
         if (_target.Stats[StatType.CurHp].FinalValue <= 0)
         {

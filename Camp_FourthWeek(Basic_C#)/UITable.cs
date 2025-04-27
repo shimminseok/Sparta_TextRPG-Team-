@@ -34,6 +34,7 @@ public enum UIName
     Quest_Detail_Working,
     Quest_Detail_Acceptyet,
     Quest_Detail_Clear,
+    Quest_Clear,
     Collection,
     Location,
     Center,
@@ -279,6 +280,15 @@ public static class UITable
                 })
             }, // 퀘스트 상세 완료
             {
+                UIName.Quest_Clear,
+                (25, new Dictionary<int, string>
+                {
+                    { 0, "0. 나가기" },
+                    { 1, "원하시는 행동을 선택해 주세요" },
+                    { 2, ">>>" },
+                })
+            },
+            {
                 UIName.Collection,
                 (5, new Dictionary<int, string>
                 {
@@ -426,6 +436,9 @@ public static class UITable
         {
             UIName.Quest_Detail_Clear, new List<int> { 17 }
         }, // 퀘스트 상세 미수락
+        {
+            UIName.Quest_Clear, new List<int> { 17 }
+        },
         {
             UIName.Collection, new List<int> { 18 }
         }, // 도감

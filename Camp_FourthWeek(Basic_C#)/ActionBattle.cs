@@ -53,12 +53,12 @@ public class EnterBattleAction : ActionBase
             { 2, new SkillSelectAction(this) },
             { 3, new CatchSelectAction(this) }
         };
-        StageManager.Instance.CurrentStage = _currentStage;
     }
 
 
     public override void OnExcute()
     {
+        StageManager.Instance.CurrentStage = currentStage;
         AttackActionBase.battleLogDic.Clear();
         AttackActionBase.uiPivotDic.Clear();
         AttackActionBase.monsterIconList.Clear();

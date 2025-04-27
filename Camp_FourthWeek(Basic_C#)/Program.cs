@@ -20,7 +20,6 @@
                 currentAction = (currentAction as ActionBase)?.NextAction;
             }
 
-            Console.ReadKey();
             GameManager.Instance.SaveGame();
         }
     }
@@ -31,7 +30,6 @@
         {
             IntroSceneAction introSceneAction = new IntroSceneAction();
             introSceneAction.Execute();
-            // GameManager.Instance.LoadGame();
         }
     }
 }

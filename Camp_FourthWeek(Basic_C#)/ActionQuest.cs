@@ -39,6 +39,7 @@ public class ActiveQuestAction : ActionBase
     public override void OnExcute()
     {
         SubActionMap.Clear();
+        SubActionMap[0] = PrevAction;
         int index = 1;
         int LineCount = 4;
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
@@ -78,6 +79,7 @@ public class AcceptableQuestAction : ActionBase
             bool canAccept = quest.PrerequisiteQuest.All(pre => QuestManager.Instance.ClearQuestList.Contains(pre))
                              && !QuestManager.Instance.ClearQuestList.Contains(quest.Key)
                              && !QuestManager.Instance.CurrentAcceptQuestList.Exists(x => x.Key == quest.Key);
+
             if (canAccept)
             {
                 SubActionMap[index++] = new DisplayQuestInfoAction(quest, this);
@@ -194,12 +196,50 @@ public class ClaimQuestRewardAction : ActionBase
     {
         PrevAction = _preAction;
         requiredQuest = _requiredQuest;
-        NextAction = _preAction;
+        SubActionMap[0] = _preAction;
     }
 
     public override void OnExcute()
     {
+        Dictionary<int, string> lineDic = new Dictionary<int, string>();
+        lineDic.Add(4, requiredQuest.QuestName);
+        int descriptionCount = 5;
+
+        string[] lines =
+            requiredQuest.QuestCompleteDescription.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        foreach (string line in lines)
+        {
+            lineDic.Add(descriptionCount++, line);
+        }
+
+        for (int i = descriptionCount; i < 17; i++)
+        {
+            lineDic.Add(i, "");
+        }
+
+        int conditionCount = 17;
+        foreach (var monster in requiredQuest.RewardMonsters)
+        {
+            Monster reward = MonsterTable.GetMonsterByType(monster);
+            lineDic.Add(conditionCount++, reward.Name);
+        }
+
+        foreach (int item in requiredQuest.RewardItemsList)
+        {
+            Item reward = ItemTable.GetItemById(item);
+            lineDic.Add(conditionCount++, reward.Name);
+        }
+
+        lineDic.Add(conditionCount++, $"{requiredQuest.QuestRewardGold}G");
+
+        for (int i = conditionCount; i < 25; i++)
+        {
+            lineDic[i] = "";
+        }
+
         QuestManager.Instance.QuestClear(requiredQuest);
+        SelectAndRunAction(SubActionMap, false,
+            () => UiManager.UIUpdater(UIName.Quest_Clear, null, (10, lineDic)));
     }
 }
 
