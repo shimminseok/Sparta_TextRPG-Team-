@@ -8,8 +8,11 @@ public abstract partial class ActionBase : IAction
     protected PlayerInfo PlayerInfo { get; } = GameManager.Instance.PlayerInfo;
     public abstract string Name { get; }
 
+    public IAction? NextAction { get; protected set; } = null;
+
     public void Execute()
     {
+        // 추후 아래의 콘솔은 지워주어야 합니다.
         Console.Clear();
         Console.WriteLine($"[{Name}]");
         OnExcute();
@@ -22,30 +25,50 @@ public abstract partial class ActionBase : IAction
 
     public abstract void OnExcute();
 
-    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap)
+    public void SelectAndRunAction(Dictionary<int, IAction> _actionMap, bool _isView = true,
+        Func<string>? inputProvider = null)
     {
         Console.WriteLine();
-        foreach (var action in _actionMap) Console.WriteLine($"{action.Key}. {action.Value.Name}");
-        Console.WriteLine();
-        Console.WriteLine($"0. {(PrevAction == null ? "종료하기" : $"{PrevAction.Name}로 되돌아가기")}");
-        Console.WriteLine();
-        Console.WriteLine(feedBackMessage);
-        Console.WriteLine("원하시는 행동을 입력해주세요.");
-        while (true)
-            if (int.TryParse(Console.ReadLine(), out var id))
+        if (_actionMap.Count == 0)
+        {
+            return;
+        }
+
+        if (_isView)
+        {
+            foreach (var action in _actionMap)
             {
+                if (action.Key < 0)
+                    continue;
+                Console.WriteLine($"{action.Key}. {action.Value.Name}");
+            }
+        }
+
+
+        while (true)
+        {
+            if (int.TryParse(inputProvider?.Invoke() ?? Console.ReadLine(), out var id))
+            {
+                if (UiManager.isLoop)
+                    UiManager.isLoop = false;
+
                 if (id == 0)
                 {
-                    if (PrevAction == null && this is MainMenuAction)
-                        GameManager.Instance.SaveGame();
+                    if (PrevAction == null && this is ActionMainMenu)
+                    {
+                        NextAction = null;
+                    }
                     else
-                        PrevAction?.Execute();
+                    {
+                        NextAction = PrevAction;
+                    }
+
                     break;
                 }
 
                 if (_actionMap.ContainsKey(id))
                 {
-                    _actionMap[id].Execute();
+                    NextAction = _actionMap[id];
                     break;
                 }
                 //개발자의 이스터에그
@@ -55,13 +78,12 @@ public abstract partial class ActionBase : IAction
                     miniGame.StartGame();
                     break;
                 }
-
-                Console.WriteLine("잘못된 입력입니다.");
+                else if (id == 99) //진화를 보여주기 위한 치트
+                {
+                    PlayerInfo.Monster.Exp += 100;
+                }
             }
-            else
-            {
-                Console.WriteLine("잘못된 입력입니다.");
-            }
+        }
 
 
         feedBackMessage = string.Empty;
