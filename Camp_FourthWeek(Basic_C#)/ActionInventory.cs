@@ -120,6 +120,7 @@ public class EquipItemManagementAction : PagedListActionBase
     protected override List<string> GetPageContent()
     {
         SubActionMap.Clear();
+        SubActionMap[0] = PrevAction;
         MaxPage = (int)Math.Ceiling(InventoryManager.Instance.Inventory.Count / (float)VIEW_COUNT);
         var output = new List<string>();
 
