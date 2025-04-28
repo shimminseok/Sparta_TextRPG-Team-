@@ -32,7 +32,7 @@ public class GameManager
         LoadCollectionData();
         LoadPlayerGold();
         // LoadCurrentMonsterData();
-        EquipmentManager.EquipmentItem(PlayerInfo.Monster.Item);
+        EquipmentManager.Instance.EquipmentItem(PlayerInfo.Monster.Item);
         StageManager.Instance.ClearStage = loadData.ClearStage;
     }
 
@@ -99,7 +99,7 @@ public class GameManager
         List<Item> inventory = new List<Item>();
         foreach (var saveItem in loadData.Inventory)
         {
-            var item = ItemTable.GetItemById(saveItem.ItemKey).Copy();
+            var item = ItemTable.Instance.GetItemById(saveItem.ItemKey).Copy();
             item.SetUniqueNumber(saveItem.UniqueNumber);
             inventory.Add(item);
         }

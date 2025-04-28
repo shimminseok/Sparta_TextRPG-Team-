@@ -128,7 +128,7 @@ public class AttackActionBase : ActionBase
         ClearStaticData();
 
         List<Monster> allMonsters = _currentStage.SpawnedMonsters
-            .Select(type => MonsterTable.MonsterDataDic[type])
+            .Select(type => MonsterTable.Instance.MonsterDataDic[type])
             .ToList();
 
         Random rand = new Random();

@@ -200,14 +200,14 @@ namespace Camp_FourthWeek_Basic_C__
                 {
                     // 플레이어 정보
                     { 0, 5.ToString() },
-                    { 1, MonsterTable.MonsterDataDic[MonsterType.Charizard].Name },
+                    { 1, MonsterTable.Instance.MonsterDataDic[MonsterType.Charizard].Name },
                     { 2, $"{100.ToString()} / {200.ToString()}" },
                     { 3, GetBar(100, 200) },
                     { 4, $"{200.ToString()} / {300.ToString()}" },
                     { 5, GetBar(200, 300) },
                     // 적 정보 1
                     { 6, $"L   V  : {10.ToString()}" },
-                    { 7, $"이  름 : {MonsterTable.MonsterDataDic[MonsterType.Squirtle].Name}" },
+                    { 7, $"이  름 : {MonsterTable.Instance.MonsterDataDic[MonsterType.Squirtle].Name}" },
                     { 8, $"H   P  : {70.ToString()} / {50.ToString()}" },
                     { 9, $"    {GetBar(50, 100)}" },
                 }),

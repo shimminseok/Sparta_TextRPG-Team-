@@ -31,10 +31,7 @@ public class MonsterBoxAction : PagedListActionBase
     public MonsterBoxAction(IAction _prevAction, int _page = 0) : base(_prevAction, _page)
     {
         PrevAction = _prevAction;
-        SubActionMap = new Dictionary<int, IAction>
-        {
-            { 101, new TestMonsterModify(this) }
-        };
+        SubActionMap[0] = PrevAction;
     }
 
     protected override List<string> GetPageContent()
@@ -270,11 +267,11 @@ public class EquipAction : ActionBase
         var currentMonster = player.Monster;
         if (currentMonster.Item == item)
         {
-            EquipmentManager.UnequipItem(currentMonster);
+            EquipmentManager.Instance.UnequipItem(currentMonster);
         }
         else
         {
-            EquipmentManager.EquipmentItem(item);
+            EquipmentManager.Instance.EquipmentItem(item);
         }
     }
 }

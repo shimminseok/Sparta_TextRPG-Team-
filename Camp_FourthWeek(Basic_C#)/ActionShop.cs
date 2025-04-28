@@ -15,7 +15,7 @@ public class EnterShopAction : PagedListActionBase
             { 2, new SellItemAction(this) }
         };
         Page = _page;
-        SaleItems = ItemTable.ItemDic.Values.ToList();
+        SaleItems = ItemTable.Instance.ItemDic.Values.ToList();
     }
 
     public override string Name => "상점";
@@ -85,7 +85,7 @@ public class BuyItemAction : PagedListActionBase
     public BuyItemAction(IAction _prevAction, int _page = 0) : base(_prevAction, _page)
     {
         PrevAction = _prevAction;
-        SaleItems = ItemTable.ItemDic.Values.ToList();
+        SaleItems = ItemTable.Instance.ItemDic.Values.ToList();
         MaxPage = (int)Math.Ceiling(SaleItems.Count / (float)VIEW_COUNT);
     }
 

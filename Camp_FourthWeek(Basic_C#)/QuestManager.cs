@@ -52,13 +52,13 @@ public class QuestManager
     {
         for (int i = 0; i < _quest.RewardItemsList.Count; i++)
         {
-            var item = ItemTable.GetItemById(_quest.RewardItemsList[i]);
+            var item = ItemTable.Instance.GetItemById(_quest.RewardItemsList[i]);
             InventoryManager.Instance.AddItem(item.Copy());
         }
 
         for (int i = 0; i < _quest.RewardMonsters.Count; i++)
         {
-            var monster = MonsterTable.GetMonsterByType(_quest.RewardMonsters[i]);
+            var monster = MonsterTable.Instance.GetMonsterByType(_quest.RewardMonsters[i]);
             InventoryManager.Instance.AddMonsterToBox(monster.Copy());
         }
 
@@ -101,7 +101,7 @@ public class QuestManager
 
     public void LoadQuestData(SaveQeust _saveQuest)
     {
-        Quest loadQuest = QuestTable.GetQuestInfo(_saveQuest.Key);
+        Quest loadQuest = QuestTable.Instance.GetQuestInfo(_saveQuest.Key);
         if (loadQuest == null)
             return;
 
@@ -112,37 +112,5 @@ public class QuestManager
         }
 
         AcceptQuest(loadQuest);
-    }
-}
-
-public class SaveQeust
-{
-    public int Key;
-    public List<SaveCondition> QuestConditions;
-
-    public SaveQeust(int _key, List<SaveCondition> _conditions)
-    {
-        Key = _key;
-        QuestConditions = _conditions;
-    }
-
-    public SaveQeust()
-    {
-    }
-}
-
-public class SaveCondition
-{
-    public int Index;
-    public int CurrentCount;
-
-    public SaveCondition(int _index, int _currentCount)
-    {
-        Index = _index;
-        CurrentCount = _currentCount;
-    }
-
-    public SaveCondition()
-    {
     }
 }

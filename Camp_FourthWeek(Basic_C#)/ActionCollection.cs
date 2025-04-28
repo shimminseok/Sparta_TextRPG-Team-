@@ -10,7 +10,7 @@ public class EnterCollectionAction : PagedListActionBase
     public EnterCollectionAction(IAction _prevAction, int _page = 0) : base(_prevAction, _page)
     {
         PrevAction = _prevAction;
-        MaxPage = (int)Math.Ceiling(MonsterTable.MonsterDataDic.Count / (float)VIEW_COUNT);
+        MaxPage = (int)Math.Ceiling(MonsterTable.Instance.MonsterDataDic.Count / (float)VIEW_COUNT);
     }
 
     protected override PagedListActionBase CreateNew(int newPage)
@@ -21,7 +21,7 @@ public class EnterCollectionAction : PagedListActionBase
     protected override List<string> GetPageContent()
     {
         var output = new List<string>();
-        var keys = MonsterTable.MonsterDataDic.Keys.ToList();
+        var keys = MonsterTable.Instance.MonsterDataDic.Keys.ToList();
         int start = (Page * VIEW_COUNT);
         int end = Math.Min(start + VIEW_COUNT, keys.Count);
 
@@ -33,7 +33,7 @@ public class EnterCollectionAction : PagedListActionBase
             bool isCaptured = CollectionManager.Instnace.IsCaptured(monster);
 
             string name = (isCaptured || isDiscovered)
-                ? MonsterTable.MonsterDataDic[monster].Name
+                ? MonsterTable.Instance.MonsterDataDic[monster].Name
                 : "???";
 
             var line = new StringBuilder($"{viewIndex++}. {name}");

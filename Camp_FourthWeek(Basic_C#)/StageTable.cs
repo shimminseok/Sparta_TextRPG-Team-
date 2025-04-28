@@ -1,8 +1,11 @@
 namespace Camp_FourthWeek_Basic_C__;
 
-public static class StageTable
+public class StageTable
 {
-    public static Dictionary<int, Stage> StageDic { get; } = new Dictionary<int, Stage>()
+    private static readonly StageTable instance = new StageTable();
+    public static StageTable Instance => instance;
+
+    public Dictionary<int, Stage> StageDic { get; } = new Dictionary<int, Stage>()
     {
         {
             1,
@@ -92,7 +95,7 @@ public static class StageTable
         },
     };
 
-    public static Stage? GetDungeonById(int _id)
+    public Stage? GetDungeonById(int _id)
     {
         if (StageDic.TryGetValue(_id, out var dungeon))
         {

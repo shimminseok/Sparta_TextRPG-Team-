@@ -3,9 +3,12 @@ using System.Collections.Generic;
 
 namespace Camp_FourthWeek_Basic_C__;
 
-public static class QuestTable
+public class QuestTable
 {
-    public static readonly Dictionary<int, Quest> QuestDic = new Dictionary<int, Quest>()
+    private static readonly QuestTable instance = new QuestTable();
+    public static QuestTable Instance => instance;
+
+    public readonly Dictionary<int, Quest> QuestDic = new Dictionary<int, Quest>()
     {
         {
             1, new Quest(1, "도구 구매 퀘스트", QuestType.Main,
@@ -75,7 +78,7 @@ public static class QuestTable
         },
     };
 
-    public static Quest GetQuestInfo(int _key)
+    public Quest GetQuestInfo(int _key)
     {
         if (QuestDic.TryGetValue(_key, out Quest quest))
         {

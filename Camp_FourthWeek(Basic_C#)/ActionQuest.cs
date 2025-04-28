@@ -75,7 +75,7 @@ public class AcceptableQuestAction : ActionBase
         int index = 1;
         int LineCount = 4;
         Dictionary<int, string> lineDic = new Dictionary<int, string>();
-        foreach (Quest quest in QuestTable.QuestDic.Values)
+        foreach (Quest quest in QuestTable.Instance.QuestDic.Values)
         {
             bool canAccept = quest.PrerequisiteQuest.All(pre => QuestManager.Instance.ClearQuestList.Contains(pre))
                              && !QuestManager.Instance.ClearQuestList.Contains(quest.Key)
@@ -221,13 +221,13 @@ public class ClaimQuestRewardAction : ActionBase
         int conditionCount = 17;
         foreach (var monster in requiredQuest.RewardMonsters)
         {
-            Monster reward = MonsterTable.GetMonsterByType(monster);
+            Monster reward = MonsterTable.Instance.GetMonsterByType(monster);
             lineDic.Add(conditionCount++, reward.Name);
         }
 
         foreach (int item in requiredQuest.RewardItemsList)
         {
-            Item reward = ItemTable.GetItemById(item);
+            Item reward = ItemTable.Instance.GetItemById(item);
             lineDic.Add(conditionCount++, reward.Name);
         }
 

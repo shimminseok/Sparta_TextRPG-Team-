@@ -4,16 +4,9 @@ namespace Camp_FourthWeek_Basic_C__;
 
 public class InventoryManager()
 {
-    private static InventoryManager instance;
+    private static InventoryManager instance = new InventoryManager();
 
-    public static InventoryManager Instance
-    {
-        get
-        {
-            if (instance == null) instance = new InventoryManager();
-            return instance;
-        }
-    }
+    public static InventoryManager Instance => instance;
 
     public const float HEAL_AMOUNT = 30f;
 
@@ -31,9 +24,9 @@ public class InventoryManager()
 
     public void RemoveItem(Item _item)
     {
-        Monster monster = EquipmentManager.GetEquippedMonster(_item);
+        Monster monster = EquipmentManager.Instance.GetEquippedMonster(_item);
         if (monster != null)
-            EquipmentManager.UnequipItem(monster);
+            EquipmentManager.Instance.UnequipItem(monster);
 
         Inventory.Remove(_item);
     }
