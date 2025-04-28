@@ -39,7 +39,7 @@ public class CreateNickNameAction : ActionBase
         for (int i = 0; i < startPoketmon.Length; i++)
         {
             var key = startPoketmon[i];
-            Monster monster = MonsterTable.GetMonsterByType(key);
+            Monster monster = MonsterTable.Instance.GetMonsterByType(key);
             SubActionMap.Add(i + 1, new SelectMonsterAction(monster, nickName));
         }
 

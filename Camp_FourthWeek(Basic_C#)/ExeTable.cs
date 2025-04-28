@@ -1,8 +1,11 @@
 namespace Camp_FourthWeek_Basic_C__;
 
-public static class ExpTable
+public class ExpTable
 {
-    public static Dictionary<int, int> ExpDataDic { get; private set; } = new Dictionary<int, int>()
+    private static readonly ExpTable instance = new ExpTable();
+    public static ExpTable Instance => instance;
+
+    public Dictionary<int, int> ExpDataDic { get; private set; } = new Dictionary<int, int>()
     {
         { 1, 0 },
         { 2, 10 },
@@ -56,7 +59,7 @@ public static class ExpTable
         { 50, 1625 }
     };
 
-    public static int GetExpByLevel(int _level)
+    public int GetExpByLevel(int _level)
     {
         if (ExpDataDic.TryGetValue(_level, out int exp))
         {

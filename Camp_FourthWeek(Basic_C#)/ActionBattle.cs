@@ -24,7 +24,7 @@ public class EnterStageAction : ActionBase
         for (var i = 0; i <= StageManager.Instance.ClearStage; i++)
         {
             //StageAction이 아닌 EnterBattleAction 이걸 추가
-            var stage = StageTable.GetDungeonById(i + 1);
+            var stage = StageTable.Instance.GetDungeonById(i + 1);
 
             var battleAction = new EnterBattleAction(stage, this);
             SubActionMap.Add(i + 1, battleAction);
@@ -494,7 +494,7 @@ public class SkillSelectAction : ActionBase
         // 플레이어 정보 출력
         AttackActionBase.BattlePlayerInfo();
 
-        skills = SkillTable.SkillDataDic.Values
+        skills = SkillTable.Instance.SkillDataDic.Values
             .Where(skill => GameManager.Instance.PlayerInfo.Skills.Contains(skill.Id))
             .ToList();
 

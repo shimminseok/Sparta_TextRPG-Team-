@@ -164,7 +164,7 @@ public class Item
     public bool IsEquippedBy(Monster m) => m.Item?.UniqueNumber == UniqueNumber;
 
     //몬스터 박스에 있는 몬스터들이 장착한 아이템인지
-    public bool IsEquipment => EquipmentManager.IsEquipped(UniqueNumber);
+    public bool IsEquipment => EquipmentManager.Instance.IsEquipped(UniqueNumber);
 
     public Item(int _key, string _name, ItemType _type, List<Stat> _stats, string _description, int _cost)
     {
@@ -330,7 +330,7 @@ public class Monster
 
     public Monster(SaveMonsterData _saveData)
     {
-        var monster = MonsterTable.GetMonsterByType(_saveData.Key);
+        var monster = MonsterTable.Instance.GetMonsterByType(_saveData.Key);
         Name = monster.Name;
         Skills = monster.Skills;
         EvolveType = monster.EvolveType;
@@ -362,7 +362,7 @@ public class Monster
 
     public Monster(MonsterType _type)
     {
-        var monster = MonsterTable.GetMonsterByType(_type).Copy();
+        var monster = MonsterTable.Instance.GetMonsterByType(_type).Copy();
         Type = monster.Type;
         Name = monster.Name;
 
@@ -433,7 +433,7 @@ public class Monster
 
         while (true)
         {
-            int maxExp = ExpTable.GetExpByLevel(Lv + 1);
+            int maxExp = ExpTable.Instance.GetExpByLevel(Lv + 1);
             if (maxExp < 0)
                 break;
 
@@ -465,7 +465,7 @@ public class Monster
 
     private void Evolve(MonsterType _monsterType)
     {
-        var monster = MonsterTable.GetMonsterByType(_monsterType).Copy();
+        var monster = MonsterTable.Instance.GetMonsterByType(_monsterType).Copy();
 
         Name = monster.Name;
         Type = monster.Type;
@@ -608,27 +608,27 @@ public class QuestCondition
         {
             case QuestConditionType.Equip:
             {
-                string itemName = ItemTable.GetItemById(TargetID).Name;
+                string itemName = ItemTable.Instance.GetItemById(TargetID).Name;
                 return $"{itemName} 장착하기";
             }
             case QuestConditionType.Buy:
             {
-                string itemName = ItemTable.GetItemById(TargetID).Name;
+                string itemName = ItemTable.Instance.GetItemById(TargetID).Name;
                 return $"{itemName} 구매하기";
             }
             case QuestConditionType.Catch:
             {
-                string monsterName = MonsterTable.GetMonsterByType((MonsterType)TargetID).Name;
+                string monsterName = MonsterTable.Instance.GetMonsterByType((MonsterType)TargetID).Name;
                 return $"{monsterName} {RequiredCount}마리 포획하기";
             }
             case QuestConditionType.Use:
             {
-                string itemName = ItemTable.GetItemById(TargetID).Name;
+                string itemName = ItemTable.Instance.GetItemById(TargetID).Name;
                 return $"{itemName} {RequiredCount}개 사용하기";
             }
             case QuestConditionType.Kill:
             {
-                string monsterName = MonsterTable.GetMonsterByType((MonsterType)TargetID).Name;
+                string monsterName = MonsterTable.Instance.GetMonsterByType((MonsterType)TargetID).Name;
                 return $"{monsterName} {RequiredCount}마리 처치하기";
             }
             default:
@@ -636,6 +636,8 @@ public class QuestCondition
         }
     }
 }
+
+#region [SaveData]
 
 public class SaveData
 {
@@ -734,3 +736,37 @@ public class SaveStat
     {
     }
 }
+
+public class SaveQeust
+{
+    public int Key;
+    public List<SaveCondition> QuestConditions;
+
+    public SaveQeust(int _key, List<SaveCondition> _conditions)
+    {
+        Key = _key;
+        QuestConditions = _conditions;
+    }
+
+    public SaveQeust()
+    {
+    }
+}
+
+public class SaveCondition
+{
+    public int Index;
+    public int CurrentCount;
+
+    public SaveCondition(int _index, int _currentCount)
+    {
+        Index = _index;
+        CurrentCount = _currentCount;
+    }
+
+    public SaveCondition()
+    {
+    }
+}
+
+#endregion

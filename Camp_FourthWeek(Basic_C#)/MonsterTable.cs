@@ -1,8 +1,11 @@
 namespace Camp_FourthWeek_Basic_C__;
 
-public static class MonsterTable
+public class MonsterTable
 {
-    public static readonly Dictionary<MonsterType, Monster> MonsterDataDic = new Dictionary<MonsterType, Monster>()
+    private static readonly MonsterTable instance = new MonsterTable();
+    public static MonsterTable Instance => instance;
+
+    public readonly Dictionary<MonsterType, Monster> MonsterDataDic = new Dictionary<MonsterType, Monster>()
     {
         {
             MonsterType.Pikachu, new Monster(MonsterType.Pikachu, "피카츄", new Dictionary<StatType, Stat>()
@@ -328,7 +331,7 @@ public static class MonsterTable
         }
     };
 
-    public static Monster GetMonsterByType(MonsterType _monsterType)
+    public Monster GetMonsterByType(MonsterType _monsterType)
     {
         if (MonsterDataDic.TryGetValue(_monsterType, out Monster monster))
         {

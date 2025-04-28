@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Camp_FourthWeek_Basic_C__
 {
-    internal static class EquipmentManager
+    public class EquipmentManager
     {
-        // public static Dictionary<ItemType, Item> EquipmentItems = new Dictionary<ItemType, Item>();
-        private static PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
+        private static readonly EquipmentManager instance = new EquipmentManager();
+        public static EquipmentManager Instance => instance;
+        private PlayerInfo playerInfo = GameManager.Instance.PlayerInfo;
 
-        public static void EquipmentItem(Item _equipItem)
+        public void EquipmentItem(Item _equipItem)
         {
             //아이템의 장착은 현재 착용한 몬스터에만 가능하고
             //만약 해당 아이템을 장착한 몬스터가 있으면 빼주고
@@ -34,7 +35,7 @@ namespace Camp_FourthWeek_Basic_C__
             QuestManager.Instance.UpdateCurrentCount((QuestTargetType.Item, QuestConditionType.Equip), _equipItem.Key);
         }
 
-        public static void UnequipItem(Monster _targetMonster)
+        public void UnequipItem(Monster _targetMonster)
         {
             Item targetItem = _targetMonster.Item;
             if (targetItem != null)
@@ -54,7 +55,7 @@ namespace Camp_FourthWeek_Basic_C__
         /// </summary>
         /// <param name="_item"></param>
         /// <returns></returns>
-        public static bool IsEquipped(int _uniqueNumber)
+        public bool IsEquipped(int _uniqueNumber)
         {
             Monster equipMonster =
                 InventoryManager.Instance.MonsterBox.Find(monster => monster.Item?.UniqueNumber == _uniqueNumber);
@@ -66,7 +67,7 @@ namespace Camp_FourthWeek_Basic_C__
         /// </summary>
         /// <param name="_targetItem"></param>
         /// <returns></returns>
-        public static Monster GetEquippedMonster(Item _targetItem)
+        public Monster GetEquippedMonster(Item _targetItem)
         {
             return InventoryManager.Instance.MonsterBox.Find(monster =>
                 monster.Item?.UniqueNumber == _targetItem.UniqueNumber);
